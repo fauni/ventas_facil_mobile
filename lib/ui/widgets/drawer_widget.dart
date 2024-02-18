@@ -76,7 +76,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             ),
             title: Text(
               'Pedidos',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
           ListTile(
@@ -102,7 +102,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             ),
             title: Text(
               'Notificaciones',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
           ListTile(
@@ -130,7 +130,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             ),
             title: Text(
               'Cerrar Sesión',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
         ],

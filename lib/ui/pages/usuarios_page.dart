@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
 class UsuariosPage extends StatefulWidget {
-  const UsuariosPage({super.key});
+  UsuariosPage({super.key});
 
   @override
   State<UsuariosPage> createState() => _UsuariosPageState();

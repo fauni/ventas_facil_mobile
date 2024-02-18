@@ -8,7 +8,7 @@ import 'package:ventas_facil/models/authentication/user.dart';
 class AuthRepository {
   Future<User> login(Login data) async {
     final response = await http.post(
-      Uri.parse('http://192.168.0.102:9095/api/User/Login'),
+      Uri.parse('http://192.168.0.102:9096/api/User/Login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

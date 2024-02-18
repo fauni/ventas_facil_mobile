@@ -17,6 +17,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState>{
         final User user = await authService.login(event.data);
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('user', jsonEncode(user));
+        await prefs.setString('token', user.apiToken!);
         emit(LoginSuccess(user: user));
       } catch (error) {
         emit(LoginFailure(error: error.toString()));
