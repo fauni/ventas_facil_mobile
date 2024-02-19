@@ -38,20 +38,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
     WidgetsBinding.instance.addPostFrameCallback((timeStamp)=> verificaSesion());
 
     _fabAnimationController = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
     _borderRadiusAnimationController = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
     fabCurve = CurvedAnimation(
       parent: _fabAnimationController,
-      curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
+      curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
     );
     borderRadiusCurve = CurvedAnimation(
       parent: _borderRadiusAnimationController,
-      curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
+      curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
     );
 
     fabAnimation = Tween<double>(begin: 0, end: 1).animate(fabCurve);
@@ -60,16 +60,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
     );
 
     _hideBottomBarAnimationController = AnimationController(
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       vsync: this,
     );
 
     Future.delayed(
-      Duration(seconds: 1),
+      const Duration(seconds: 1),
       () => _fabAnimationController.forward(),
     );
     Future.delayed(
-      Duration(seconds: 1),
+      const Duration(seconds: 1),
       () => _borderRadiusAnimationController.forward(),
     );
   }
@@ -95,18 +95,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
   ];
 
   final List<Widget> _pages = [
-    PrincipalPage(),
-    ModuloPage(),
-    PedidoPage(),
-    SettingsPage(),
-    ModuloPage()
+    const PrincipalPage(),
+    const ModuloPage(),
+    const PedidoPage(),
+    const SettingsPage(),
+    const ModuloPage()
   ];
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      drawer: DrawerWidget(),
+      drawer: const DrawerWidget(),
       // appBar: AppBar(
       //   title: const Text('Home Page'),
       //   actions: [
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
           onTap: _navigateBottomBar,
           hideAnimationController: _hideBottomBarAnimationController,
           shadow: BoxShadow(
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
             blurRadius: 12,
             spreadRadius: 0.5,
             color: Theme.of(context).secondaryHeaderColor
@@ -196,7 +196,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
         user = User.fromJson(userMap);
         setState(() {});
       } catch (e) {
-        print('Error al decodificar el usuario: $e');
         context.go('/Login');
       }
     } else {

@@ -110,7 +110,7 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
                                       Text(
                                         '${pedido.observacion}'
                                       ),
-                                      Text('${ formatDate(pedido.fechaRegistro!, [d,'-',M,'-',yy])}')
+                                      Text(formatDate(pedido.fechaRegistro!, [d,'-',M,'-',yy]))
                                     ],
                                   ),
                                   leading: const CircleAvatar(
@@ -125,7 +125,7 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
                               itemCount: state.pedidos.length
                             );
                           } else {
-                            return Container(child: Text('Container'),);
+                            return const Text('Container');
                           }
                         }, 
                       ),

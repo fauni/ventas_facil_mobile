@@ -17,7 +17,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp)=> loadUserData());
   }
@@ -62,7 +61,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Theme.of(context).colorScheme.secondary,
-                child: Text('${usuario!.userName![0].toUpperCase()}', style: TextStyle(fontSize: 30, color: Colors.white)),
+                child: Text(usuario!.userName![0].toUpperCase(), style: const TextStyle(fontSize: 30, color: Colors.white)),
               ),
             ),
           ),

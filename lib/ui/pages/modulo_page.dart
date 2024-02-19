@@ -12,7 +12,6 @@ class _ModuloPageState extends State<ModuloPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
   @override

@@ -34,11 +34,11 @@ class _ProductoPageState extends State<ProductoPage> {
         },
         builder: (context, state) {
           if (state is ProductosLoading) {
-            return CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           } else if (state is ProductosLoaded) {
             return ListView.separated(
             separatorBuilder: (context, index) {
-              return SizedBox();
+              return const SizedBox();
             },
               itemCount: state.productos.length,
               itemBuilder: (context, index) {
@@ -49,11 +49,11 @@ class _ProductoPageState extends State<ProductoPage> {
               },
             );
           } else if (state is ProductosEmpty) {
-            return Center(child: Text("No hay productos disponibles."));
+            return const Center(child: Text("No hay productos disponibles."));
           } else if (state is ProductosUnauthorized) {
-            return Text('state.message');
+            return const Text('state.message');
           } else {
-            return Container(child: Text('Container'),); // Estado inicial o desconocido
+            return const Text('Container');
           }
         },
       )

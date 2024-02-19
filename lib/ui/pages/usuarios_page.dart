@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
 class UsuariosPage extends StatefulWidget {
-  UsuariosPage({super.key});
+  const UsuariosPage({super.key});
 
   @override
   State<UsuariosPage> createState() => _UsuariosPageState();
@@ -14,7 +14,6 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<UsuarioBloc>(context).add(LoadLocalUsuarios());
     BlocProvider.of<UsuarioBloc>(context).add(LoadLastSyncDate());

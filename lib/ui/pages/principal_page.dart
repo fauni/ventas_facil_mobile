@@ -5,8 +5,6 @@ class PrincipalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Principal PAge'),
-    );
+    return const Text('Principal PAge');
   }
 }
