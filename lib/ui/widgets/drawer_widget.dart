@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ventas_facil/database/user_local_provider.dart';
 import 'package:ventas_facil/models/authentication/user.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -31,9 +32,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           usuario = User.fromJson(userMap);
         });
       } catch (e) {
+        // ignore: use_build_context_synchronously
         context.go('/Login');
       }
     } else {
+      // ignore: use_build_context_synchronously
       context.go('/Login');
     }
   }
@@ -119,6 +122,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ),
           ListTile(
             onTap: () {
+              logout().then((value) => context.go('/Login'));
               // logout().then((value) {
               //   Navigator.of(context).pushNamedAndRemoveUntil('/Login', (Route<dynamic> route) => false);
               // });

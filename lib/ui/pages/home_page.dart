@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';

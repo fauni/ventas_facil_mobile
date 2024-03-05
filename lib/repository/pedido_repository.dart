@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:ventas_facil/config/constants/environment.dart';
 import 'package:ventas_facil/config/helpers/exceptions.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
 
 class PedidoRepository {
-  final String _baseUrl = 'http://192.168.0.102:9096/api';
+  final String _baseUrl = Environment.UrlApi;
   Future<List<PedidoList>> getAllVentas(String sessionID) async {
     try {
       final response = await http.get(

@@ -20,6 +20,13 @@ class _LoginPageState extends State<LoginPage> {
   final loginData = Login();
   
   @override
+  void initState() {
+    usernameController.text = 'faruni';
+    passwordController.text = 'Inbolsa1';
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LoginBloc(authService: AuthService()),

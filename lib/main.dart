@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ventas_facil/bloc/common_bloc.dart';
 import 'package:ventas_facil/bloc/theme_bloc/theme_bloc.dart';
 import 'package:ventas_facil/bloc/theme_bloc/theme_state.dart';
 import 'package:ventas_facil/config/router/app_router.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 

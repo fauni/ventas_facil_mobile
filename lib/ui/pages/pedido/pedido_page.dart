@@ -83,7 +83,9 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
                         listener: (context, state) {
                           if(state is PedidosUnauthorized){
                             context.go('/login');
-                          } else if(state is PedidosNotLoaded){
+                          } 
+                          else if(state is PedidosNotLoaded){
+                            // TODO: Revisar estos metodos
                             context.go('/login');
                           }
                         },
