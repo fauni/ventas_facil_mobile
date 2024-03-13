@@ -4,7 +4,10 @@
 
 import 'dart:convert';
 
+import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
 import 'package:ventas_facil/models/pedido/item_pedido.dart';
+import 'package:ventas_facil/models/venta/persona_contacto.dart';
+import 'package:ventas_facil/models/venta/socio_negocio.dart';
 
 Pedido pedidoFromJson(String str) => Pedido.fromJson(json.decode(str));
 
@@ -23,12 +26,14 @@ class Pedido {
     String? estado;
     String? idCliente;
     String? nombreCliente;
+    SocioNegocio? cliente;
     int? idEmpleado;
     String? nombreEmpleado;
+    EmpleadoVenta? empleado;
     String? moneda;
-    String? personaContacto;
-    List<ItemPedido>? linesPedido;
-    double? totalAntesDelDescuento;
+    int? personaContacto;
+    PersonaContacto? contacto;
+    List<ItemPedido> linesPedido;
     double? descuento;
     double? impuesto;
     double? total;
@@ -47,16 +52,34 @@ class Pedido {
         this.estado,
         this.idCliente,
         this.nombreCliente,
+        this.cliente,
         this.idEmpleado,
         this.nombreEmpleado,
+        this.empleado,
         this.moneda,
         this.personaContacto,
-        this.linesPedido,
-        this.totalAntesDelDescuento,
+        this.contacto,
+        required this.linesPedido,
         this.descuento,
         this.impuesto,
         this.total
     });
+
+    double get totalAntesDelDescuento {
+      double totalADTemp = 0;
+      for (var element in linesPedido) {
+        totalADTemp += element.total!;
+      }
+      return totalADTemp;
+    }
+
+    double get totalImpuesto {
+      return totalAntesDelDescuento * 0.13;
+    }
+
+    double get totalDespuesdelImpuesto{
+      return totalAntesDelDescuento + totalImpuesto;
+    }
 
     Pedido copyWith({
         int? id,
@@ -73,10 +96,13 @@ class Pedido {
         String? estado,
         String? idCliente,
         String? nombreCliente,
+        SocioNegocio? cliente,
         int? idEmpleado,
         String? nombreEmpleado,
+        EmpleadoVenta? empleado,
         String? moneda,
-        String? personaContacto,
+        int? personaContacto,
+        PersonaContacto? contacto,
         List<ItemPedido>? linesPedido,
     }) => 
         Pedido(
@@ -94,10 +120,13 @@ class Pedido {
             estado: estado ?? this.estado,
             idCliente: idCliente ?? this.idCliente,
             nombreCliente: nombreCliente ?? this.nombreCliente,
+            cliente: cliente ?? this.cliente,
             idEmpleado: idEmpleado ?? this.idEmpleado,
             nombreEmpleado: nombreEmpleado ?? this.nombreEmpleado,
+            empleado: empleado ?? this.empleado,
             moneda: moneda ?? this.moneda,
             personaContacto: personaContacto ?? this.personaContacto,
+            contacto: contacto ?? this.contacto,
             linesPedido: linesPedido ?? this.linesPedido
         );
 
@@ -116,10 +145,13 @@ class Pedido {
         estado: json["estado"],
         idCliente: json["idCliente"],
         nombreCliente: json["nombreCliente"],
+        cliente: json["cliente"] == null ? null : SocioNegocio.fromJson(json["cliente"]),
         idEmpleado: json["idEmpleado"],
         nombreEmpleado: json["nombreEmpleado"],
+        empleado: json["empleado"] == null ? null : EmpleadoVenta.fromJson(json["empleado"]),
         moneda: json["moneda"],
-        personaContacto: json["personaContacto"],
+        personaContacto: json["personaContacto"]?.toDouble(),
+        contacto: json["contacto"] == null ? null : PersonaContacto.fromJson(json["contacto"]),
         linesPedido: json["linesPedido"] == null ? [] : List<ItemPedido>.from(json["linesPedido"]!.map((x) => ItemPedido.fromJson(x))),
     );
 
@@ -138,10 +170,13 @@ class Pedido {
         "estado": estado,
         "idCliente": idCliente,
         "nombreCliente": nombreCliente,
+        "cliente": cliente,
         "idEmpleado": idEmpleado,
         "nombreEmpleado": nombreEmpleado,
+        "empleado": empleado,
         "moneda": moneda,
         "personaContacto": personaContacto,
-        "linesPedido": linesPedido == null ? [] : List<dynamic>.from(linesPedido!.map((x) => x.toJson())),
+        "contacto": contacto,
+        "linesPedido": linesPedido.isEmpty ? [] : List<dynamic>.from(linesPedido.map((x) => x.toJson())),
     };
 }

@@ -38,7 +38,16 @@ class App {
 
 
 class Colors {
-  Color mainColor(double opacity) {
+  Color naranja721Color(double opacity) {
+    try {
+      // return Color(int.parse(settingRepo.setting.value.mainColor.replaceAll("#", "0xFF"))).withOpacity(opacity);
+      return const Color(0xFFFFA721).withOpacity(opacity);
+    } catch (e) {
+      return const Color(0xFFFFA721).withOpacity(opacity);
+    }
+  }
+
+  Color naranja900Color(double opacity){
     try {
       // return Color(int.parse(settingRepo.setting.value.mainColor.replaceAll("#", "0xFF"))).withOpacity(opacity);
       return const Color(0xFFFE8900).withOpacity(opacity);
@@ -47,32 +56,24 @@ class Colors {
     }
   }
 
-  Color floatingActionButtonPrimaryColor(){
+  Color amarilloA67Color(double opacity) {
     try {
       // return Color(int.parse(settingRepo.setting.value.mainColor.replaceAll("#", "0xFF"))).withOpacity(opacity);
-      return const Color(0xFFFE8900);
+      return const Color(0xFFFADA67).withOpacity(opacity);
     } catch (e) {
-      return const Color(0xFFFE8900);
+      return const Color(0xFFFADA67).withOpacity(opacity);
     }
   }
-  Color primaryColor(double opacity) {
+  Color azul8FFColor(double opacity) {
     try {
       // return Color(int.parse(settingRepo.setting.value.mainColor.replaceAll("#", "0xFF"))).withOpacity(opacity);
-      return const Color(0xFFFFA721).withOpacity(opacity);
+      return const Color(0xFF57B8FF).withOpacity(opacity);
     } catch (e) {
-      return const Color(0xFFFFA721).withOpacity(opacity);
-    }
-  }
-  Color secondaryColor(double opacity) {
-    try {
-      // return Color(int.parse(settingRepo.setting.value.mainColor.replaceAll("#", "0xFF"))).withOpacity(opacity);
-      return const Color(0xFFFE8900).withOpacity(opacity);
-    } catch (e) {
-      return const Color(0xFFFE8900).withOpacity(opacity);
+      return const Color(0xFF57B8FF).withOpacity(opacity);
     }
   }
 
-  Color accentColor(double opacity) {
+  Color gris7BDColor(double opacity) {
     try {
       // return Color(int.parse(settingRepo.setting.value.mainColor.replaceAll("#", "0xFF"))).withOpacity(opacity);
       return const Color(0xFFA7B7BD).withOpacity(opacity);
@@ -81,29 +82,37 @@ class Colors {
     }
   }
 
-  Color splashColor(double opacity) {
+  Color verde59BColor(double opacity) {
     try {
       // return Color(int.parse(settingRepo.setting.value.mainColor.replaceAll("#", "0xFF"))).withOpacity(opacity);
-      return const Color(0xFF7E84A3).withOpacity(opacity);
+      return const Color(0xFF21D59B).withOpacity(opacity);
     } catch (e) {
-      return const Color(0xFF7E84A3).withOpacity(opacity);
+      return const Color(0xFF21D59B).withOpacity(opacity);
     } 
   }
-  Color blueIconColor(double opacity) {
+  Color textoGris4A3Color(double opacity) {
     try {
       // return Color(int.parse(settingRepo.setting.value.mainColor.replaceAll("#", "0xFF"))).withOpacity(opacity);
-      return const Color(0xFF57B8FF).withOpacity(opacity);
+      return const Color(0xFF7E84A3).withOpacity(opacity);
     } catch (e) {
-      return const Color(0xFF57B8FF).withOpacity(opacity);
+      return const Color(0xFF7E84A3).withOpacity(opacity);
     } 
   }
 
-  Color greenIconColor(double opacity) {
+  Color textoNegro523Color(double opacity) {
     try {
       // return Color(int.parse(settingRepo.setting.value.mainColor.replaceAll("#", "0xFF"))).withOpacity(opacity);
-      return const Color(0xFF21D59B).withOpacity(opacity);
+      return const Color(0xFF131523).withOpacity(opacity);
     } catch (e) {
-      return const Color(0xFF21D59B).withOpacity(opacity);
+      return const Color(0xFF131523).withOpacity(opacity);
+    } 
+  }
+
+  Color blancoColor(double opacity){
+    try {
+      return Color.fromARGB(255, 255, 255, 255).withOpacity(opacity);
+    } catch (e) {
+      return Color.fromARGB(255, 255, 255, 255).withOpacity(opacity);
     } 
   }
 }

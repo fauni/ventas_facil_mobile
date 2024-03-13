@@ -24,7 +24,6 @@ class _ItemPageState extends State<ItemPage> {
     super.initState();
     BlocProvider.of<ItemBloc>(context).add(LoadItems());
   }
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,7 +117,7 @@ class _ItemPageState extends State<ItemPage> {
 
                     line.precioPorUnidad = precio.precio;
 
-                    context.pop(pedido);
+                    context.pop(line);
                   }
                 }, 
                 child: const Text('Agregar'),

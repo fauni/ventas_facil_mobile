@@ -1,5 +1,6 @@
 
 import 'package:equatable/equatable.dart';
+import 'package:ventas_facil/models/venta/pedido.dart';
 
 abstract class PedidoEvent extends Equatable {
   @override
@@ -7,3 +8,11 @@ abstract class PedidoEvent extends Equatable {
 }
 
 class LoadPedidos extends PedidoEvent{}
+
+class SavePedido extends PedidoEvent {
+  final Pedido pedido;
+  SavePedido(this.pedido);
+
+  @override
+  List<Object> get props => [pedido];
+}

@@ -43,12 +43,15 @@ class _ModuloPageState extends State<ModuloPage> {
 
   Widget _buildMenuItem(IconData icon, String title, String route){
     return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
+      leading: Icon(icon, color: Theme.of(context).colorScheme.secondary,),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
       onTap: () {
         context.push(route);
       },
-      trailing: const Icon(Icons.arrow_forward_ios),
+      trailing: Icon(Icons.arrow_forward_ios, color: Theme.of(context).colorScheme.secondary,),
     );
   }
 }

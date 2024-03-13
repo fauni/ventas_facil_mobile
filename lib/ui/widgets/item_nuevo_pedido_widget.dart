@@ -12,11 +12,21 @@ class ItemNuevoPedidoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: EdgeInsets.only(
+        right: isSeleccionable ? 10.0 : 30.0,
+        left: 10.0,
+      ),
       child: Row(
         children: [
-          Text('$titulo: ', style: const TextStyle(color: Colors.blue),), // Theme.of(context).colorScheme.secondary),),
-          Expanded(child: Text(valor)),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: Text('$titulo: ', style: const TextStyle(color: Colors.blue),)),
+                Expanded(child: Text(valor, textAlign: TextAlign.right, maxLines: 3,)),
+              ],
+            ),
+          ), // Theme.of(context).colorScheme.secondary),),
           isSeleccionable 
           ? IconButton(
               icon: const Icon(Icons.arrow_forward_ios), 

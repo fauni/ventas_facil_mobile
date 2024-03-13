@@ -34,7 +34,7 @@ class _CambiarEmpleadoVentaWidgetState extends State<CambiarEmpleadoVentaWidget>
               titulo: 'Empleado de Venta', 
               valor: '${widget.empleadoSeleccionado.nombreEmpleado}', // '${state.empleado.nombreEmpleado}', 
               isSeleccionable: true, 
-              onPush: () async{
+              onPush: () async {
                 final result = await context.push<EmpleadoVenta>('/EmpleadoVentas', extra: widget.empleadoSeleccionado);
                 if (result != null){
                   setState(() {

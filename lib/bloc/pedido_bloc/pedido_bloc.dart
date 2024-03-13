@@ -10,6 +10,7 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
 
   PedidoBloc(this._pedidoRepository): super(PedidosLoading()){
     on<LoadPedidos>(_onLoadPedidos);
+    on<SavePedido>(_onGuardarPedido);
   }
 
   Future<void> _onLoadPedidos(LoadPedidos event, Emitter<PedidoState> emit) async {
@@ -17,7 +18,7 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
     final token = prefs.get('token').toString();
     emit(PedidosLoading());
     try {
-      final pedidos = await _pedidoRepository.getAllVentas(token);
+      final pedidos = await _pedidoRepository.getOrdenesVentaAbiertos(token);
       emit(PedidosLoaded(pedidos));
     } on UnauthorizedException catch(_){
       emit(PedidosUnauthorized());
@@ -25,6 +26,18 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
       emit(PedidosEmpty());
     }catch (e) {
       emit(PedidosNotLoaded(e.toString()));
+    }
+  }
+
+  Future<void> _onGuardarPedido(SavePedido event, Emitter<PedidoState> emit) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.get('token').toString();
+    emit(PedidoGuardando());
+    try {
+      final pedidoGuardado = await _pedidoRepository.guardarPedido(token, event.pedido);
+      emit(PedidoGuardadoExitoso(pedidoGuardado));
+    } catch (e) {
+      emit(PedidoGuardadoError(e.toString()));
     }
   }
 }

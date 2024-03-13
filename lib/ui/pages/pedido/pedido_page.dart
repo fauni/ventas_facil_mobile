@@ -1,4 +1,3 @@
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +5,7 @@ import 'package:ventas_facil/bloc/pedido_bloc/pedido_bloc.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_event.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_state.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
+import 'package:ventas_facil/ui/widgets/item_list_pedido_widget.dart';
 
 class PedidoPage extends StatefulWidget {
   const PedidoPage({super.key});
@@ -21,14 +21,18 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-    BlocProvider.of<PedidoBloc>(context).add(LoadPedidos());
+    _tabController = TabController(length: 2, vsync: this);
+    cargarPedidos();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void cargarPedidos(){
+    BlocProvider.of<PedidoBloc>(context).add(LoadPedidos());
   }
 
   @override
@@ -40,8 +44,11 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: (){
-                context.push('/NuevoPedido');
+              onPressed: () async {
+                final result = await context.push<bool>('/NuevoPedido');
+                if(result!) {
+                  cargarPedidos();
+                }
               }, 
               icon: const Icon(Icons.add, size: 30,)
             ),
@@ -54,7 +61,6 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
             controller: _tabController,
             tabs: const [
               Tab(text: 'Abiertos',),
-              Tab(text: 'Mis Ordenes',),
               Tab(text: 'Todas',),
             ]
           ),
@@ -98,27 +104,9 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
                             return ListView.separated(
                               itemBuilder: (context, index) {
                                 PedidoList pedido = state.pedidos[index];
-                                return ListTile(
-                                  title: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('${pedido.codigoSap} - ${pedido.nombreCliente}'),
-                                      Text('${pedido.estado}')
-                                    ],
-                                  ),
-                                  subtitle: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${pedido.observacion}'
-                                      ),
-                                      Text(formatDate(pedido.fechaRegistro!, [d,'-',M,'-',yy]))
-                                    ],
-                                  ),
-                                  leading: const CircleAvatar(
-                                    child: Icon(Icons.check),
-                                  ),
-                                  trailing: const Icon(Icons.arrow_forward_ios),
+                                return Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: ItemListPedidoWidget(pedido: pedido)
                                 );
                               }, 
                               separatorBuilder: (context, index) {
@@ -135,7 +123,6 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
                   ],
                 ),
                 const Text('Segundo'),
-                const Text('Tercero'),
               ]
             )
           )
