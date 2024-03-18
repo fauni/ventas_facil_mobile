@@ -11,6 +11,7 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
   PedidoBloc(this._pedidoRepository): super(PedidosLoading()){
     on<LoadPedidos>(_onLoadPedidos);
     on<SavePedido>(_onGuardarPedido);
+    on<UpdatePedido>(_onUpdatePedido);
   }
 
   Future<void> _onLoadPedidos(LoadPedidos event, Emitter<PedidoState> emit) async {
@@ -38,6 +39,18 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
       emit(PedidoGuardadoExitoso(pedidoGuardado));
     } catch (e) {
       emit(PedidoGuardadoError(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdatePedido(UpdatePedido event, Emitter<PedidoState> emit) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.get('token').toString();
+    emit(PedidoModificando());
+    try {
+      final pedidoActualizado = await _pedidoRepository.modificarPedido(token, event.pedido);
+      emit(PedidoModificadoExitoso(pedidoActualizado));
+    } catch (e) {
+      emit(PedidoModificadoError(e.toString()));
     }
   }
 }

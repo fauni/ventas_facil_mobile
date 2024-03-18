@@ -34,6 +34,7 @@ class Pedido {
     int? personaContacto;
     PersonaContacto? contacto;
     List<ItemPedido> linesPedido;
+    String? ubicacion;
     double? descuento;
     double? impuesto;
     double? total;
@@ -60,6 +61,7 @@ class Pedido {
         this.personaContacto,
         this.contacto,
         required this.linesPedido,
+        this.ubicacion,
         this.descuento,
         this.impuesto,
         this.total
@@ -104,6 +106,7 @@ class Pedido {
         int? personaContacto,
         PersonaContacto? contacto,
         List<ItemPedido>? linesPedido,
+        String? ubicacion
     }) => 
         Pedido(
             id: id ?? this.id,
@@ -127,7 +130,8 @@ class Pedido {
             moneda: moneda ?? this.moneda,
             personaContacto: personaContacto ?? this.personaContacto,
             contacto: contacto ?? this.contacto,
-            linesPedido: linesPedido ?? this.linesPedido
+            linesPedido: linesPedido ?? this.linesPedido,
+            ubicacion: ubicacion ?? this.ubicacion
         );
 
     factory Pedido.fromJson(Map<String, dynamic> json) => Pedido(
@@ -153,6 +157,7 @@ class Pedido {
         personaContacto: json["personaContacto"]?.toDouble(),
         contacto: json["contacto"] == null ? null : PersonaContacto.fromJson(json["contacto"]),
         linesPedido: json["linesPedido"] == null ? [] : List<ItemPedido>.from(json["linesPedido"]!.map((x) => ItemPedido.fromJson(x))),
+        ubicacion: json["ubicacion"]
     );
 
     Map<String, dynamic> toJson() => {
@@ -178,5 +183,6 @@ class Pedido {
         "personaContacto": personaContacto,
         "contacto": contacto,
         "linesPedido": linesPedido.isEmpty ? [] : List<dynamic>.from(linesPedido.map((x) => x.toJson())),
+        "ubicacion": ubicacion
     };
 }

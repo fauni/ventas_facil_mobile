@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
+import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
 
 // ignore: must_be_immutable
 class SocioNegocioPage extends StatefulWidget {
@@ -23,17 +24,23 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Socios de Negocio'),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          GoRouter.of(context).pop(widget.clienteSeleccionado);
-        }, 
-        label: const Text('Seleccionar'),
-        icon: const Icon(Icons.check),
-      ),
-      body: BlocBuilder<SocioNegocioBloc, SocioNegocioState>(
+      appBar: const AppBarWidget(titulo: 'Socios de Negocio',),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () {
+      //     GoRouter.of(context).pop(widget.clienteSeleccionado);
+      //   }, 
+      //   label: const Text('Seleccionar'),
+      //   icon: const Icon(Icons.check),
+      // ),
+      body: BlocConsumer<SocioNegocioBloc, SocioNegocioState>(
+        listener: (context, state) {
+          if(state is SocioNegocioUnauthorized){
+            context.go('/login');
+          } else if(state is SocioNegocioNotLoaded){
+            // TODO: sIEMPRE INGRESA POR ESTE METODO AUNQUE SEA OTRO ERROR
+            context.go('/login');
+          }
+        },
         builder: (context, state) {
           if(state is SocioNegocioLoading){
             return const Center(
@@ -46,6 +53,8 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                 bool isSelected = widget.clienteSeleccionado.codigoSn == cliente.codigoSn;
                 return ListTile(
                   leading: CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    foregroundColor: Theme.of(context).colorScheme.surface,
                     // backgroundColor: isSelected ? Colors.green : Colors.yellowAccent,
                     child: isSelected 
                       ? const Icon(Icons.check) 
@@ -57,7 +66,9 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                     widget.clienteSeleccionado = cliente;
                     isSelected = true;
                     setState(() {});
+                    GoRouter.of(context).pop(cliente);
                   },
+                  trailing: const Icon(Icons.touch_app),
                 );
               },
               separatorBuilder: (context, index) {

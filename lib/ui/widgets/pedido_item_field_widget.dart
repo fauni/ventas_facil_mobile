@@ -12,28 +12,26 @@ class PedidoItemFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            child: Text(
-              titulo, 
-              style: Theme.of(context).textTheme.titleSmall,
-            )
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: Text(
+            titulo, 
+            style: Theme.of(context).textTheme.titleSmall,
+          )
+        ),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(5.0)
           ),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(5.0)
-            ),
-            child: Text(valor, style: Theme.of(context).textTheme.bodyMedium,)
-          ),
-          const SizedBox(height: 10,)
-        ],
-      ),
+          child: Text(valor, style: Theme.of(context).textTheme.bodyMedium,)
+        ),
+        const SizedBox(height: 10,)
+      ],
     );
   }
 }

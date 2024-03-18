@@ -110,9 +110,9 @@ class Colors {
 
   Color blancoColor(double opacity){
     try {
-      return Color.fromARGB(255, 255, 255, 255).withOpacity(opacity);
+      return const Color.fromARGB(255, 255, 255, 255).withOpacity(opacity);
     } catch (e) {
-      return Color.fromARGB(255, 255, 255, 255).withOpacity(opacity);
+      return const Color.fromARGB(255, 255, 255, 255).withOpacity(opacity);
     } 
   }
 }

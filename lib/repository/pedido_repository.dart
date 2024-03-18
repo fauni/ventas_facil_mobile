@@ -58,4 +58,28 @@ class PedidoRepository {
       throw Exception('Error en la solicitud: $e');
     }
   }
+
+  Future<bool> modificarPedido(String sessionID, Pedido data) async {
+    try {
+      final response = await http.patch(
+        Uri.parse('$_baseUrl/Orders/${data.codigoSap}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID
+        },
+        body: jsonEncode(data)
+      );
+      if(response.statusCode == 200){
+        return true;
+      } else if(response.statusCode == 401) {
+        throw UnauthorizedException();
+      }
+      else {
+        throw FetchDataException('Error al guardar: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error al guardar el pedido: $e');
+    }
+  }
+
 }

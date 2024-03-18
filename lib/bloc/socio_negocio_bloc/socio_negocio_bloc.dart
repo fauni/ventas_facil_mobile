@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
+import 'package:ventas_facil/config/helpers/exceptions.dart';
 import 'package:ventas_facil/repository/socio_negocio_repository.dart';
 
 class SocioNegocioBloc extends Bloc<SocioNegocioEvent, SocioNegocioState>{
@@ -19,6 +20,8 @@ class SocioNegocioBloc extends Bloc<SocioNegocioEvent, SocioNegocioState>{
     try { 
       final clientes = await _repository.getAllSocioNegocio(token);
       emit(SocioNegocioLoaded(clientes));
+    } on UnauthorizedException catch(_){
+      emit(SocioNegocioUnauthorized());
     } catch(e){
       emit(SocioNegocioNotLoaded(e.toString()));
     }

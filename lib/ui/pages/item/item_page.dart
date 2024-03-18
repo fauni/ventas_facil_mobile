@@ -5,6 +5,7 @@ import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/producto/item.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
+import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
 
 class ItemPage extends StatefulWidget {
   final SocioNegocio socioNegocio;
@@ -27,9 +28,8 @@ class _ItemPageState extends State<ItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Items'),
-      ),
+      backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
+      appBar: const AppBarWidget(titulo: 'Items',),
       body: Column(
         children: [
           Container(
@@ -37,12 +37,12 @@ class _ItemPageState extends State<ItemPage> {
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Buscar Items',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
+                prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.tertiary,),
+                border: UnderlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0)
                 ),
                 filled: true,
-                fillColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)
+                fillColor: Theme.of(context).colorScheme.onTertiary.withOpacity(0.3),
               ),
             ),
           ),
@@ -59,16 +59,26 @@ class _ItemPageState extends State<ItemPage> {
                     itemCount: state.items.length,
                     itemBuilder: (context, index) {
                       Item item = state.items[index];
-                      return ListTile(
-                        title: Text('${item.codigo}'),
-                        subtitle: Text('${item.descripcion}'),
-                        onTap: () {
-                          _showBottomSheetCantidad(context, item);
-                        },
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            child: Text('${index + 1}'),
+                          ),
+                          title: Text('${item.codigo}', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),),
+                          subtitle: Text('${item.descripcion}'),
+                          onTap: () {
+                            _showBottomSheetCantidad(context, item);
+                          },
+                        ),
                       );
                     },
                     separatorBuilder: (context, index) {
-                      return const Divider();
+                      return const SizedBox();
                     },
                   );
                 } else {
@@ -89,18 +99,31 @@ class _ItemPageState extends State<ItemPage> {
       context: context, 
       builder: (BuildContext bc) {
         return AlertDialog(
-          title: const Text('Ingrese la Cantidad'),
+          title: Text('Ingrese la Cantidad', style: Theme.of(context).textTheme.titleLarge,),
           // padding: const EdgeInsets.all(20),
           content: Wrap(
             children: [
               TextField(
                 controller: controllerCantidad,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Cantidad'
+                autofocus: true,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.add_chart_sharp),
+                  labelText: 'Cantidad',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0)
+                  )
                 ),
               ),
-              ElevatedButton(
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  minimumSize: Size(double.infinity, 40),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))
+                  )
+                ),
                 onPressed: () {
                   if(controllerCantidad.text.isEmpty){
                     // TODO: Cambiar por un mensaje que se muestre
@@ -120,7 +143,8 @@ class _ItemPageState extends State<ItemPage> {
                     context.pop(line);
                   }
                 }, 
-                child: const Text('Agregar'),
+                icon: const Icon(Icons.add),
+                label: const Text('Agregar'),
               )
             ],
           ),

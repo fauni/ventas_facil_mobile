@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final loginData = Login();
+  bool visible = false;
   
   @override
   void initState() {
@@ -31,49 +32,103 @@ class _LoginPageState extends State<LoginPage> {
     return BlocProvider(
       create: (context) => LoginBloc(authService: AuthService()),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Login'),
-        ),
-        body: BlocConsumer<LoginBloc, LoginState>(
-          listener: (context, state) {
-            if(state is LoginSuccess){
-              context.go('/');
-            } else if(state is LoginFailure){
-              ScaffoldMessenger.of(context)
-              ..removeCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(state.error)));
-            }
-          },
-          builder: (context, state) {
-            if(state is LoginLoading){
-              return const Center(child: CircularProgressIndicator(),);
-            }
-            return Column(
-              children: [
-                TextField(
-                  controller: usernameController,
-                  decoration: const InputDecoration(labelText: 'Nombre de Usuario'),
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary
                 ),
-                TextField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(labelText: 'Contraseña'),
-                  obscureText: true,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    loginData.idCompany = 1;
-                    loginData.userName = usernameController.text;
-                    loginData.passwordHash = passwordController.text;
-
-                    BlocProvider.of<LoginBloc>(context).add(
-                      LoginButtonPressed(data: loginData)
-                    );
-                  }, 
-                  child: const Text('Iniciar Sesión')
-                )
-              ],
-            );
-          },
+              ),
+            ),
+            Expanded(
+              child: BlocConsumer<LoginBloc, LoginState>(
+                listener: (context, state) {
+                  if(state is LoginSuccess){
+                    context.go('/');
+                  } else if(state is LoginFailure){
+                    ScaffoldMessenger.of(context)
+                    ..removeCurrentSnackBar()
+                    ..showSnackBar(SnackBar(content: Text(state.error)));
+                  }
+                },
+                builder: (context, state) {
+                  if(state is LoginLoading){
+                    return const Center(child: CircularProgressIndicator(),);
+                  }
+                  return Container(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          'Bienvenido!', 
+                          style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextField(
+                          controller: usernameController,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.email),
+                            labelText: 'Nombre de Usuario',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                            )  
+                          ),
+                        ),
+                        TextField(
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.password),
+                            suffixIcon: IconButton(
+                              onPressed: (){
+                                print(visible);
+                                setState(() {
+                                  visible = !visible;
+                                });
+                              }, 
+                              icon: visible 
+                                ? const Icon(Icons.visibility_off) 
+                                : const Icon(Icons.visibility)
+                            ),
+                            labelText: 'Contraseña',
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10))
+                            )
+                          ),
+                          obscureText: !visible,
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            loginData.idCompany = 1;
+                            loginData.userName = usernameController.text;
+                            loginData.passwordHash = passwordController.text;
+                                  
+                            BlocProvider.of<LoginBloc>(context).add(
+                              LoginButtonPressed(data: loginData)
+                            );
+                          }, 
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                            minimumSize: const Size(double.infinity, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)
+                            )
+                          ),
+                          label: const Text('INICIAR SESIÓN'),
+                          icon: const Icon(Icons.login),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

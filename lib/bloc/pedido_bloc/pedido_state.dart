@@ -48,3 +48,22 @@ class PedidoGuardadoError extends PedidoState {
   @override
   List<Object> get props => [error];
 }
+
+// Estados para modificar un pedido
+class PedidoModificando extends PedidoState {}
+
+class PedidoModificadoExitoso extends PedidoState {
+  final bool seModifico;
+
+  PedidoModificadoExitoso(this.seModifico);
+  @override
+  List<Object> get props => [seModifico];
+}
+
+class PedidoModificadoError extends PedidoState {
+  final String error;
+  PedidoModificadoError(this.error);
+
+  @override
+  List<Object> get props => [error];
+}

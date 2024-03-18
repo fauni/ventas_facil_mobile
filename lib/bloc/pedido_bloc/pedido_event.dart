@@ -16,3 +16,10 @@ class SavePedido extends PedidoEvent {
   @override
   List<Object> get props => [pedido];
 }
+
+class UpdatePedido extends PedidoEvent{
+  final Pedido pedido;
+  UpdatePedido(this.pedido);
+  @override
+  List<Object> get props => [pedido]; 
+}

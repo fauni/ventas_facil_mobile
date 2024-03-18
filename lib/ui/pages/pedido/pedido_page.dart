@@ -38,96 +38,85 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text('Pedidos'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () async {
-                final result = await context.push<bool>('/NuevoPedido');
-                if(result!) {
-                  cargarPedidos();
-                }
+                // final result = await context.push<bool>('/NuevoPedido');
+                // if(result!) {
+                //   cargarPedidos();
+                // }
               }, 
-              icon: const Icon(Icons.add, size: 30,)
+              icon: const Icon(Icons.sort, size: 30,)
             ),
           )
         ],
       ),
       body: Column(
         children: [
-          TabBar.secondary(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Abiertos',),
-              Tab(text: 'Todas',),
-            ]
+          Container(
+            padding: const EdgeInsets.all(10.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Buscar Pedidos',
+                prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.tertiary,),
+                border: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0)
+                ),
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.onTertiary.withOpacity(0.3),
+              ),
+            ),
           ),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Buscar Pedidos',
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[200]
+            child: BlocConsumer<PedidoBloc, PedidoState>(
+              listener: (context, state) {
+                if(state is PedidosUnauthorized){
+                  context.go('/login');
+                } 
+                else if(state is PedidosNotLoaded){
+                  // TODO: Revisar estos metodos
+                  context.go('/login');
+                }
+              },
+              builder: (context, state) {
+                if (state is PedidosLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator()
+                  );
+                } else if (state is PedidosLoaded) {
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      PedidoList pedido = state.pedidos[index];
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(10)
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: BlocConsumer<PedidoBloc, PedidoState>(
-                        listener: (context, state) {
-                          if(state is PedidosUnauthorized){
-                            context.go('/login');
-                          } 
-                          else if(state is PedidosNotLoaded){
-                            // TODO: Revisar estos metodos
-                            context.go('/login');
-                          }
-                        },
-                        builder: (context, state) {
-                          if (state is PedidosLoading) {
-                            return const Center(
-                              child: CircularProgressIndicator()
-                            );
-                          } else if (state is PedidosLoaded) {
-                            return ListView.separated(
-                              itemBuilder: (context, index) {
-                                PedidoList pedido = state.pedidos[index];
-                                return Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                  child: ItemListPedidoWidget(pedido: pedido)
-                                );
-                              }, 
-                              separatorBuilder: (context, index) {
-                                return const Divider();
-                              }, 
-                              itemCount: state.pedidos.length
-                            );
-                          } else {
-                            return const Text('Container');
-                          }
-                        }, 
-                      ),
-                    ),
-                  ],
-                ),
-                const Text('Segundo'),
-              ]
-            )
-          )
+                        child: ItemListPedidoWidget(pedido: pedido)
+                      );
+                    }, 
+                    separatorBuilder: (context, index) {
+                      return const SizedBox(height: 3,);
+                    }, 
+                    itemCount: state.pedidos.length
+                  );
+                } else {
+                  return const Text('Container');
+                }
+              }, 
+            ),
+          ),
         ],
-      )
+      ),
     );
   }
 }

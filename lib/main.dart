@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ventas_facil/bloc/common_bloc.dart';
@@ -38,14 +37,16 @@ class MyApp extends StatelessWidget {
               dividerColor: config.Colors().amarilloA67Color(0.1),
               // Iconos sidebar, 
               focusColor: config.Colors().azul8FFColor(1),
-              hintColor: config.Colors().azul8FFColor(1),
+              hintColor: config.Colors().textoGris4A3Color(1),
               colorScheme: ColorScheme(
                 brightness: Brightness.light, 
                 primary: config.Colors().naranja721Color(1), 
                 // Letras del navigation bar unselected
-                onPrimary: config.Colors().azul8FFColor(1), 
-                secondary: config.Colors().azul8FFColor(1), 
+                onPrimary: config.Colors().blancoColor(1), 
+                secondary: config.Colors().amarilloA67Color(1), 
                 onSecondary: config.Colors().gris7BDColor(1), 
+                tertiary: config.Colors().textoNegro523Color(1),
+                onTertiary: config.Colors().textoGris4A3Color(1),
                 error: config.Colors().verde59BColor(1), 
                 onError: config.Colors().azul8FFColor(1), 
                 // Fondo de toda la pantalla

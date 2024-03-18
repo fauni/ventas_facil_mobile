@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
 import 'package:ventas_facil/models/venta/persona_contacto.dart';
+import 'package:ventas_facil/models/venta/socio_negocio.dart';
 
 PedidoList pedidoListFromJson(String str) => PedidoList.fromJson(json.decode(str));
 
@@ -19,6 +20,7 @@ class PedidoList {
     final DateTime? fechaDelDocumento;
     final String? codigoCliente;
     final String? nombreCliente;
+    SocioNegocio? cliente;
     final int? codigoPersonaDeContacto;
     final PersonaContacto? contacto;
     final String? moneda;
@@ -32,6 +34,7 @@ class PedidoList {
     final double? impuesto;
     final double? total;
     final List<LinesOrder>? linesOrder;
+    final String? ubicacion;
 
     PedidoList({
         this.id,
@@ -41,6 +44,7 @@ class PedidoList {
         this.fechaDelDocumento,
         this.codigoCliente,
         this.nombreCliente,
+        this.cliente,
         this.codigoPersonaDeContacto,
         this.contacto,
         this.moneda,
@@ -54,6 +58,7 @@ class PedidoList {
         this.impuesto,
         this.total,
         this.linesOrder,
+        this.ubicacion
     });
 
     double get totalAntesDelDescuento {
@@ -68,6 +73,7 @@ class PedidoList {
         DateTime? fechaDelDocumento,
         String? codigoCliente,
         String? nombreCliente,
+        SocioNegocio? cliente,
         int? codigoPersonaDeContacto,
         PersonaContacto? contacto,
         String? moneda,
@@ -81,6 +87,7 @@ class PedidoList {
         double? impuesto,
         double? total,
         List<LinesOrder>? linesOrder,
+        String? ubicacion
     }) => 
         PedidoList(
             id: id ?? this.id,
@@ -90,6 +97,7 @@ class PedidoList {
             fechaDelDocumento: fechaDelDocumento ?? this.fechaDelDocumento,
             codigoCliente: codigoCliente ?? this.codigoCliente,
             nombreCliente: nombreCliente ?? this.nombreCliente,
+            cliente: cliente ?? this.cliente,
             codigoPersonaDeContacto: codigoPersonaDeContacto ?? this.codigoPersonaDeContacto,
             contacto:  contacto ?? this.contacto,
             moneda: moneda ?? this.moneda,
@@ -103,6 +111,7 @@ class PedidoList {
             impuesto: impuesto ?? this.impuesto,
             total: total ?? this.total,
             linesOrder: linesOrder ?? this.linesOrder,
+            ubicacion: ubicacion ?? this.ubicacion
         );
 
     factory PedidoList.fromJson(Map<String, dynamic> json) => PedidoList(
@@ -113,6 +122,7 @@ class PedidoList {
         fechaDelDocumento: json["fechaDelDocumento"] == null ? null : DateTime.parse(json["fechaDelDocumento"]),
         codigoCliente: json["codigoCliente"],
         nombreCliente: json["nombreCliente"],
+        cliente: json["cliente"] == null ? null : SocioNegocio.fromJson(json["cliente"]),
         codigoPersonaDeContacto: json["codigoPersonaDeContacto"],
         contacto: json["contacto"] == null ? null : PersonaContacto.fromJson(json["contacto"]),
         moneda: json["moneda"],
@@ -126,6 +136,7 @@ class PedidoList {
         impuesto: json["impuesto"]?.toDouble(),
         total: json["total"]?.toDouble(),
         linesOrder: json["linesOrder"] == null ? [] : List<LinesOrder>.from(json["linesOrder"]!.map((x) => LinesOrder.fromJson(x))),
+        ubicacion: json["ubicacion"]
     );
 
     Map<String, dynamic> toJson() => {
@@ -136,6 +147,7 @@ class PedidoList {
         "fechaDelDocumento": fechaDelDocumento?.toIso8601String(),
         "codigoCliente": codigoCliente,
         "nombreCliente": nombreCliente,
+        "cliente": cliente,
         "codigoPersonaDeContacto": codigoPersonaDeContacto,
         "contacto": contacto,
         "moneda": moneda,
@@ -149,6 +161,7 @@ class PedidoList {
         "impuesto": impuesto,
         "total": total,
         "linesOrder": linesOrder == null ? [] : List<dynamic>.from(linesOrder!.map((x) => x.toJson())),
+        "ubicacion": ubicacion
     };
 }
 

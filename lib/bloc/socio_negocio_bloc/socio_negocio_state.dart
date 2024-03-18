@@ -7,7 +7,7 @@ abstract class SocioNegocioState extends Equatable {
 }
 
 class SocioNegocioLoading extends SocioNegocioState{}
-
+class SocioNegocioUnauthorized extends SocioNegocioState{}
 class SocioNegocioLoaded extends SocioNegocioState{
   final List<SocioNegocio> clientes;
   SocioNegocioLoaded(this.clientes);

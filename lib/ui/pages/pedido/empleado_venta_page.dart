@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
+import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
 
 class EmpleadoVentaPage extends StatefulWidget {
   final EmpleadoVenta empleadoSeleccionado; 
@@ -23,16 +24,14 @@ class _EmpleadoVentaPageState extends State<EmpleadoVentaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Empleados de Venta'),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: (){
-          GoRouter.of(context).pop(newEmpleadoSeleccionado);
-        }, 
-        label: const Text('Seleccionar'),
-        icon: const Icon(Icons.check),
-      ),
+      appBar: const AppBarWidget(titulo: 'Empleados de Venta'),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: (){
+      //     GoRouter.of(context).pop(newEmpleadoSeleccionado);
+      //   }, 
+      //   label: const Text('Seleccionar'),
+      //   icon: const Icon(Icons.check),
+      // ),
       body: BlocConsumer<SalesEmployeeBloc, SalesEmployeeState>(
         listener: (context, state) {
           
@@ -49,13 +48,15 @@ class _EmpleadoVentaPageState extends State<EmpleadoVentaPage> {
                 bool isSelected = widget.empleadoSeleccionado.codigoEmpleado == empleado.codigoEmpleado;
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: isSelected ? Colors.green : Colors.yellowAccent,
-                    child: const Icon(Icons.check),
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    foregroundColor: Theme.of(context).colorScheme.surface,
+                    child: isSelected ? const Icon(Icons.check) : const Icon(Icons.info_outline),
                   ),
                   selected: isSelected,
                   title: Text(empleado.nombreEmpleado!),
                   onTap: () {
                     newEmpleadoSeleccionado = empleado;
+                    GoRouter.of(context).pop(empleado);
                   },
                 );
               }, 

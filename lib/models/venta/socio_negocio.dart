@@ -23,7 +23,7 @@ class SocioNegocio {
     final String? telefono2;
     final String? telefonoMovil;
     final String? correoElectronico;
-    final String? personaContacto;
+    String? personaContacto;
     final List<PersonaContacto>? contactosEmpleado;
     final int? codigoEmpleadoVentas;
     final String? direccion;

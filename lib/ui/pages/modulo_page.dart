@@ -23,7 +23,7 @@ class _ModuloPageState extends State<ModuloPage> {
       ),
       body: ListView(
         children: [
-          _buildMenuItem(Icons.calendar_today, 'Actividades', ''),
+          _buildMenuItem(Icons.calendar_today, 'Actividades', '/NuevoPedido'),
           const Divider(),
           _buildMenuItem(Icons.group, 'Socios Comerciales', ''),
           const Divider(),
@@ -31,7 +31,7 @@ class _ModuloPageState extends State<ModuloPage> {
           const Divider(),
           _buildMenuItem(Icons.price_change, 'Listas de Precio', ''),
           const Divider(),
-          _buildMenuItem(Icons.receipt, 'Ordenes de Venta', '/Pedidos'),
+          _buildMenuItem(Icons.receipt, 'Ordenes de Venta', '/NuevoPedido'),
           const Divider(),
           _buildMenuItem(Icons.local_shipping, 'Entrega', ''),
           const Divider(),
