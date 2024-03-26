@@ -6,6 +6,7 @@ import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/producto/item.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
 import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
+import 'package:ventas_facil/ui/widgets/item_list_item_widget.dart';
 
 class ItemPage extends StatefulWidget {
   final SocioNegocio socioNegocio;
@@ -59,22 +60,27 @@ class _ItemPageState extends State<ItemPage> {
                     itemCount: state.items.length,
                     itemBuilder: (context, index) {
                       Item item = state.items[index];
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                          borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            child: Text('${index + 1}'),
-                          ),
-                          title: Text('${item.codigo}', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),),
-                          subtitle: Text('${item.descripcion}'),
-                          onTap: () {
-                            _showBottomSheetCantidad(context, item);
-                          },
-                        ),
+                      return ItemListItemWidget(
+                        index: index,
+                        item: item,
+                        onTap: () {
+                          // _showBottomSheetCantidad(context, item);
+                          line = ItemPedido();
+                          line.codigo = item.codigo;
+                          line.descripcion = item.descripcion;
+                          line.descripcionAdicional = item.descripcion;
+                          line.cantidad = 1; 
+                          line.descuento = 0;
+
+                          ListaPrecio precio = item.listaPrecios!.firstWhere(
+                            (element) => element.numero == widget.socioNegocio.numeroListaPrecio, 
+                            orElse: () => ListaPrecio()
+                          );
+
+                          line.precioPorUnidad = precio.precio;
+
+                          context.pop(line);
+                        },
                       );
                     },
                     separatorBuilder: (context, index) {
@@ -94,66 +100,68 @@ class _ItemPageState extends State<ItemPage> {
     );
   }
 
-  void _showBottomSheetCantidad(BuildContext context, Item item){
-    showDialog(
-      context: context, 
-      builder: (BuildContext bc) {
-        return AlertDialog(
-          title: Text('Ingrese la Cantidad', style: Theme.of(context).textTheme.titleLarge,),
-          // padding: const EdgeInsets.all(20),
-          content: Wrap(
-            children: [
-              TextField(
-                controller: controllerCantidad,
-                keyboardType: TextInputType.number,
-                autofocus: true,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.add_chart_sharp),
-                  labelText: 'Cantidad',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0)
-                  )
-                ),
-              ),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  minimumSize: Size(double.infinity, 40),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))
-                  )
-                ),
-                onPressed: () {
-                  if(controllerCantidad.text.isEmpty){
-                    // TODO: Cambiar por un mensaje que se muestre
-                  } else {
-                    line = ItemPedido();
-                    line.codigo = item.codigo;
-                    line.descripcion = item.descripcion;
-                    line.cantidad = double.tryParse(controllerCantidad.text) ?? 0; 
+  // void _showBottomSheetCantidad(BuildContext context, Item item){
+  //   showDialog(
+  //     context: context, 
+  //     builder: (BuildContext bc) {
+  //       return AlertDialog(
+  //         title: Text('Ingrese la Cantidad', style: Theme.of(context).textTheme.titleLarge,),
+  //         // padding: const EdgeInsets.all(20),
+  //         content: Wrap(
+  //           children: [
+  //             TextField(
+  //               controller: controllerCantidad,
+  //               keyboardType: TextInputType.number,
+  //               autofocus: true,
+  //               decoration: InputDecoration(
+  //                 prefixIcon: const Icon(Icons.add_chart_sharp),
+  //                 labelText: 'Cantidad',
+  //                 border: OutlineInputBorder(
+  //                   borderRadius: BorderRadius.circular(15.0)
+  //                 )
+  //               ),
+  //             ),
+  //             ElevatedButton.icon(
+  //               style: ElevatedButton.styleFrom(
+  //                 backgroundColor: Theme.of(context).colorScheme.primary,
+  //                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
+  //                 minimumSize: Size(double.infinity, 40),
+  //                 shape: const RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.all(Radius.circular(10))
+  //                 )
+  //               ),
+  //               onPressed: () {
+  //                 if(controllerCantidad.text.isEmpty){
+  //                   // TODO: Cambiar por un mensaje que se muestre
+  //                 } else {
+  //                   line = ItemPedido();
+  //                   line.codigo = item.codigo;
+  //                   line.descripcion = item.descripcion;
+  //                   line.cantidad = double.tryParse(controllerCantidad.text) ?? 0; 
+  //                   line.descuento = 0;
 
-                    ListaPrecio precio = item.listaPrecios!.firstWhere(
-                      (element) => element.numero == widget.socioNegocio.numeroListaPrecio, 
-                      orElse: () => ListaPrecio()
-                    );
+  //                   ListaPrecio precio = item.listaPrecios!.firstWhere(
+  //                     (element) => element.numero == widget.socioNegocio.numeroListaPrecio, 
+  //                     orElse: () => ListaPrecio()
+  //                   );
 
-                    line.precioPorUnidad = precio.precio;
+  //                   line.precioPorUnidad = precio.precio;
 
-                    context.pop(line);
-                  }
-                }, 
-                icon: const Icon(Icons.add),
-                label: const Text('Agregar'),
-              )
-            ],
-          ),
-        );
-      },
-    ).then((result){
-      if(result != null){
-        context.pop(result);
-      }
-    });
-  }
+  //                   context.pop(line);
+  //                 }
+  //               }, 
+  //               icon: const Icon(Icons.add),
+  //               label: const Text('Agregar'),
+  //             )
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   ).then((result){
+  //     if(result != null){
+  //       context.pop(result);
+  //     }
+  //   });
+  // }
 }
+

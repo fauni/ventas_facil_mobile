@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
 import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
+import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
+import 'package:ventas_facil/ui/widgets/not_found_information_widget.dart';
 
 // ignore: must_be_immutable
 class SocioNegocioPage extends StatefulWidget {
@@ -19,6 +21,10 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
   @override
   void initState() {
     super.initState();
+    cargarSocioDeNegocio();
+  }
+
+  void cargarSocioDeNegocio(){
     BlocProvider.of<SocioNegocioBloc>(context).add(LoadSociosNegocio());
   }
   @override
@@ -34,11 +40,10 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
       // ),
       body: BlocConsumer<SocioNegocioBloc, SocioNegocioState>(
         listener: (context, state) {
-          if(state is SocioNegocioUnauthorized){
-            context.go('/login');
-          } else if(state is SocioNegocioNotLoaded){
-            // TODO: sIEMPRE INGRESA POR ESTE METODO AUNQUE SEA OTRO ERROR
-            context.go('/login');
+          if(state is SocioNegocioNotLoaded){
+            if (state.error.contains('UnauthorizedException')) {
+              LoginDialogWidget.mostrarDialogLogin(context);
+            }
           }
         },
         builder: (context, state) {
@@ -77,9 +82,7 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
               itemCount: state.clientes.length,
             );
           } else {
-            return const Center(
-              child: Text('No se pudo traer los Clientes'),
-            );
+            return NotFoundInformationWidget(mensaje: 'Ocurrio un error al traer los socios de negocio.', onPush: () => cargarSocioDeNegocio(),);
           }
         }
       ),

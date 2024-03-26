@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/models/venta/persona_contacto.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
 import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
+import 'package:ventas_facil/ui/widgets/not_found_information_widget.dart';
 
 class PersonaContactoPage extends StatefulWidget {
   final SocioNegocio socioNegocio;
@@ -14,10 +15,17 @@ class PersonaContactoPage extends StatefulWidget {
 
 class _PersonaContactoPageState extends State<PersonaContactoPage> {
   PersonaContacto contactoSeleccionado = PersonaContacto();
+
+  @override
+  void initState() {
+    super.initState();
+    // print(widget.socioNegocio.contactosEmpleado);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarWidget(titulo: 'Socios de Negocio'),
+      appBar: const AppBarWidget(titulo: 'Persona de Contacto'),
       // floatingActionButton: FloatingActionButton.extended(
       //   onPressed: () {
       //     GoRouter.of(context).pop(contactoSeleccionado);
@@ -25,7 +33,8 @@ class _PersonaContactoPageState extends State<PersonaContactoPage> {
       //   label: const Text('Seleccionar'),
       //   icon: const Icon(Icons.check),
       // ),
-      body: ListView.separated(
+      body: widget.socioNegocio.contactosEmpleado!.isNotEmpty 
+      ? ListView.separated(
         itemBuilder: (context, index) {
           PersonaContacto contacto = widget.socioNegocio.contactosEmpleado![index];
           bool isSelected = widget.socioNegocio.personaContacto == contacto.nombreCliente;
@@ -53,7 +62,9 @@ class _PersonaContactoPageState extends State<PersonaContactoPage> {
           return const Divider();
         },
         itemCount: widget.socioNegocio.contactosEmpleado!.length,
-      ),
+      ) : NotFoundInformationWidget(mensaje: 'No se registraron personas de contacto', onPush: () {
+        context.pop();
+      },),
     );
   }
 }

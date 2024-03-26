@@ -15,61 +15,92 @@ class ItemListPedidoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return DetallePedidoPage(pedido: pedido);
-            },
-            fullscreenDialog: true
-          )
-        );
-      },
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal:5.0, vertical: 20),
-            decoration: BoxDecoration(
-              color: pedido.estado == 'bost_Open' ?Theme.of(context).colorScheme.primary : Colors.blueGrey
-            ),
-          ),
-          const SizedBox(width: 10.0,),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('${pedido.codigoCliente} - ${pedido.nombreCliente}', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),),
-                    Text(formatDate(pedido.fechaDelDocumento!, [dd,'-',m,'-',yyyy]))
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      pedido.linesOrder!.length > 1 
-                      ? '${pedido.linesOrder!.length} items'
-                      : '${pedido.linesOrder!.length} item'
-                    ),
-                    Text('${pedido.total} ${pedido.moneda}')
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 10,),
-          IconButton(
-            color: Theme.of(context).colorScheme.onError,
+    return Row(
+      children: [
+        CircleAvatar(
+          backgroundColor: getEstado() == 'Abierto' 
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).colorScheme.onTertiary,
+          child: IconButton(
             onPressed: (){
-              context.pop(MapGeneric.pedidoListToPedido(pedido));
-              // context.push('/DetallePedido', extra: pedido);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return DetallePedidoPage(pedido: pedido);
+                  },
+                  fullscreenDialog: true
+                )
+              );
             }, 
-            icon: const Icon(Icons.arrow_forward_ios)
-          )
-        ],
-      ),
+            icon: const Icon(Icons.remove_red_eye_sharp)
+          ),
+        ),
+        const SizedBox(width: 10.0,),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Codigo SAP: ', style: Theme.of(context).textTheme.titleSmall,),
+                  Text('${pedido.numeroDocumento}'),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Número de Documento: ', style: Theme.of(context).textTheme.titleSmall,),
+                  Text('${pedido.codigoSap}'),
+                ],
+              ),
+              Text('${pedido.codigoCliente} ${pedido.nombreCliente}', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Fecha del Documento: ', style: Theme.of(context).textTheme.titleSmall,),
+                  Text(formatDate(pedido.fechaDelDocumento!, [dd,'-',m,'-',yyyy]))
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('TOTAL: ', style: Theme.of(context).textTheme.titleSmall,),
+                  Text('${pedido.total} ${pedido.moneda}')
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Estado del Documento: ', style: Theme.of(context).textTheme.titleSmall,),
+                  Text(getEstado())
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 10,),
+        IconButton(
+          color: Theme.of(context).colorScheme.onError,
+          onPressed: (){
+            context.pop(MapGeneric.pedidoListToPedido(pedido));
+            // context.push('/DetallePedido', extra: pedido);
+          }, 
+          icon: const Icon(Icons.arrow_forward_ios)
+        )
+      ],
     );
+  }
+
+  String getEstado(){
+    String estadoGeneral = '';
+    if(pedido.estado == 'bost_Close' && pedido.estadoCancelado == 'csYes'){
+      estadoGeneral = 'Cancelado';
+    } else if (pedido.estadoCancelado == 'csNo' && pedido.estado == 'bost_Close'){
+      estadoGeneral = 'Cerrado';
+    } else {
+      estadoGeneral = 'Abierto';
+    }
+    return estadoGeneral;
   }
 }

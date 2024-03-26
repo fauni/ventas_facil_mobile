@@ -24,6 +24,7 @@ class Pedido {
     String? observacion;
     DateTime? fechaRegistro;
     String? estado;
+    String? estadoCancelado;
     String? idCliente;
     String? nombreCliente;
     SocioNegocio? cliente;
@@ -34,7 +35,11 @@ class Pedido {
     int? personaContacto;
     PersonaContacto? contacto;
     List<ItemPedido> linesPedido;
-    String? ubicacion;
+    String? usuarioVentaFacil;
+    String? latitud;
+    String? longitud;
+    DateTime? fechaRegistroApp;
+    DateTime? horaRegistroApp;
     double? descuento;
     double? impuesto;
     double? total;
@@ -51,6 +56,7 @@ class Pedido {
         this.observacion,
         this.fechaRegistro,
         this.estado,
+        this.estadoCancelado,
         this.idCliente,
         this.nombreCliente,
         this.cliente,
@@ -61,7 +67,11 @@ class Pedido {
         this.personaContacto,
         this.contacto,
         required this.linesPedido,
-        this.ubicacion,
+        this.usuarioVentaFacil,
+        this.latitud,
+        this.longitud,
+        this.fechaRegistroApp,
+        this.horaRegistroApp,
         this.descuento,
         this.impuesto,
         this.total
@@ -96,6 +106,7 @@ class Pedido {
         String? observacion,
         DateTime? fechaRegistro,
         String? estado,
+        String? estadoCancelado,
         String? idCliente,
         String? nombreCliente,
         SocioNegocio? cliente,
@@ -106,7 +117,11 @@ class Pedido {
         int? personaContacto,
         PersonaContacto? contacto,
         List<ItemPedido>? linesPedido,
-        String? ubicacion
+        String? usuarioVentaFacil,
+        String? latitud,
+        String? longitud,
+        DateTime? fechaRegistroApp,
+        DateTime? horaRegistroApp,
     }) => 
         Pedido(
             id: id ?? this.id,
@@ -121,6 +136,7 @@ class Pedido {
             observacion: observacion ?? this.observacion,
             fechaRegistro: fechaRegistro ?? this.fechaRegistro,
             estado: estado ?? this.estado,
+            estadoCancelado: estadoCancelado ?? this.estadoCancelado,
             idCliente: idCliente ?? this.idCliente,
             nombreCliente: nombreCliente ?? this.nombreCliente,
             cliente: cliente ?? this.cliente,
@@ -131,7 +147,11 @@ class Pedido {
             personaContacto: personaContacto ?? this.personaContacto,
             contacto: contacto ?? this.contacto,
             linesPedido: linesPedido ?? this.linesPedido,
-            ubicacion: ubicacion ?? this.ubicacion
+            usuarioVentaFacil: usuarioVentaFacil ?? this.usuarioVentaFacil,
+            latitud: latitud ?? this.latitud,
+            longitud: longitud ?? this.longitud,
+            fechaRegistroApp: fechaRegistroApp ?? this.fechaRegistroApp,
+            horaRegistroApp: horaRegistroApp ?? this.horaRegistroApp,
         );
 
     factory Pedido.fromJson(Map<String, dynamic> json) => Pedido(
@@ -147,6 +167,7 @@ class Pedido {
         observacion: json["observacion"],
         fechaRegistro: json["fechaRegistro"] == null ? null : DateTime.parse(json["fechaRegistro"]),
         estado: json["estado"],
+        estadoCancelado: json["estadoCancelado"],
         idCliente: json["idCliente"],
         nombreCliente: json["nombreCliente"],
         cliente: json["cliente"] == null ? null : SocioNegocio.fromJson(json["cliente"]),
@@ -154,10 +175,14 @@ class Pedido {
         nombreEmpleado: json["nombreEmpleado"],
         empleado: json["empleado"] == null ? null : EmpleadoVenta.fromJson(json["empleado"]),
         moneda: json["moneda"],
-        personaContacto: json["personaContacto"]?.toDouble(),
+        personaContacto: json["personaContacto"],
         contacto: json["contacto"] == null ? null : PersonaContacto.fromJson(json["contacto"]),
         linesPedido: json["linesPedido"] == null ? [] : List<ItemPedido>.from(json["linesPedido"]!.map((x) => ItemPedido.fromJson(x))),
-        ubicacion: json["ubicacion"]
+        usuarioVentaFacil: json["usuarioVentaFacil"],
+        latitud: json["latitud"],
+        longitud: json["longitud"],
+        fechaRegistroApp: json["fechaRegistroApp"] == null ? null : DateTime.parse(json["fechaRegistroApp"]),
+        horaRegistroApp: json["horaRegistroApp"] == null ? null : DateTime.parse(json["horaRegistroApp"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -173,6 +198,7 @@ class Pedido {
         "observacion": observacion,
         "fechaRegistro": fechaRegistro?.toIso8601String(),
         "estado": estado,
+        "estadoCancelado": estadoCancelado,
         "idCliente": idCliente,
         "nombreCliente": nombreCliente,
         "cliente": cliente,
@@ -183,6 +209,10 @@ class Pedido {
         "personaContacto": personaContacto,
         "contacto": contacto,
         "linesPedido": linesPedido.isEmpty ? [] : List<dynamic>.from(linesPedido.map((x) => x.toJson())),
-        "ubicacion": ubicacion
+        "usuarioVentaFacil": usuarioVentaFacil,
+        "latitud": latitud,
+        "longitud": longitud,
+        "fechaRegistroApp": fechaRegistroApp?.toIso8601String(),
+        "horaRegistroApp": horaRegistroApp?.toIso8601String(),
     };
 }

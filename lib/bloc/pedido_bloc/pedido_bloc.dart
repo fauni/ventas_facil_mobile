@@ -37,6 +37,8 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
     try {
       final pedidoGuardado = await _pedidoRepository.guardarPedido(token, event.pedido);
       emit(PedidoGuardadoExitoso(pedidoGuardado));
+    } on UnauthorizedException catch(_){
+      emit(PedidosUnauthorized());
     } catch (e) {
       emit(PedidoGuardadoError(e.toString()));
     }

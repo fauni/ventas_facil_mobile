@@ -13,11 +13,12 @@ class LinePedidoPage extends StatefulWidget {
 }
 
 class _LinePedidoPageState extends State<LinePedidoPage> {
-  // Pedido pedido = Pedido(linesPedido: []);
-  // List<ItemPedido> items = [];
+  final TextEditingController controllerDescripcionAdicional = TextEditingController();
+  final TextEditingController controllerCantidad = TextEditingController();
+  final TextEditingController controllerPrecio = TextEditingController();
+  final TextEditingController controllerDescuento = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final temaTexto = Theme.of(context).textTheme;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
       appBar: const AppBarWidget(titulo: 'Items',),
@@ -32,60 +33,76 @@ class _LinePedidoPageState extends State<LinePedidoPage> {
                   itemCount: widget.pedido.linesPedido.length,
                   itemBuilder: (context, index) {
                     ItemPedido articulo = widget.pedido.linesPedido.elementAt(index);
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 3),
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: BorderRadius.circular(10)
+                    return GestureDetector(
+                      onTap: () {
+                        _showUpdateItemPedido(context, articulo, index);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 3),
+                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Producto:', style: Theme.of(context).textTheme.titleMedium,),
+                                      Text('${articulo.codigo}', style: Theme.of(context).textTheme.bodyMedium,),
+                                    ],
+                                  ),
+                                  // Text('Descripción Adicional:', style: Theme.of(context).textTheme.titleMedium,),
+                                  Text('${articulo.descripcionAdicional}'),
+                                  const Divider(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Cantidad:', style: Theme.of(context).textTheme.titleMedium,),
+                                      Text('${articulo.cantidad}', style: Theme.of(context).textTheme.bodyMedium,),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Precio por unidad:', style: Theme.of(context).textTheme.titleMedium,),
+                                      Text('${articulo.precioPorUnidad} ${widget.pedido.moneda}', style: Theme.of(context).textTheme.bodyMedium,),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Descuento(%):', style: Theme.of(context).textTheme.titleMedium,),
+                                      Text('${articulo.descuento ?? 0} %', style: Theme.of(context).textTheme.bodyMedium,),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Total Linea:', style: Theme.of(context).textTheme.titleMedium,),
+                                      Text('${articulo.total} ${widget.pedido.moneda}', style: Theme.of(context).textTheme.bodyMedium,),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: (){}, 
+                              icon: const Icon(
+                                Icons.remove_circle,
+                                size: 30,
+                                color: Colors.red,// Theme.of(context).colorScheme.onError,
+                              ),
+                            )
+                          ],
+                        )
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Producto:', style: Theme.of(context).textTheme.titleMedium,),
-                                    Text('${articulo.codigo}', style: Theme.of(context).textTheme.bodyMedium,),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Cantidad:', style: Theme.of(context).textTheme.titleMedium,),
-                                    Text('${articulo.cantidad}', style: Theme.of(context).textTheme.bodyMedium,),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Precio por unidad:', style: Theme.of(context).textTheme.titleMedium,),
-                                    Text('${articulo.precioPorUnidad} ${widget.pedido.moneda}', style: Theme.of(context).textTheme.bodyMedium,),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Total Linea:', style: Theme.of(context).textTheme.titleMedium,),
-                                    Text('${articulo.total} ${widget.pedido.moneda}', style: Theme.of(context).textTheme.bodyMedium,),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: (){}, 
-                            icon: const Icon(
-                              Icons.remove_circle,
-                              size: 30,
-                              color: Colors.red,// Theme.of(context).colorScheme.onError,
-                            ),
-                          )
-                        ],
-                      )
                     );
                   },
                 ),
@@ -108,6 +125,10 @@ class _LinePedidoPageState extends State<LinePedidoPage> {
                       final result = await context.push<ItemPedido>('/Items', extra: widget.pedido.cliente);
                       setState(() {
                         widget.pedido.linesPedido.add(result!);
+                        controllerDescripcionAdicional.text = result.descripcionAdicional!;
+                        controllerCantidad.text = result.cantidad.toString();
+                        controllerPrecio.text = result.precioPorUnidad.toString();
+                        controllerDescuento.text = result.descuento.toString();
                       });
                     },
                   ),
@@ -188,5 +209,104 @@ class _LinePedidoPageState extends State<LinePedidoPage> {
         ],
       )
     );
+  }
+
+  void _showUpdateItemPedido(BuildContext context, ItemPedido item, int indexLine){
+    showDialog(
+      context: context, 
+      barrierDismissible: false,
+      builder: (BuildContext bc) { 
+        controllerDescripcionAdicional.text = item.descripcionAdicional ?? '';
+        controllerCantidad.text = item.cantidad.toString();
+        controllerPrecio.text = item.precioPorUnidad.toString();
+        controllerDescuento.text = item.descuento.toString();
+        return AlertDialog(
+          title: Text('Detalle del Item', style: Theme.of(context).textTheme.titleLarge,),
+          // padding: const EdgeInsets.all(20),
+          content: SizedBox(
+            height: 400,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextField(
+                    maxLines: 2,
+                    maxLength: 150,
+                    decoration: InputDecoration(
+                      label: const Text('Descripción Adicional'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      )
+                    ),
+                    controller: controllerDescripcionAdicional,
+                  ),
+                  const SizedBox(height: 20,),
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      label: const Text('Cantidad'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      )
+                    ),
+                    controller: controllerCantidad,
+                  ),
+                  const SizedBox(height: 20,),
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      label: const Text('Precio Unitario'),
+                      suffixText: '${widget.pedido.moneda}',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      )
+                    ),
+                    controller: controllerPrecio,
+                  ),
+                  const SizedBox(height: 20,),
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      label: const Text('Descuento'),
+                      suffixText: '%',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      )
+                    ),
+                    controller: controllerDescuento,
+                  )
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                minimumSize: const Size(double.infinity, 40),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))
+                )
+              ),
+              onPressed: () {
+                setState(() {
+                  widget.pedido.linesPedido[indexLine].descripcionAdicional = controllerDescripcionAdicional.text;
+                  widget.pedido.linesPedido[indexLine].cantidad = double.parse(controllerCantidad.text);
+                  widget.pedido.linesPedido[indexLine].precioPorUnidad = double.parse(controllerPrecio.text);
+                  widget.pedido.linesPedido[indexLine].descuento = double.parse(controllerDescuento.text);
+                });
+                context.pop();
+              }, 
+              icon: const Icon(Icons.save),
+              label: const Text('Guardar Cambios'),
+            )
+          ],
+        );
+      },
+    ).then((result){
+      if(result != null){
+        context.pop(result);
+      }
+    });
   }
 }

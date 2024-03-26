@@ -24,10 +24,10 @@ class PedidoRepository {
         throw UnauthorizedException();
       }
       else {
-        throw FetchDataException('Error al guardar: ${response.body}');
+        throw FetchDataException('${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Error al guardar el pedido: $e');
+      throw Exception('$e');
     }
   }
 
@@ -52,10 +52,10 @@ class PedidoRepository {
         throw UnauthorizedException();
       } 
       else {
-        throw FetchDataException('Error al recuperar los pedidos: Estado ${response.statusCode}');
+        throw FetchDataException('${response.statusCode}');
       }
     } catch(e){
-      throw Exception('Error en la solicitud: $e');
+      throw Exception('$e');
     }
   }
 

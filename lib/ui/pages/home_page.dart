@@ -30,9 +30,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
     try{
       Position position = await LocationService().getCurrentLocation();
       await GenericosService().saveLocation(position.latitude, position.longitude) ;
-      print("Ubicación guardada: ${position.latitude}, ${position.longitude}");
     } catch (e){
-      print("Error al obtener la ubicación: $e");
+      return;
     }
   }
 

@@ -7,10 +7,15 @@ class GenericosService {
     await prefs.setDouble('longitude', longitude);
   }
 
-  Future<String> getLocation() async {
+  Future<double?> getLatitud() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    double? latitude = prefs.getDouble('latitude');
-    double? longitude = prefs.getDouble('longitude');
-    return '${latitude ?? 0.0}|${longitude ?? 0.0}';
+    double? latitud = prefs.getDouble('latitude');
+    return latitud;
+  }
+
+  Future<double?> getLongitud() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    double? longitud = prefs.getDouble('longitude');
+    return longitud;
   }
 }

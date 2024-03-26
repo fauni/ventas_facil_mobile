@@ -11,8 +11,10 @@ String itemToJson(ItemPedido data) => json.encode(data.toJson());
 class ItemPedido {
     String? codigo;
     String? descripcion;
+    String? descripcionAdicional;
     double? cantidad;
     double? precioPorUnidad; 
+    double? descuento;
     String? indicadorDeImpuestos;
     // double? porcentajeDescuento;
     // double? precioTrasElDescuento;
@@ -22,8 +24,10 @@ class ItemPedido {
     ItemPedido({
         this.codigo,
         this.descripcion,
+        this.descripcionAdicional,
         this.cantidad,
         this.precioPorUnidad,
+        this.descuento,
         this.indicadorDeImpuestos
     });
 
@@ -32,31 +36,39 @@ class ItemPedido {
     ItemPedido copyWith({
         String? codigo,
         String? descripcion,
+        String? descripcionAdicional,
         double? cantidad,
         double? precioPorUnidad,
+        double? descuento,
         String? indicadorDeImpuestos
     }) => 
         ItemPedido(
             codigo: codigo ?? this.codigo,
             descripcion: descripcion ?? this.descripcion,
+            descripcionAdicional: descripcionAdicional ?? this.descripcionAdicional,
             cantidad: cantidad ?? this.cantidad,
             precioPorUnidad: precioPorUnidad ?? this.precioPorUnidad,
+            descuento: descuento ?? this.descuento,
             indicadorDeImpuestos: indicadorDeImpuestos ?? this.indicadorDeImpuestos
         );
 
     factory ItemPedido.fromJson(Map<String, dynamic> json) => ItemPedido(
         codigo: json["codigo"],
         descripcion: json["descripcion"],
-        cantidad: json["cantidad"],
-        precioPorUnidad: json["precio"],
+        descripcionAdicional: json["descripcionAdicional"],
+        cantidad: json["cantidad"]?.toDouble(),
+        precioPorUnidad: json["precioPorUnidad"]?.toDouble(),
+        descuento: json["descuento"]?.toDouble(),
         indicadorDeImpuestos: json["indicadorDeImpuestos"]
     );
 
     Map<String, dynamic> toJson() => {
         "codigo": codigo,
         "descripcion": descripcion,
+        "descripcionAdicional": descripcionAdicional,
         "cantidad": cantidad,
-        "precio": precioPorUnidad,
+        "precioPorUnidad": precioPorUnidad,
+        "descuento": descuento,
         "indicadorDeImpuestos": indicadorDeImpuestos
     };
 }

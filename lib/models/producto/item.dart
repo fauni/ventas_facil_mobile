@@ -19,7 +19,10 @@ class Item {
     final String? esGestionadoNumeroLote;
     final String? unidadMedidaVenta;
     final String? unidadMedidaInventario;
+    final double? cantidadEnStock;
     final List<ListaPrecio>? listaPrecios;
+    final List<ItemAlmacen>? informacionItemAlmacen;
+    final List<ItemLote>? informacionItemLote;
 
     Item({
         this.codigo,
@@ -32,7 +35,10 @@ class Item {
         this.esGestionadoNumeroLote,
         this.unidadMedidaVenta,
         this.unidadMedidaInventario,
+        this.cantidadEnStock,
         this.listaPrecios,
+        this.informacionItemAlmacen,
+        this.informacionItemLote
     });
 
     Item copyWith({
@@ -46,7 +52,10 @@ class Item {
         String? esGestionadoNumeroLote,
         String? unidadMedidaVenta,
         String? unidadMedidaInventario,
+        double? cantidadEnStock,
         List<ListaPrecio>? listaPrecios,
+        List<ItemAlmacen>? informacionItemAlmacen,
+        List<ItemLote>? informacionItemLote
     }) => 
         Item(
             codigo: codigo ?? this.codigo,
@@ -59,7 +68,10 @@ class Item {
             esGestionadoNumeroLote: esGestionadoNumeroLote ?? this.esGestionadoNumeroLote,
             unidadMedidaVenta: unidadMedidaVenta ?? this.unidadMedidaVenta,
             unidadMedidaInventario: unidadMedidaInventario ?? this.unidadMedidaInventario,
+            cantidadEnStock: cantidadEnStock ?? this.cantidadEnStock,
             listaPrecios: listaPrecios ?? this.listaPrecios,
+            informacionItemAlmacen: informacionItemAlmacen ?? this.informacionItemAlmacen,
+            informacionItemLote: informacionItemLote ?? this.informacionItemLote,
         );
 
     factory Item.fromJson(Map<String, dynamic> json) => Item(
@@ -73,7 +85,10 @@ class Item {
         esGestionadoNumeroLote: json["esGestionadoNumeroLote"],
         unidadMedidaVenta: json["unidadMedidaVenta"],
         unidadMedidaInventario: json["unidadMedidaInventario"],
+        cantidadEnStock: json["cantidadEnStock"]?.toDouble(),
         listaPrecios: json["listaPrecios"] == null ? [] : List<ListaPrecio>.from(json["listaPrecios"]!.map((x) => ListaPrecio.fromJson(x))),
+        informacionItemAlmacen: json["informacionItemAlmacen"] == null ? [] : List<ItemAlmacen>.from(json["informacionItemAlmacen"]!.map((x) => ItemAlmacen.fromJson(x))),
+        informacionItemLote: json["informacionItemLote"] == null ? [] : List<ItemLote>.from(json["informacionItemLote"]!.map((x) => ItemLote.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -87,7 +102,10 @@ class Item {
         "esGestionadoNumeroLote": esGestionadoNumeroLote,
         "unidadMedidaVenta": unidadMedidaVenta,
         "unidadMedidaInventario": unidadMedidaInventario,
+        "cantidadEnStock": cantidadEnStock,
         "listaPrecios": listaPrecios == null ? [] : List<dynamic>.from(listaPrecios!.map((x) => x.toJson())),
+        "informacionItemAlmacen": informacionItemAlmacen == null ? [] : List<dynamic>.from(informacionItemAlmacen!.map((x) => x.toJson())),
+        "informacionItemLote": informacionItemLote == null ? [] : List<dynamic>.from(informacionItemLote!.map((x) => x.toJson())),
     };
 }
 
@@ -152,5 +170,94 @@ class ListaPrecio {
         "numero": numero,
         "precio": precio,
         "moneda": moneda,
+    };
+}
+
+
+class ItemAlmacen {
+    final String? codigoItem;
+    final String? codigoAlmacen;
+    final double? enStock;
+
+    ItemAlmacen({
+        this.codigoItem,
+        this.codigoAlmacen,
+        this.enStock,
+    });
+
+    ItemAlmacen copyWith({
+      String? codigoItem,
+      String? codigoAlmacen,
+      double? enStock,
+    }) => 
+        ItemAlmacen(
+            codigoItem: codigoItem ?? this.codigoItem,
+            codigoAlmacen: codigoAlmacen ?? this.codigoAlmacen,
+            enStock: enStock ?? this.enStock,
+        );
+
+    factory ItemAlmacen.fromJson(Map<String, dynamic> json) => ItemAlmacen(
+        codigoItem: json["codigoItem"],
+        codigoAlmacen: json["codigoAlmacen"],
+        enStock: json["enStock"]?.toDouble(),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "codigoItem": codigoItem,
+        "codigoAlmacen": codigoAlmacen,
+        "enStock": enStock,
+    };
+}
+
+class ItemLote {
+    final String? almacen;
+    final String? codigoArticulo;
+    final String? nombreArticulo;
+    final String? numeroLote;
+    final double? stock;
+    final DateTime? fechaVencimiento;
+
+    ItemLote({
+        this.almacen,
+        this.codigoArticulo,
+        this.nombreArticulo,
+        this.numeroLote,
+        this.stock,
+        this.fechaVencimiento
+    });
+
+    ItemLote copyWith({
+      final String? almacen,
+      final String? codigoArticulo,
+      final String? nombreArticulo,
+      final String? numeroLote,
+      final double? stock,
+      final DateTime? fechaVencimiento
+    }) => 
+        ItemLote(
+            almacen: almacen ?? this.almacen,
+            codigoArticulo: codigoArticulo ?? this.codigoArticulo,
+            nombreArticulo: nombreArticulo ?? this.nombreArticulo,
+            numeroLote: numeroLote ?? this.numeroLote,
+            stock: stock ?? this.stock,
+            fechaVencimiento: fechaVencimiento ?? this.fechaVencimiento
+        );
+
+    factory ItemLote.fromJson(Map<String, dynamic> json) => ItemLote(
+        almacen: json["almacen"],
+        codigoArticulo: json["codigoArticulo"],
+        nombreArticulo: json["nombreArticulo"],
+        numeroLote: json["numeroLote"],
+        stock: json["stock"]?.toDouble(),
+        fechaVencimiento: json["fechaVencimiento"] == null ? null : DateTime.parse(json["fechaVencimiento"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "almacen": almacen,
+        "codigoArticulo": codigoArticulo,
+        "nombreArticulo": nombreArticulo,
+        "numeroLote": numeroLote,
+        "stock": stock,
+        "fechaVencimiento": fechaVencimiento?.toIso8601String(),
     };
 }

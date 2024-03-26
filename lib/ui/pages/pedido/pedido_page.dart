@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_bloc.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_event.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_state.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
 import 'package:ventas_facil/ui/widgets/item_list_pedido_widget.dart';
+import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
+import 'package:ventas_facil/ui/widgets/not_found_information_widget.dart';
 
 class PedidoPage extends StatefulWidget {
   const PedidoPage({super.key});
@@ -44,6 +45,12 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text('Pedidos'),
         actions: [
+          IconButton(
+            onPressed: (){
+              cargarPedidos();
+            }, 
+            icon: const Icon(Icons.refresh)
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
@@ -78,11 +85,17 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
             child: BlocConsumer<PedidoBloc, PedidoState>(
               listener: (context, state) {
                 if(state is PedidosUnauthorized){
-                  context.go('/login');
+                  LoginDialogWidget.mostrarDialogLogin(context);
                 } 
                 else if(state is PedidosNotLoaded){
-                  // TODO: Revisar estos metodos
-                  context.go('/login');
+                  if(state.error.contains("UnauthorizedException")){
+                    // TODO: Revisar estos metodos
+                    LoginDialogWidget.mostrarDialogLogin(context);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Ocurrio un problema al obtener los Pedidos'), backgroundColor: Colors.red,)
+                    );
+                  }
                 }
               },
               builder: (context, state) {
@@ -110,7 +123,12 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
                     itemCount: state.pedidos.length
                   );
                 } else {
-                  return const Text('Container');
+                  return NotFoundInformationWidget(
+                    mensaje: 'No se encontraron pedidos',
+                    onPush: () {
+                      cargarPedidos();
+                    },
+                  );
                 }
               }, 
             ),
@@ -120,3 +138,4 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
     );
   }
 }
+

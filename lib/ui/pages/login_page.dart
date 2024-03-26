@@ -85,7 +85,6 @@ class _LoginPageState extends State<LoginPage> {
                             prefixIcon: const Icon(Icons.password),
                             suffixIcon: IconButton(
                               onPressed: (){
-                                print(visible);
                                 setState(() {
                                   visible = !visible;
                                 });

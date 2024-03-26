@@ -1,5 +1,3 @@
-
-
 import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
@@ -17,6 +15,7 @@ class MapGeneric {
     pedido.observacion = data.comentarios;
     pedido.fechaRegistro = data.fechaDelDocumento;
     pedido.estado = data.estado;
+    pedido.estadoCancelado = data.estadoCancelado;
     pedido.idCliente = data.codigoCliente;
     pedido.nombreCliente = data.nombreCliente;
     pedido.cliente = data.cliente;
@@ -27,7 +26,11 @@ class MapGeneric {
     pedido.personaContacto = data.codigoPersonaDeContacto;
     pedido.contacto = data.contacto;
     pedido.linesPedido = itemPedidoToLinesOrder(data.linesOrder!);
-    pedido.ubicacion = data.ubicacion;
+    pedido.usuarioVentaFacil = data.usuarioVentaFacil;
+    pedido.latitud = data.latitud;
+    pedido.longitud = data.longitud;
+    pedido.fechaRegistroApp = data.fechaRegistroApp;
+    pedido.horaRegistroApp = data.horaRegistroApp;
     pedido.descuento = data.descuento;
     pedido.impuesto = data.impuesto;
     pedido.total = data.total;
@@ -40,7 +43,9 @@ class MapGeneric {
       ItemPedido item = ItemPedido();
       item.codigo = element.codigo;
       item.descripcion = element.descripcion;
+      item.descripcionAdicional = element.descripcionAdicional;
       item.cantidad = element.cantidad;
+      item.descuento = element.descuento;
       item.precioPorUnidad = element.precioUnitario;
       item.indicadorDeImpuestos = "IVA";
       listaItem.add(item);
