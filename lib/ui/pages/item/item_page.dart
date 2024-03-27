@@ -7,6 +7,8 @@ import 'package:ventas_facil/models/producto/item.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
 import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
 import 'package:ventas_facil/ui/widgets/item_list_item_widget.dart';
+import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
+import 'package:ventas_facil/ui/widgets/not_found_information_widget.dart';
 
 class ItemPage extends StatefulWidget {
   final SocioNegocio socioNegocio;
@@ -24,6 +26,10 @@ class _ItemPageState extends State<ItemPage> {
   @override
   void initState() {
     super.initState();
+    cargarItems();
+  }
+
+  void cargarItems(){
     BlocProvider.of<ItemBloc>(context).add(LoadItems());
   }
   @override
@@ -48,7 +54,14 @@ class _ItemPageState extends State<ItemPage> {
             ),
           ),
           Expanded(
-            child: BlocBuilder<ItemBloc, ItemState>(
+            child: BlocConsumer<ItemBloc, ItemState>(
+              listener: (context, state) {
+                if(state is ItemNotLoaded){
+                  if(state.error.contains('UnauthorizedException')){
+                    LoginDialogWidget.mostrarDialogLogin(context);
+                  } 
+                }
+              },
               builder: (context, state) {
                 if(state is ItemLoading){
                   return const Center(
@@ -88,8 +101,11 @@ class _ItemPageState extends State<ItemPage> {
                     },
                   );
                 } else {
-                  return const Center(
-                    child: Text('No se pudo cargar los Items, intente nuevamente!'),
+                  return NotFoundInformationWidget(
+                    mensaje: 'No se pudo cargar los Items, intente nuevamente!', 
+                    onPush: () {
+                      cargarItems();
+                    },
                   );
                 }
               }, 

@@ -82,7 +82,20 @@ class Pedido {
       for (var element in linesPedido) {
         totalADTemp += element.total!;
       }
-      return totalADTemp;
+      return double.parse(totalADTemp.toStringAsFixed(2));
+    }
+
+    double get totalDescuento {
+      double totalAD = 0;
+      for (var element in linesPedido) {
+        var precioDescuento = element.total! * element.descuento! / 100;
+        totalAD += precioDescuento;
+      }
+      return double.parse(totalAD.toStringAsFixed(2));
+    }
+
+    double get totalDespuesDelDescuento{
+      return double.parse((totalAntesDelDescuento - totalDescuento).toStringAsFixed(2)) ;
     }
 
     double get totalImpuesto {

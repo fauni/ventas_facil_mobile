@@ -32,6 +32,8 @@ class ItemPedido {
     });
 
     double? get total => cantidad != null && precioPorUnidad != null ? cantidad! * precioPorUnidad! : null;
+    double? get precioConIVA => total != null ? total! - total! * 0.13 : null;
+    double? get precioConDescuento => total != null ? total! - total! * descuento!/100 : null;
 
     ItemPedido copyWith({
         String? codigo,

@@ -73,8 +73,26 @@ class PedidoList {
         this.horaRegistroApp,
     });
 
+
     double get totalAntesDelDescuento {
-      return total! - impuesto!;
+      double totalADTemp = 0;
+      for (var element in linesOrder!) {
+        totalADTemp += element.total!;
+      }
+      return totalADTemp;
+    }
+
+    double get totalDescuento {
+      double totalAD = 0;
+      for (var element in linesOrder!) {
+        var precioDescuento = element.total! * element.descuento! / 100;
+        totalAD += precioDescuento;
+      }
+      return totalAD;
+    }
+
+    double get totalDespuesDelDescuento{
+      return totalAntesDelDescuento! - totalDescuento;
     }
 
     PedidoList copyWith({
@@ -229,6 +247,10 @@ class LinesOrder {
         this.unidadDeMedida,
         this.estadoLinea,
     });
+
+    double? get total => cantidad != null && precioUnitario != null ? cantidad! * precioUnitario! : null;
+    double? get precioConIVA => total != null ? total! - total! * 0.13 : null;
+    double? get precioConDescuento => total != null ? total! - total! * descuento!/100 : null;
 
     LinesOrder copyWith({
         String? codigo,

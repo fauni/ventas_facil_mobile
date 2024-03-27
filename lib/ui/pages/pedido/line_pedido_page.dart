@@ -21,11 +21,31 @@ class _LinePedidoPageState extends State<LinePedidoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
-      appBar: const AppBarWidget(titulo: 'Items',),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        title: const Text('Items'),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final result = await context.push<ItemPedido>('/Items', extra: widget.pedido.cliente);
+              setState(() {
+                widget.pedido.linesPedido.add(result!);
+                controllerDescripcionAdicional.text = result.descripcionAdicional!;
+                controllerCantidad.text = result.cantidad.toString();
+                controllerPrecio.text = result.precioPorUnidad.toString();
+                controllerDescuento.text = result.descuento.toString();
+              });
+            }, 
+            icon: const Icon(Icons.add_circle_outline_rounded)
+          ),
+          const SizedBox(width: 10,)
+        ],
+      ),
       body: Stack(
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
+          SingleChildScrollView(
+            padding: const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 130),
             child: Column(
               children: [
                 ListView.builder(
@@ -86,14 +106,18 @@ class _LinePedidoPageState extends State<LinePedidoPage> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text('Total Linea:', style: Theme.of(context).textTheme.titleMedium,),
-                                      Text('${articulo.total} ${widget.pedido.moneda}', style: Theme.of(context).textTheme.bodyMedium,),
+                                      Text('${articulo.precioConDescuento} ${widget.pedido.moneda}', style: Theme.of(context).textTheme.bodyMedium,),
                                     ],
                                   ),
                                 ],
                               ),
                             ),
                             IconButton(
-                              onPressed: (){}, 
+                              onPressed: (){
+                                setState(() {
+                                  widget.pedido.linesPedido.removeAt(index);
+                                });
+                              }, 
                               icon: const Icon(
                                 Icons.remove_circle,
                                 size: 30,
@@ -106,33 +130,33 @@ class _LinePedidoPageState extends State<LinePedidoPage> {
                     );
                   },
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Theme.of(context).colorScheme.secondary)
-                  ),
-                  child: ListTile( 
-                    textColor: Theme.of(context).colorScheme.onPrimary,
-                    iconColor: Theme.of(context).colorScheme.onPrimary,
-                    title: const Text('Agregar Items al Pedido'),
-                    leading: IconButton(
-                      onPressed: () {}, 
-                      icon: const Icon(Icons.add, size: 30,)
-                    ),
-                    trailing: const Icon(Icons.arrow_forward_ios_rounded),
-                    onTap: () async {
-                      final result = await context.push<ItemPedido>('/Items', extra: widget.pedido.cliente);
-                      setState(() {
-                        widget.pedido.linesPedido.add(result!);
-                        controllerDescripcionAdicional.text = result.descripcionAdicional!;
-                        controllerCantidad.text = result.cantidad.toString();
-                        controllerPrecio.text = result.precioPorUnidad.toString();
-                        controllerDescuento.text = result.descuento.toString();
-                      });
-                    },
-                  ),
-                )
+                // Container(
+                //   decoration: BoxDecoration(
+                //     color: Theme.of(context).colorScheme.primary,
+                //     borderRadius: BorderRadius.circular(10),
+                //     border: Border.all(color: Theme.of(context).colorScheme.secondary)
+                //   ),
+                //   child: ListTile( 
+                //     textColor: Theme.of(context).colorScheme.onPrimary,
+                //     iconColor: Theme.of(context).colorScheme.onPrimary,
+                //     title: const Text('Agregar Items al Pedido'),
+                //     leading: IconButton(
+                //       onPressed: () {}, 
+                //       icon: const Icon(Icons.add, size: 30,)
+                //     ),
+                //     trailing: const Icon(Icons.arrow_forward_ios_rounded),
+                //     onTap: () async {
+                //       final result = await context.push<ItemPedido>('/Items', extra: widget.pedido.cliente);
+                //       setState(() {
+                //         widget.pedido.linesPedido.add(result!);
+                //         controllerDescripcionAdicional.text = result.descripcionAdicional!;
+                //         controllerCantidad.text = result.cantidad.toString();
+                //         controllerPrecio.text = result.precioPorUnidad.toString();
+                //         controllerDescuento.text = result.descuento.toString();
+                //       });
+                //     },
+                //   ),
+                // )
               ],
             ),
           ),
@@ -144,7 +168,7 @@ class _LinePedidoPageState extends State<LinePedidoPage> {
             left: 0,
             right: 0,
             child: Container(
-              height: 200,
+              height: 130,
               margin: const EdgeInsets.only(left: 5, right: 5),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
@@ -161,35 +185,36 @@ class _LinePedidoPageState extends State<LinePedidoPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total antes del descuento: ', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface),),
-                      Text('${widget.pedido.totalAntesDelDescuento}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
+                      Text('${widget.pedido.totalAntesDelDescuento} ${widget.pedido.moneda}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Descuento: ', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface),),
-                      Text('0 %', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
+                      Text('${widget.pedido.totalDescuento} ${widget.pedido.moneda}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Impuesto: ', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface),),
-                      Text('${widget.pedido.totalImpuesto}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Text('Impuesto: ', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface),),
+                  //     Text('${widget.pedido.totalImpuesto}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
+                  //   ],
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total: ', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface),),
-                      Text('${widget.pedido.totalDespuesdelImpuesto}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
+                      Text('${widget.pedido.totalDespuesDelDescuento}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
                     ],
                   ),
+                  const SizedBox(height: 5,),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      minimumSize: const Size(double.infinity, 45),
+                      minimumSize: const Size(double.infinity, 40),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))
                       )

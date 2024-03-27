@@ -19,7 +19,7 @@ class ItemAddPedidoObservacionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimary.withOpacity(1),

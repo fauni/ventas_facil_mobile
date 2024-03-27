@@ -57,8 +57,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
       
       body: ListView(
         children: [
-          _buildMenuItem(Icons.calendar_today, 'Actividades', ''),
-          const Divider(),
+          // _buildMenuItem(Icons.calendar_today, 'Actividades', ''),
+          // const Divider(),
           _buildMenuItem(Icons.group, 'Socios Comerciales', ''),
           const Divider(),
           _buildMenuItem(Icons.inventory, 'Inventario', ''),
@@ -66,10 +66,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
           _buildMenuItem(Icons.price_change, 'Listas de Precio', ''),
           const Divider(),
           _buildMenuItem(Icons.receipt, 'Ordenes de Venta', '/NuevoPedido'),
-          const Divider(),
-          _buildMenuItem(Icons.local_shipping, 'Entrega', ''),
-          const Divider(),
-          _buildMenuItem(Icons.medical_information, 'Visita', '')
+          // const Divider(),
+          // _buildMenuItem(Icons.local_shipping, 'Entrega', ''),
+          // const Divider(),
+          // _buildMenuItem(Icons.medical_information, 'Visita', '')
         ],
       )
     );    

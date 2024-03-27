@@ -16,6 +16,7 @@ import 'package:ventas_facil/ui/widgets/icon_button_generic_widget.dart';
 import 'package:ventas_facil/ui/widgets/item_add_pedido_observacion_widget.dart';
 import 'package:ventas_facil/ui/widgets/item_add_pedido_widget.dart';
 import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
+import 'package:ventas_facil/ui/widgets/view_detail_line_pedido_widget.dart';
 
 class NuevoPedidoPage extends StatefulWidget {
   const NuevoPedidoPage({super.key});
@@ -167,7 +168,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
         child: Stack(
           children: [
             SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 100),
+              padding: const EdgeInsets.only(bottom: 130),
               child: Column(
                 children: [
                   // TextField(
@@ -280,89 +281,22 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                       setState((){});
                     },
                   ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    padding: const EdgeInsets.only(left: 20,right: 20, top: 0, bottom: 5),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Items (${pedido.linesPedido.length} Lineas)', style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Theme.of(context).colorScheme.error),),
-                            IconButton(onPressed: () async {
-                              if(validaSeleccionCliente()){
-                                final result = await context.push<Pedido>('/LineaDetallePedido', extra: pedido);
-                                if(result != null){
-                                  setState(() {
-                                    pedido = result;
-                                  });
-                                }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Primero tienes que elegir un cliente.'), backgroundColor: Colors.red,)
-                                );
-                              }
-                            }, icon: Icon(Icons.edit, color: Theme.of(context).colorScheme.error,))
-                          ],
-                        ),
-                        ListView.separated(
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            ItemPedido itemPedido = pedido.linesPedido[index];
-                            return Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Producto:', style: Theme.of(context).textTheme.titleMedium,),
-                                    Text('${itemPedido.codigo}', style: Theme.of(context).textTheme.bodyMedium,),
-                                  ],
-                                ),
-                                Text('${itemPedido.descripcionAdicional}'),
-                                // Divider(color: Theme.of(context).colorScheme.error,),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Cantidad:', style: Theme.of(context).textTheme.titleMedium,),
-                                    Text('${itemPedido.cantidad}', style: Theme.of(context).textTheme.bodyMedium,),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Precio por unidad:', style: Theme.of(context).textTheme.titleMedium,),
-                                    Text('${itemPedido.precioPorUnidad} ${pedido.moneda}', style: Theme.of(context).textTheme.bodyMedium,),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Descuento:', style: Theme.of(context).textTheme.titleMedium,),
-                                    Text('${itemPedido.descuento} %', style: Theme.of(context).textTheme.bodyMedium,),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Total Linea:', style: Theme.of(context).textTheme.titleMedium,),
-                                    Text('${itemPedido.total} ${pedido.moneda}', style: Theme.of(context).textTheme.bodyMedium,),
-                                  ],
-                                ),
-                              ],
-                            );
-                          }, 
-                          separatorBuilder: (context, index) {
-                            return Divider(color: Theme.of(context).colorScheme.error);
-                          }, 
-                          itemCount: pedido.linesPedido.length
-                        ),
-                        Divider(color: Theme.of(context).colorScheme.error,),
-                      ],
-                    ),
+                  ViewDetailLinePedidoWidget(
+                    pedido: pedido, 
+                    onPressed: () async {
+                      if(validaSeleccionCliente()){
+                        final result = await context.push<Pedido>('/LineaDetallePedido', extra: pedido);
+                        if(result != null){
+                          setState(() {
+                            pedido = result;
+                          });
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Primero tienes que elegir un cliente.'), backgroundColor: Colors.red,)
+                        );
+                      }
+                    },
                   ),
                   ItemAddPedidoObservacionWidget(
                     titulo: 'Observaciones', 
@@ -372,8 +306,8 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                       cambiarObservaciones(context);
                     },
                   ),
-                  ItemAddPedidoWidget(titulo: 'Total antes del Descuento', valor: '${pedido.totalAntesDelDescuento}', isSeleccionable: false, onPush: (){},),
-                  ItemAddPedidoWidget(titulo: 'Impuesto', valor: '${pedido.totalImpuesto}', isSeleccionable: false, onPush: (){},),
+                  // ItemAddPedidoWidget(titulo: 'Total antes del Descuento', valor: '${pedido.totalAntesDelDescuento}', isSeleccionable: false, onPush: (){},),
+                  // ItemAddPedidoWidget(titulo: 'Impuesto', valor: '${pedido.totalImpuesto}', isSeleccionable: false, onPush: (){},),
                   // ItemAddPedidoWidget(titulo: 'Total', valor: '${pedido.totalDespuesdelImpuesto}', isSeleccionable: false, onPush: (){},),
                 ],
               ),
@@ -383,7 +317,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
               left: 0,
               right: 0,
               child: Container(
-                height: 100,
+                height: 150,
                 margin: const EdgeInsets.only(left: 5, right: 5),
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
@@ -399,8 +333,22 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Text('Total antes del Descuento: ', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface),),
+                        Text('${pedido.totalAntesDelDescuento} ${pedido.moneda ?? 'BS'}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Descuento: ', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface),),
+                        Text('${pedido.totalDescuento} ${pedido.moneda ?? 'BS'}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Text('Total: ', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface),),
-                        Text('${pedido.totalDespuesdelImpuesto}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
+                        Text('${pedido.totalDespuesDelDescuento} ${pedido.moneda ?? 'BS'}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
                       ],
                     ),
                     pedido.estado == 'bost_Open' 
@@ -408,7 +356,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
                         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                        minimumSize: const Size(double.infinity, 45),
+                        minimumSize: const Size(double.infinity, 40),
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))
                         )
