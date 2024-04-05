@@ -34,11 +34,7 @@ class LoginDialogWidget {
                 if(state is! LoginLoading) ...[
                   ElevatedButton.icon(
                     onPressed: () {
-                      Login loginData = Login();
-                      loginData.idCompany = 1;
-                      loginData.userName = usernameController.text;
-                      loginData.passwordHash= passwordController.text;
-                      loginBloc.add(LoginButtonPressed(data: loginData));
+                      onIniciarSesion(loginBloc, usernameController.text, passwordController.text);
                     },
                     icon: const Icon(Icons.login),
                     label: const Text('Iniciar Sesión'),
@@ -91,6 +87,7 @@ class LoginDialogWidget {
                         ),
                       ),
                       obscureText: true,
+                      onSubmitted: (value) => onIniciarSesion(loginBloc, usernameController.text, passwordController.text),
                     ),
                   ],
                 ),
@@ -101,4 +98,12 @@ class LoginDialogWidget {
       },
     );
   }
+}
+
+void onIniciarSesion(LoginBloc loginBloc, String username, String password) {
+  Login loginData = Login();
+  loginData.idCompany = 1;
+  loginData.userName = username;
+  loginData.passwordHash= password;
+  loginBloc.add(LoginButtonPressed(data: loginData));
 }

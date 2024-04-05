@@ -18,8 +18,8 @@ class SocioNegocioBloc extends Bloc<SocioNegocioEvent, SocioNegocioState>{
     final token = prefs.get('token').toString();    
     emit(SocioNegocioLoading());
     try { 
-      final clientes = await _repository.getAllSocioNegocio(token);
-      emit(SocioNegocioLoaded(clientes));
+      final clientesNuevos = await _repository.getAllSocioNegocio(token, event.top, event.skip);
+      emit(SocioNegocioLoaded(clientesNuevos));
     } on UnauthorizedException catch(_){
       emit(SocioNegocioUnauthorized());
     } catch(e){

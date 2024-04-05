@@ -231,6 +231,7 @@ class LinesOrder {
     final double? totalLinea;
     final String? codigoDeAlmacen;
     final String? unidadDeMedida;
+    final int? codigoUnidadMedida;
     final String? estadoLinea;
 
     LinesOrder({
@@ -245,6 +246,7 @@ class LinesOrder {
         this.totalLinea,
         this.codigoDeAlmacen,
         this.unidadDeMedida,
+        this.codigoUnidadMedida,
         this.estadoLinea,
     });
 
@@ -264,6 +266,7 @@ class LinesOrder {
         double? totalLinea,
         String? codigoDeAlmacen,
         String? unidadDeMedida,
+        int? codigoUnidadMedida,
         String? estadoLinea,
     }) => 
         LinesOrder(
@@ -278,6 +281,7 @@ class LinesOrder {
             totalLinea: totalLinea ?? this.totalLinea,
             codigoDeAlmacen: codigoDeAlmacen ?? this.codigoDeAlmacen,
             unidadDeMedida: unidadDeMedida ?? this.unidadDeMedida,
+            codigoUnidadMedida: codigoUnidadMedida?? this.codigoUnidadMedida,
             estadoLinea: estadoLinea ?? this.estadoLinea,
         );
 
@@ -293,6 +297,7 @@ class LinesOrder {
         totalLinea: json["totalLinea"]?.toDouble(),
         codigoDeAlmacen: json["codigoDeAlmacen"],
         unidadDeMedida: json["unidadDeMedida"],
+        codigoUnidadMedida: json["codigoUnidadMedida"],
         estadoLinea: json["estadoLinea"],
     );
 
@@ -308,6 +313,7 @@ class LinesOrder {
         "totalLinea": totalLinea,
         "codigoDeAlmacen": codigoDeAlmacen,
         "unidadDeMedida": unidadDeMedida,
+        "codigoUnidadMedida": codigoUnidadMedida,
         "estadoLinea": estadoLinea,
     };
 }

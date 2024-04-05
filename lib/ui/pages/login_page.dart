@@ -32,13 +32,27 @@ class _LoginPageState extends State<LoginPage> {
     return BlocProvider(
       create: (context) => LoginBloc(authService: AuthService()),
       child: Scaffold(
+        appBar: AppBar(),
         body: Column(
           children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary
-                ),
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onPrimary
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  HeroMode(
+                    child: Hero(
+                      tag: 'heroIcono',
+                      child: Image.asset(
+                        'assets/icons/tomatefacilbanner.jpg',
+                        height: 150,
+                      ),
+                    ),
+                    enabled: true,
+                  ),
+                ],
               ),
             ),
             Expanded(
@@ -62,11 +76,17 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const Text(
-                          'Bienvenido!', 
+                        Text(
+                          'Bienvenido a:', 
                           style: TextStyle(
-                            fontSize: 35,
+                            fontSize: 30,
                             fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSecondary
+                          ),
+                        ),
+                        Center(
+                          child: Image.asset(
+                            'assets/icons/icono-logo.png'
                           ),
                         ),
                         TextField(

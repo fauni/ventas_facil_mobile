@@ -2,8 +2,9 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/models/producto/item.dart';
+import 'package:ventas_facil/ui/pages/item/item_almacen_page.dart';
 
-class ItemListItemWidget extends StatelessWidget {
+class ItemListItemWidget extends StatefulWidget {
   const ItemListItemWidget({
     super.key,
     required this.index,
@@ -15,7 +16,11 @@ class ItemListItemWidget extends StatelessWidget {
   final Item item;
   final Function() onTap;
 
+  @override
+  State<ItemListItemWidget> createState() => _ItemListItemWidgetState();
+}
 
+class _ItemListItemWidgetState extends State<ItemListItemWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,12 +35,6 @@ class ItemListItemWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                IconButton(
-                  onPressed: (){
-                    _showBottomSheetStock(context, item);
-                  }, 
-                  icon: const Icon(Icons.remove_red_eye)
-                ),
                 Expanded(
                   child: Column(
                     children: [
@@ -43,21 +42,21 @@ class ItemListItemWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(child: Text('Codigo', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),)),
-                          Expanded(child: Text('${item.codigo}', style: Theme.of(context).textTheme.bodyMedium,))
+                          Expanded(child: Text('${widget.item.codigo}', style: Theme.of(context).textTheme.bodyMedium,))
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(child: Text('Descripción', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),)),
-                          Expanded(child: Text('${item.descripcion}', style: Theme.of(context).textTheme.bodyMedium,))
+                          Expanded(child: Text('${widget.item.descripcion}', style: Theme.of(context).textTheme.bodyMedium,))
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(child: Text('Cantidad en Stock', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),)),
-                          Expanded(child: Text('${item.cantidadEnStock} ${item.unidadMedidaVenta}', style: Theme.of(context).textTheme.bodyMedium,))
+                          Expanded(child: Text('${widget.item.cantidadEnStock} ${widget.item.unidadMedidaVenta ?? ''}', style: Theme.of(context).textTheme.bodyMedium,))
                         ],
                       ),
                     ],
@@ -68,10 +67,33 @@ class ItemListItemWidget extends StatelessWidget {
                     // onTap: onTap,
                   ),
                 ),
+                Column(
+                  children: [
+                    IconButton(
+                      onPressed: (){
+                        _showBottomSheetStock(context, widget.item);
+                      }, 
+                      icon: Icon(Icons.remove_red_eye, color: Theme.of(context).colorScheme.error,)
+                    ),
+                    IconButton(
+                      onPressed: (){
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ItemAlmacenPage(item: widget.item);
+                            },
+                            fullscreenDialog: true
+                          )
+                        );
+                      }, 
+                      icon: Icon(Icons.inventory_outlined, color: Theme.of(context).colorScheme.error)
+                    ),
+                  ],
+                ),
               ],
             ),
             ElevatedButton.icon(
-              onPressed: onTap, 
+              onPressed: widget.onTap, 
               icon: const Icon(Icons.check), 
               label: const Text('Seleccionar Item'),
               style: ElevatedButton.styleFrom(
@@ -110,7 +132,8 @@ class ItemListItemWidget extends StatelessWidget {
           content: SizedBox(
             height: 200,
             width: 300,
-            child: ListView.separated(
+            child: item.informacionItemLote!.isNotEmpty
+            ? ListView.separated(
               separatorBuilder: (context, index) {
                 return const Divider();
               },
@@ -150,8 +173,51 @@ class ItemListItemWidget extends StatelessWidget {
                   ],
                 );
               },
-            ),
+            )
+            : Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                // border: Border.all()
+              ),
+              child: const Text('El Item seleccionado no tiene lotes creados.'),
+            )
           )
+        );
+      },
+    ).then((result){
+      if(result != null){
+        // context.pop(result);
+      }
+    });
+  }
+
+  void _showBottomSheetStockPorAlmacen(BuildContext context, Item item){
+    showDialog(
+      context: context, 
+      builder: (BuildContext bc) {
+        List<bool> _isOpen;
+        _isOpen = List<bool>.filled(item.informacionItemAlmacen!.length, false);
+        List<ItemAlmacen> listaItemAlmacen = item.informacionItemAlmacen ?? [];
+        return AlertDialog(
+          title: Text('Stock por Almacen', style: Theme.of(context).textTheme.titleLarge,),
+          actions: [
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                )
+              ),
+              onPressed: (){
+                context.pop();
+              }, 
+              icon: const Icon(Icons.arrow_back_ios), 
+              label: const Text('Volver'),
+            )
+          ],
+          // padding: const EdgeInsets.all(20),
+          content: SingleChildScrollView(),
         );
       },
     ).then((result){

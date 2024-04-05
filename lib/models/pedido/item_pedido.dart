@@ -16,6 +16,9 @@ class ItemPedido {
     double? precioPorUnidad; 
     double? descuento;
     String? indicadorDeImpuestos;
+    double? unidadDeMedidaManual;
+    int? codigoUnidadMedida;
+    String? nombreUnidadMedida;
     // double? porcentajeDescuento;
     // double? precioTrasElDescuento;
     // String? monedaPrecio;
@@ -28,7 +31,10 @@ class ItemPedido {
         this.cantidad,
         this.precioPorUnidad,
         this.descuento,
-        this.indicadorDeImpuestos
+        this.indicadorDeImpuestos,
+        this.unidadDeMedidaManual,
+        this.codigoUnidadMedida,
+        this.nombreUnidadMedida
     });
 
     double? get total => cantidad != null && precioPorUnidad != null ? cantidad! * precioPorUnidad! : null;
@@ -42,7 +48,10 @@ class ItemPedido {
         double? cantidad,
         double? precioPorUnidad,
         double? descuento,
-        String? indicadorDeImpuestos
+        String? indicadorDeImpuestos,
+        double? unidadDeMedidaManual,
+        int? codigoUnidadMedida,
+        String? nombreUnidadMedida
     }) => 
         ItemPedido(
             codigo: codigo ?? this.codigo,
@@ -51,7 +60,10 @@ class ItemPedido {
             cantidad: cantidad ?? this.cantidad,
             precioPorUnidad: precioPorUnidad ?? this.precioPorUnidad,
             descuento: descuento ?? this.descuento,
-            indicadorDeImpuestos: indicadorDeImpuestos ?? this.indicadorDeImpuestos
+            indicadorDeImpuestos: indicadorDeImpuestos ?? this.indicadorDeImpuestos,
+            unidadDeMedidaManual: unidadDeMedidaManual ?? this.unidadDeMedidaManual,
+            codigoUnidadMedida: codigoUnidadMedida ?? this.codigoUnidadMedida,
+            nombreUnidadMedida: nombreUnidadMedida ?? this.nombreUnidadMedida
         );
 
     factory ItemPedido.fromJson(Map<String, dynamic> json) => ItemPedido(
@@ -61,7 +73,10 @@ class ItemPedido {
         cantidad: json["cantidad"]?.toDouble(),
         precioPorUnidad: json["precioPorUnidad"]?.toDouble(),
         descuento: json["descuento"]?.toDouble(),
-        indicadorDeImpuestos: json["indicadorDeImpuestos"]
+        indicadorDeImpuestos: json["indicadorDeImpuestos"],
+        unidadDeMedidaManual: json["unidadDeMedidaManual"]?.toDouble(),
+        codigoUnidadMedida: json["codigoUnidadMedida"],
+        nombreUnidadMedida: json["nombreUnidadMedida"]
     );
 
     Map<String, dynamic> toJson() => {
@@ -71,6 +86,9 @@ class ItemPedido {
         "cantidad": cantidad,
         "precioPorUnidad": precioPorUnidad,
         "descuento": descuento,
-        "indicadorDeImpuestos": indicadorDeImpuestos
+        "indicadorDeImpuestos": indicadorDeImpuestos,
+        "unidadDeMedidaManual": unidadDeMedidaManual,
+        "codigoUnidadMedida": codigoUnidadMedida,
+        "nombreUnidadMedida": nombreUnidadMedida
     };
 }

@@ -3,6 +3,7 @@ import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/bloc/login_bloc/login_bloc.dart';
 import 'package:ventas_facil/database/database_provider.dart';
 import 'package:ventas_facil/repository/item_repository.dart';
+import 'package:ventas_facil/repository/item_unidad_medida_repository.dart';
 import 'package:ventas_facil/repository/pedido_repository.dart';
 import 'package:ventas_facil/repository/producto_repository.dart';
 import 'package:ventas_facil/repository/sales_employee_repository.dart';
@@ -20,6 +21,7 @@ class CommonBloc {
   static final salesEmployeelBloc = SalesEmployeeBloc(SalesEmployeeRepository());
   static final socioNegocioBloc = SocioNegocioBloc(SocioNegocioRepository());
   static final itemBloc = ItemBloc(ItemRepository());
+  static final itemUnidadMedidaBloc = UnidadMedidaBloc(ItemUnidadMedidaRepository());
 
   static final List<BlocProvider> blocProviders = [
     BlocProvider<ThemeBloc>(
@@ -43,6 +45,9 @@ class CommonBloc {
     BlocProvider<SocioNegocioBloc>(
       create: (context) => socioNegocioBloc,
     ),
+    BlocProvider<UnidadMedidaBloc>(
+      create: (context) => itemUnidadMedidaBloc,
+    ),
     BlocProvider<ItemBloc>(
       create: (context) => itemBloc,
     )
@@ -57,6 +62,7 @@ class CommonBloc {
     pedidoBloc.close();
     salesEmployeelBloc.close();
     socioNegocioBloc.close();
+    itemUnidadMedidaBloc.close();
     itemBloc.close();
   }
 

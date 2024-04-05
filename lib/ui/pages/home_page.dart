@@ -40,36 +40,63 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text('Ventas Facil'),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        foregroundColor: Theme.of(context).colorScheme.primary,
+        title: const Text(''),
         centerTitle: true,
         actions: [
           IconButton(
             onPressed: (){
               logout();
             }, 
-            icon: const Icon(Icons.logout)
+            icon: const Icon(Icons.logout, size: 30,),
           )
         ],
       ),
-      drawer: const DrawerWidget(),
+      // drawer: const DrawerWidget(),
       
-      body: ListView(
+      body: Stack(
         children: [
-          // _buildMenuItem(Icons.calendar_today, 'Actividades', ''),
-          // const Divider(),
-          _buildMenuItem(Icons.group, 'Socios Comerciales', ''),
-          const Divider(),
-          _buildMenuItem(Icons.inventory, 'Inventario', ''),
-          const Divider(),
-          _buildMenuItem(Icons.price_change, 'Listas de Precio', ''),
-          const Divider(),
-          _buildMenuItem(Icons.receipt, 'Ordenes de Venta', '/NuevoPedido'),
-          // const Divider(),
-          // _buildMenuItem(Icons.local_shipping, 'Entrega', ''),
-          // const Divider(),
-          // _buildMenuItem(Icons.medical_information, 'Visita', '')
+          ListView(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                child: HeroMode(
+                  child: Hero(
+                    tag: 'heroIcono',
+                    child: Image.asset('assets/icons/icono-logo.png'),
+                  ),
+                  enabled: true,
+                ),
+              ),
+              const Divider(),
+              // _buildMenuItem(Icons.calendar_today, 'Actividades', ''),
+              // const Divider(),
+              _buildMenuItem(Icons.group, 'Socios Comerciales', ''),
+              const Divider(),
+              _buildMenuItem(Icons.inventory, 'Inventario', ''),
+              const Divider(),
+              _buildMenuItem(Icons.price_change, 'Listas de Precio', ''),
+              const Divider(),
+              _buildMenuItem(Icons.receipt, 'Ordenes de Venta', '/NuevoPedido'),
+              // Text('${user!.almacen}')
+              // const Divider(),
+              // _buildMenuItem(Icons.local_shipping, 'Entrega', ''),
+              // const Divider(),
+              // _buildMenuItem(Icons.medical_information, 'Visita', '')
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            right: 10,
+            
+            child: Image.asset(
+              'assets/icons/tomatefaciltoolbar.jpg',
+              height: 80,
+            )
+          )
         ],
       )
     );    
@@ -96,6 +123,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
       try {
         final Map<String, dynamic> userMap = jsonDecode(userString);
         user = User.fromJson(userMap);
+        // print(jsonEncode(user));
         setState(() {});
       } catch (e) {
         context.go('/Login');

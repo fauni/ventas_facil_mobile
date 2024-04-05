@@ -34,7 +34,7 @@ class PedidoRepository {
   Future<List<PedidoList>> getOrdenesVentaAbiertos(String sessionID) async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/Orders'),
+        Uri.parse('$_baseUrl/Orders?top=5&skip=0'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Cookie': sessionID

@@ -130,9 +130,9 @@ class DetallePedidoPage extends StatelessWidget {
               height: 95.0,
               child: Column(
                 children: [
-                  // ItemBottomDetalleWidget(titulo: 'TOTAL ANTES DEL DESCUENTO', valor: '${pedido.totalAntesDelDescuento}', moneda: '${pedido.moneda}',),
-                  // ItemBottomDetalleWidget(titulo: 'DESCUENTO', valor: '${pedido.totalDescuento }', moneda: '${pedido.moneda}'),
-                  // ItemBottomDetalleWidget(titulo: 'TOTAL DEL DOCUMENTO', valor: '${pedido.totalDespuesDelDescuento}', moneda: '${pedido.moneda}')
+                  ItemBottomDetalleWidget(titulo: 'TOTAL ANTES DEL DESCUENTO', valor: '${pedido.totalAntesDelDescuento}', moneda: '${pedido.moneda}',),
+                  ItemBottomDetalleWidget(titulo: 'DESCUENTO', valor: '${pedido.totalDescuento }', moneda: '${pedido.moneda}'),
+                  ItemBottomDetalleWidget(titulo: 'TOTAL DEL DOCUMENTO', valor: '${pedido.totalDespuesDelDescuento}', moneda: '${pedido.moneda}')
                 ],
               ),
             )

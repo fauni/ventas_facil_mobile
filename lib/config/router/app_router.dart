@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
@@ -23,7 +24,21 @@ final appRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const HomePage(),
+      pageBuilder: (context, state) => CustomTransitionPage<void>(
+        key: state.pageKey,
+        child: const HomePage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
+      // builder: (context, state) => const HomePage(),
+
     ),
     GoRoute(
       path: '/Modulos',

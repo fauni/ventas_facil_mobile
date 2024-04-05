@@ -4,6 +4,8 @@ import 'package:ventas_facil/bloc/pedido_bloc/pedido_bloc.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_event.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_state.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
+import 'package:ventas_facil/ui/widgets/button_generic_alone_icon_widget.dart';
+import 'package:ventas_facil/ui/widgets/icon_button_generic_widget.dart';
 import 'package:ventas_facil/ui/widgets/item_list_pedido_widget.dart';
 import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
 import 'package:ventas_facil/ui/widgets/not_found_information_widget.dart';
@@ -16,19 +18,16 @@ class PedidoPage extends StatefulWidget {
 }
 
 class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
-
-  late final TabController _tabController;
+  String selectedItem = 'Buscar por:';
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
     cargarPedidos();
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -45,40 +44,85 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text('Pedidos'),
         actions: [
-          IconButton(
-            onPressed: (){
-              cargarPedidos();
-            }, 
-            icon: const Icon(Icons.refresh)
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              onPressed: () async {
-                // final result = await context.push<bool>('/NuevoPedido');
-                // if(result!) {
-                //   cargarPedidos();
-                // }
-              }, 
-              icon: const Icon(Icons.sort, size: 30,)
+          Container(
+            margin: EdgeInsets.only(right: 10),
+            child: PopupMenuButton<String>(
+              onSelected: (String result) {
+                print(result);
+                setState(() {
+                  selectedItem = result;
+                });
+            
+              },
+              itemBuilder: (context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'Opción 1',
+                  child: Text('Opción 1'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Opción 2',
+                  child: Text('Opción 2'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Opción 3',
+                  child: Text('Opción 3'),
+                ),
+              ],
+              child: TextButton.icon(
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary
+                ),
+                onPressed: () {
+                  
+                }, 
+                icon: const Icon(Icons.keyboard_arrow_down), 
+                label: Text('Buscar por:')
+              )
             ),
           )
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          cargarPedidos();
+        },
+        child: const Icon(Icons.refresh)
+      ),
       body: Column(
         children: [
           Container(
+            child: Row(
+
+            ),
+          ),
+          Container(
             padding: const EdgeInsets.all(10.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Buscar Pedidos',
-                prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.tertiary,),
-                border: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0)
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Buscar Pedidos',
+                      prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.tertiary,),
+                      border: const UnderlineInputBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          bottomLeft: Radius.circular(10),
+                        )
+                      ),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.onTertiary.withOpacity(0.3),
+                    ),
+                  ),
                 ),
-                filled: true,
-                fillColor: Theme.of(context).colorScheme.onTertiary.withOpacity(0.3),
-              ),
+                ButtonGenericAloneIconWidget(
+                  icon: Icons.search,
+                  height: 48,
+                  onPressed: () {
+                  
+                  },
+                )
+              ],
             ),
           ),
           Expanded(

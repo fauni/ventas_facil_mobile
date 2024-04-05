@@ -26,6 +26,7 @@ class User {
   int? idCompany;
   int? idEmpleadoSap;
   String? imagen;
+  String? almacen;
 
   User({
       this.id,
@@ -45,6 +46,7 @@ class User {
       this.idCompany,
       this.idEmpleadoSap,
       this.imagen,
+      this.almacen
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -65,6 +67,7 @@ class User {
       idCompany: json["idCompany"],
       idEmpleadoSap: json["idEmpleadoSap"],
       imagen: json["imagen"],
+      almacen: json["almacen"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -85,5 +88,6 @@ class User {
       "idCompany": idCompany,
       "idEmpleadoSap": idEmpleadoSap,
       "imagen": imagen,
+      "almacen": almacen
   };
 }

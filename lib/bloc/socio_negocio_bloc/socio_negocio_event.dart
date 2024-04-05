@@ -5,4 +5,9 @@ abstract class SocioNegocioEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadSociosNegocio extends SocioNegocioEvent{}
+// ignore: must_be_immutable
+class LoadSociosNegocio extends SocioNegocioEvent{
+  int top;
+  int skip;
+  LoadSociosNegocio({ required this.top, required this.skip });
+}

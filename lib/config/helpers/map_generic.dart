@@ -5,7 +5,7 @@ import 'package:ventas_facil/models/venta/pedido_list.dart';
 class MapGeneric {
   static Pedido pedidoListToPedido(PedidoList data){
     Pedido pedido = Pedido(linesPedido: []);
-    pedido.id =
+    pedido.id = data.codigoSap;
     pedido.codigoSap = data.codigoSap;
     pedido.nombreFactura = data.nombreFactura;
     pedido.nitFactura = data.nitFactura;
@@ -48,6 +48,8 @@ class MapGeneric {
       item.descuento = element.descuento;
       item.precioPorUnidad = element.precioUnitario;
       item.indicadorDeImpuestos = "IVA";
+      item.codigoUnidadMedida = element.codigoUnidadMedida;
+      item.nombreUnidadMedida = element.unidadDeMedida;
       listaItem.add(item);
     }
     return listaItem;

@@ -20,6 +20,7 @@ class Item {
     final String? unidadMedidaVenta;
     final String? unidadMedidaInventario;
     final double? cantidadEnStock;
+    final double? grupoUnidadMedida;
     final List<ListaPrecio>? listaPrecios;
     final List<ItemAlmacen>? informacionItemAlmacen;
     final List<ItemLote>? informacionItemLote;
@@ -35,6 +36,7 @@ class Item {
         this.esGestionadoNumeroLote,
         this.unidadMedidaVenta,
         this.unidadMedidaInventario,
+        this.grupoUnidadMedida,
         this.cantidadEnStock,
         this.listaPrecios,
         this.informacionItemAlmacen,
@@ -52,6 +54,7 @@ class Item {
         String? esGestionadoNumeroLote,
         String? unidadMedidaVenta,
         String? unidadMedidaInventario,
+        double? grupoUnidadMedida,
         double? cantidadEnStock,
         List<ListaPrecio>? listaPrecios,
         List<ItemAlmacen>? informacionItemAlmacen,
@@ -68,6 +71,7 @@ class Item {
             esGestionadoNumeroLote: esGestionadoNumeroLote ?? this.esGestionadoNumeroLote,
             unidadMedidaVenta: unidadMedidaVenta ?? this.unidadMedidaVenta,
             unidadMedidaInventario: unidadMedidaInventario ?? this.unidadMedidaInventario,
+            grupoUnidadMedida: grupoUnidadMedida ?? this.grupoUnidadMedida,
             cantidadEnStock: cantidadEnStock ?? this.cantidadEnStock,
             listaPrecios: listaPrecios ?? this.listaPrecios,
             informacionItemAlmacen: informacionItemAlmacen ?? this.informacionItemAlmacen,
@@ -85,6 +89,7 @@ class Item {
         esGestionadoNumeroLote: json["esGestionadoNumeroLote"],
         unidadMedidaVenta: json["unidadMedidaVenta"],
         unidadMedidaInventario: json["unidadMedidaInventario"],
+        grupoUnidadMedida: json["grupoUnidadMedida"]?.toDouble(),
         cantidadEnStock: json["cantidadEnStock"]?.toDouble(),
         listaPrecios: json["listaPrecios"] == null ? [] : List<ListaPrecio>.from(json["listaPrecios"]!.map((x) => ListaPrecio.fromJson(x))),
         informacionItemAlmacen: json["informacionItemAlmacen"] == null ? [] : List<ItemAlmacen>.from(json["informacionItemAlmacen"]!.map((x) => ItemAlmacen.fromJson(x))),
@@ -102,6 +107,7 @@ class Item {
         "esGestionadoNumeroLote": esGestionadoNumeroLote,
         "unidadMedidaVenta": unidadMedidaVenta,
         "unidadMedidaInventario": unidadMedidaInventario,
+        "grupoUnidadMedida": grupoUnidadMedida,
         "cantidadEnStock": cantidadEnStock,
         "listaPrecios": listaPrecios == null ? [] : List<dynamic>.from(listaPrecios!.map((x) => x.toJson())),
         "informacionItemAlmacen": informacionItemAlmacen == null ? [] : List<dynamic>.from(informacionItemAlmacen!.map((x) => x.toJson())),
@@ -178,34 +184,52 @@ class ItemAlmacen {
     final String? codigoItem;
     final String? codigoAlmacen;
     final double? enStock;
+    final double? comprometida;
+    final double? solicitada;
+    final double? disponible;
 
     ItemAlmacen({
         this.codigoItem,
         this.codigoAlmacen,
         this.enStock,
+        this.comprometida,
+        this.solicitada,
+        this.disponible
     });
 
     ItemAlmacen copyWith({
       String? codigoItem,
       String? codigoAlmacen,
       double? enStock,
+      double? comprometida,
+      double? solicitada,
+      double? disponible
     }) => 
         ItemAlmacen(
             codigoItem: codigoItem ?? this.codigoItem,
             codigoAlmacen: codigoAlmacen ?? this.codigoAlmacen,
             enStock: enStock ?? this.enStock,
+            comprometida: comprometida ?? this.comprometida,
+            solicitada: solicitada ?? this.solicitada,
+            disponible: disponible ?? this.disponible
         );
 
     factory ItemAlmacen.fromJson(Map<String, dynamic> json) => ItemAlmacen(
         codigoItem: json["codigoItem"],
         codigoAlmacen: json["codigoAlmacen"],
         enStock: json["enStock"]?.toDouble(),
+        comprometida: json["comprometida"]?.toDouble(),
+        solicitada: json["solicitada"]?.toDouble(),
+        disponible: json["disponible"]?.toDouble(),
     );
 
     Map<String, dynamic> toJson() => {
         "codigoItem": codigoItem,
         "codigoAlmacen": codigoAlmacen,
         "enStock": enStock,
+        "comprometida": comprometida,
+        "solicitada": solicitada,
+        "disponible": disponible,
     };
 }
 
