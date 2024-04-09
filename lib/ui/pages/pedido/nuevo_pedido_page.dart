@@ -154,7 +154,6 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
               onPressed: () async {
                 final result = await context.push<Pedido>('/Pedidos');
                 pedido = result!;  
-                pedidoController.text = jsonEncode(pedido);
                 esNuevo = false;
                 // ignore: use_build_context_synchronously
                 BlocProvider.of<SalesEmployeeBloc>(context).add(GetSalesEmployeeById(pedido.empleado!));

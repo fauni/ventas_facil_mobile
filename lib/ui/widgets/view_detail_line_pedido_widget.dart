@@ -74,6 +74,7 @@ class ViewDetailLinePedidoWidget extends StatelessWidget {
                       Text('${itemPedido.precioConDescuento} ${pedido.moneda}', style: Theme.of(context).textTheme.bodyMedium,),
                     ],
                   ),
+                  Text(itemPedido.fechaDeEntrega!.toIso8601String())
                 ],
               );
             }, 

@@ -3,7 +3,7 @@ import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
 
 class MapGeneric {
-  static Pedido pedidoListToPedido(PedidoList data){
+  static Pedido pedidoListToPedido(PedidoList data) {
     Pedido pedido = Pedido(linesPedido: []);
     pedido.id = data.codigoSap;
     pedido.codigoSap = data.codigoSap;
@@ -38,7 +38,7 @@ class MapGeneric {
     return pedido;
   }
 
-  static List<ItemPedido> itemPedidoToLinesOrder(List<LinesOrder> data){
+  static List<ItemPedido> itemPedidoToLinesOrder(List<LinesOrder> data) {
     List<ItemPedido> listaItem = [];
     for (var element in data) {
       ItemPedido item = ItemPedido();
@@ -52,6 +52,7 @@ class MapGeneric {
       item.indicadorDeImpuestos = "IVA";
       item.codigoUnidadMedida = element.codigoUnidadMedida;
       item.nombreUnidadMedida = element.unidadDeMedida;
+      item.fechaDeEntrega = element.fechaDeEntrega;
       listaItem.add(item);
     }
     return listaItem;

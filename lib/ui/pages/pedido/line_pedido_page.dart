@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +6,8 @@ import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/producto/item_unidad_medida.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
+import 'package:ventas_facil/ui/widgets/item_add_pedido_observacion_widget.dart';
+import 'package:ventas_facil/ui/widgets/item_add_pedido_widget.dart';
 
 class LinePedidoPage extends StatefulWidget {
   final Pedido pedido;
@@ -480,6 +483,19 @@ Widget build(BuildContext context) {
   );
 }
 
+Future<DateTime?> _seleccionarFecha(BuildContext context) async {
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2025),
+  );
+  if (picked != null) {
+    return picked;
+  }
+  return null;
+}
+
   void _showUpdateItemPedido(BuildContext context, ItemPedido item, int indexLine){
     showDialog(
       context: context, 
@@ -552,6 +568,15 @@ Widget build(BuildContext context) {
                       )
                     ),
                     controller: controllerDescuento,
+                  ),
+                  const SizedBox(height: 20,),
+                  ItemAddPedidoObservacionWidget(
+                    titulo: 'Fecha de Entrega', 
+                    valor: item.fechaDeEntrega == null ? '' : formatDate(item.fechaDeEntrega!, [dd, '-', mm , '-', yyyy]),
+                    isSeleccionable: true, onPush: () async {
+                      item.fechaDeEntrega = await _seleccionarFecha(context);
+                      setState((){});
+                    },
                   ),
                   const SizedBox(height: 20,),
                   BlocConsumer<UnidadMedidaBloc, UnidadMedidaState>(
