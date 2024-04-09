@@ -92,7 +92,7 @@ class PedidoList {
     }
 
     double get totalDespuesDelDescuento{
-      return totalAntesDelDescuento! - totalDescuento;
+      return totalAntesDelDescuento - totalDescuento;
     }
 
     PedidoList copyWith({
@@ -220,6 +220,7 @@ class PedidoList {
 }
 
 class LinesOrder {
+    final int? numeroDeLinea;
     final String? codigo;
     final String? descripcion;
     final String? descripcionAdicional;
@@ -235,6 +236,7 @@ class LinesOrder {
     final String? estadoLinea;
 
     LinesOrder({
+        this.numeroDeLinea,
         this.codigo,
         this.descripcion,
         this.descripcionAdicional,
@@ -255,6 +257,7 @@ class LinesOrder {
     double? get precioConDescuento => total != null ? total! - total! * descuento!/100 : null;
 
     LinesOrder copyWith({
+        int? numeroDeLinea,
         String? codigo,
         String? descripcion,
         String? descripcionAdicional,
@@ -270,6 +273,7 @@ class LinesOrder {
         String? estadoLinea,
     }) => 
         LinesOrder(
+            numeroDeLinea: numeroDeLinea ?? this.numeroDeLinea,
             codigo: codigo ?? this.codigo,
             descripcion: descripcion ?? this.descripcion,
             descripcionAdicional: descripcionAdicional ?? this.descripcionAdicional,
@@ -286,6 +290,7 @@ class LinesOrder {
         );
 
     factory LinesOrder.fromJson(Map<String, dynamic> json) => LinesOrder(
+        numeroDeLinea: json["numeroDeLinea"],
         codigo: json["codigo"],
         descripcion: json["descripcion"],
         descripcionAdicional: json["descripcionAdicional"],
@@ -302,6 +307,7 @@ class LinesOrder {
     );
 
     Map<String, dynamic> toJson() => {
+        "numeroDeLinea": numeroDeLinea,
         "codigo": codigo,
         "descripcion": descripcion,
         "descripcionAdicional": descripcionAdicional,

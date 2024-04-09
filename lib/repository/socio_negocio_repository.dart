@@ -8,10 +8,10 @@ import 'package:ventas_facil/models/venta/socio_negocio.dart';
 
 class SocioNegocioRepository {
   final String _baseUrl = Environment.UrlApi;
-  Future<List<SocioNegocio>> getAllSocioNegocio(String sessionID, int top, int skip) async {
+  Future<List<SocioNegocio>> getAllSocioNegocio(String sessionID, int top, int skip, String text) async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/BusinessPartners?top=$top&skip=$skip'),
+        Uri.parse('$_baseUrl/BusinessPartners?top=$top&skip=$skip&text=$text'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Cookie': sessionID

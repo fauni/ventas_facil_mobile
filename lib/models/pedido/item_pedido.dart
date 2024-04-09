@@ -9,6 +9,7 @@ ItemPedido itemFromJson(String str) => ItemPedido.fromJson(json.decode(str));
 String itemToJson(ItemPedido data) => json.encode(data.toJson());
 
 class ItemPedido {
+    int? numeroDeLinea;
     String? codigo;
     String? descripcion;
     String? descripcionAdicional;
@@ -25,6 +26,7 @@ class ItemPedido {
 
 
     ItemPedido({
+        this.numeroDeLinea,
         this.codigo,
         this.descripcion,
         this.descripcionAdicional,
@@ -42,6 +44,7 @@ class ItemPedido {
     double? get precioConDescuento => total != null ? total! - total! * descuento!/100 : null;
 
     ItemPedido copyWith({
+        int? numeroDeLinea,
         String? codigo,
         String? descripcion,
         String? descripcionAdicional,
@@ -54,6 +57,7 @@ class ItemPedido {
         String? nombreUnidadMedida
     }) => 
         ItemPedido(
+            numeroDeLinea: numeroDeLinea ?? this.numeroDeLinea,
             codigo: codigo ?? this.codigo,
             descripcion: descripcion ?? this.descripcion,
             descripcionAdicional: descripcionAdicional ?? this.descripcionAdicional,
@@ -67,6 +71,7 @@ class ItemPedido {
         );
 
     factory ItemPedido.fromJson(Map<String, dynamic> json) => ItemPedido(
+        numeroDeLinea: json["numeroDeLinea"],
         codigo: json["codigo"],
         descripcion: json["descripcion"],
         descripcionAdicional: json["descripcionAdicional"],
@@ -80,6 +85,7 @@ class ItemPedido {
     );
 
     Map<String, dynamic> toJson() => {
+        "numeroDeLinea": numeroDeLinea,
         "codigo": codigo,
         "descripcion": descripcion,
         "descripcionAdicional": descripcionAdicional,

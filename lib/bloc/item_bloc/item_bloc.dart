@@ -16,7 +16,7 @@ class ItemBloc extends Bloc<ItemEvent, ItemState>{
     final token = prefs.get('token').toString();    
     emit(ItemLoading());
     try {
-      final items = await _repository.getAllItemsParaVenta(token);
+      final items = await _repository.getAllItemsParaVenta(token, event.text);
       emit(ItemLoaded(items));
     } catch(e){
       emit(ItemNotLoaded(e.toString()));

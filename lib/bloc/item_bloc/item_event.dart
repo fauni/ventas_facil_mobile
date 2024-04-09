@@ -5,4 +5,8 @@ abstract class ItemEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadItems extends ItemEvent{}
+// ignore: must_be_immutable
+class LoadItems extends ItemEvent{
+  String text;
+  LoadItems({ required this.text });
+}

@@ -20,7 +20,7 @@ class _PanelFilterItemCantidadWidgetState extends State<PanelFilterItemCantidadW
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       width: double.infinity,
       decoration: const BoxDecoration(
         // color: Theme.of(context).colorScheme.onSecondary

@@ -43,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   HeroMode(
+                    enabled: true,
                     child: Hero(
                       tag: 'heroIcono',
                       child: Image.asset(
@@ -50,7 +51,6 @@ class _LoginPageState extends State<LoginPage> {
                         height: 150,
                       ),
                     ),
-                    enabled: true,
                   ),
                 ],
               ),

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
@@ -82,7 +81,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
         return AlertDialog(
           title: const Text('¿Estas seguro?'),
           content: const Text(
-            '¿Estas seguro que quieres salir de esta pagina, los datos se perderán?',
+            '¿Estas seguro que quieres salir de esta pagina, los datos no guardados se perderán?',
           ),
           actions: <Widget>[
             TextButton(
@@ -184,12 +183,13 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
               // iniciarValores();
             } else if(state is PedidoGuardadoError){
               Navigator.of(context, rootNavigator: true).pop('dialog');
+              String errorMessage = state.error.replaceAll('Exception: ', '');
               if (state.error.contains("UnauthorizedException")) {
                 LoginDialogWidget.mostrarDialogLogin(context);
                 // mostrarDialogLogin(context);
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tu sesión no es válida'), backgroundColor: Colors.red,));
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Ocurrio un error al guardar.'), backgroundColor: Colors.red,));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage), backgroundColor: Colors.red,));
               }
             }
             // ESTADOS PARA MODIFICAR PEDIDO
@@ -221,6 +221,12 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                     ItemAddPedidoWidget(
                       titulo: 'Codigo del Pedido', 
                       valor: '${pedido.codigoSap ?? 0}', 
+                      isSeleccionable: false, 
+                      onPush: (){},
+                    ),
+                    ItemAddPedidoWidget(
+                      titulo: 'Numero del Documento', 
+                      valor: '${pedido.numeroDocumento ?? 0}', 
                       isSeleccionable: false, 
                       onPush: (){},
                     ),
@@ -290,16 +296,36 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                             valor: pedido.empleado!.nombreEmpleado!, 
                             isSeleccionable: true, 
                             onPush: () async {
+                              setState(() {
+                                
+                              });
                               final result = await context.push<EmpleadoVenta>('/EmpleadoVentas', extra: state.empleado);
                               if (result != null){
                                 // ignore: use_build_context_synchronously
                                 BlocProvider.of<SalesEmployeeBloc>(context).add(GetSalesEmployeeById(result));
+                              } else {
+                                // ignore: use_build_context_synchronously
+                                BlocProvider.of<SalesEmployeeBloc>(context).add(GetSalesEmployeeById(EmpleadoVenta(codigoEmpleado: pedido.idEmpleado)));
                               }
+
                             },);
                         } else if(state is SalesEmployeeError){
-                          return ItemAddPedidoWidget(titulo: 'Empleado de Venta: ', valor: 'No se pudo traer esta información', isSeleccionable: true, onPush: () {},);
-                        } else{
-                          return ItemAddPedidoWidget(titulo: 'Empleado de Venta: ', valor: 'Requerido', isSeleccionable: true, onPush: () {},);
+                          return ItemAddPedidoWidget(
+                            titulo: 'Empleado de Venta: ', 
+                            valor: 'No se pudo traer esta información', 
+                            isSeleccionable: true, 
+                            onPush: () {},
+                          );
+                        } 
+                        else{
+                          return ItemAddPedidoWidget(
+                            titulo: 'Empleado de Venta: ', 
+                            valor: 'Requerido', 
+                            isSeleccionable: true, 
+                            onPush: () {
+                              
+                            },
+                          );
                         }
                       }, 
                       listener: (context, state) {

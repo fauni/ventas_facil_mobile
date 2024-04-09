@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ventas_facil/models/authentication/user.dart';
 import 'package:ventas_facil/services/genericos_service.dart';
 import 'package:ventas_facil/services/location_service.dart';
-import 'package:ventas_facil/ui/widgets/drawer_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -64,11 +63,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 child: HeroMode(
+                  enabled: true,
                   child: Hero(
                     tag: 'heroIcono',
                     child: Image.asset('assets/icons/icono-logo.png'),
                   ),
-                  enabled: true,
                 ),
               ),
               const Divider(),

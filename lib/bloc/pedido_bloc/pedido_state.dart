@@ -30,6 +30,15 @@ class PedidosUnauthorized extends PedidoState{}
 class PedidosEmpty extends PedidoState{}
 class PedidosError extends PedidoState{}
 
+// Estados para Cargar pedidos por busqueda
+class PedidosLoadedSearch extends PedidoState{
+  final List<PedidoList> pedidos;
+
+  PedidosLoadedSearch(this.pedidos);
+  @override
+  List<Object> get props => [pedidos];
+}
+
 // Estados para guardar un nuevo pedido
 class PedidoGuardando extends PedidoState {}
 

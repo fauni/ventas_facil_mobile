@@ -9,5 +9,6 @@ abstract class SocioNegocioEvent extends Equatable {
 class LoadSociosNegocio extends SocioNegocioEvent{
   int top;
   int skip;
-  LoadSociosNegocio({ required this.top, required this.skip });
+  String text;
+  LoadSociosNegocio({ required this.top, required this.skip, required this.text });
 }

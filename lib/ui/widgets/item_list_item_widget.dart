@@ -190,40 +190,4 @@ class _ItemListItemWidgetState extends State<ItemListItemWidget> {
       }
     });
   }
-
-  void _showBottomSheetStockPorAlmacen(BuildContext context, Item item){
-    showDialog(
-      context: context, 
-      builder: (BuildContext bc) {
-        List<bool> _isOpen;
-        _isOpen = List<bool>.filled(item.informacionItemAlmacen!.length, false);
-        List<ItemAlmacen> listaItemAlmacen = item.informacionItemAlmacen ?? [];
-        return AlertDialog(
-          title: Text('Stock por Almacen', style: Theme.of(context).textTheme.titleLarge,),
-          actions: [
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)
-                )
-              ),
-              onPressed: (){
-                context.pop();
-              }, 
-              icon: const Icon(Icons.arrow_back_ios), 
-              label: const Text('Volver'),
-            )
-          ],
-          // padding: const EdgeInsets.all(20),
-          content: SingleChildScrollView(),
-        );
-      },
-    ).then((result){
-      if(result != null){
-        // context.pop(result);
-      }
-    });
-  }
 }

@@ -9,6 +9,14 @@ abstract class PedidoEvent extends Equatable {
 
 class LoadPedidos extends PedidoEvent{}
 
+class LoadPedidosSearch extends PedidoEvent{
+  final String search;
+  LoadPedidosSearch(this.search);
+
+  @override
+  List<Object> get props => [search];
+}
+
 class SavePedido extends PedidoEvent {
   final Pedido pedido;
   SavePedido(this.pedido);

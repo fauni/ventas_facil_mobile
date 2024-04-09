@@ -367,7 +367,7 @@ Widget build(BuildContext context) {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text('Unidad de Medida:', style: Theme.of(context).textTheme.titleMedium,),
-                                      Text('${articulo.nombreUnidadMedida ?? 'Requerido'}', style: Theme.of(context).textTheme.bodyMedium,),
+                                      Text(articulo.nombreUnidadMedida ?? 'Requerido', style: Theme.of(context).textTheme.bodyMedium,),
                                     ],
                                   )
                                   : const SizedBox(),
@@ -582,9 +582,7 @@ Widget build(BuildContext context) {
                                   
                                 });
                                 selectedEntry = selected ? it.absEntry : null;
-                                print(selectedEntry);
                                 ItemUnidadMedida? nuevaSeleccion = state.unidades.firstWhere((element) => element.absEntry == selectedEntry);
-                                print(nuevaSeleccion.code);
                                 widget.pedido.linesPedido[indexLine].codigoUnidadMedida = nuevaSeleccion.absEntry;
                                 widget.pedido.linesPedido[indexLine].nombreUnidadMedida = nuevaSeleccion.code;
                               },

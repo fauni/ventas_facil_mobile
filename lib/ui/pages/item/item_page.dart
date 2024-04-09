@@ -6,6 +6,7 @@ import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/producto/item.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
 import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
+import 'package:ventas_facil/ui/widgets/buscar_pedidos_widget.dart';
 import 'package:ventas_facil/ui/widgets/item_list_item_widget.dart';
 import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
 import 'package:ventas_facil/ui/widgets/not_found_information_widget.dart';
@@ -22,15 +23,19 @@ class _ItemPageState extends State<ItemPage> {
   ItemPedido line = ItemPedido();
   // Item itemSeleccionado = Item();
   final TextEditingController controllerCantidad = TextEditingController();
+  TextEditingController controllerSearch = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     cargarItems();
+    controllerSearch.text = '';
   }
 
   void cargarItems(){
-    BlocProvider.of<ItemBloc>(context).add(LoadItems());
+    BlocProvider.of<ItemBloc>(context).add(LoadItems(
+      text: controllerSearch.text
+    ));
   }
   @override
   Widget build(BuildContext context) {
@@ -39,20 +44,21 @@ class _ItemPageState extends State<ItemPage> {
       appBar: const AppBarWidget(titulo: 'Items',),
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Buscar Items',
-                prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.tertiary,),
-                border: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0)
-                ),
-                filled: true,
-                fillColor: Theme.of(context).colorScheme.onTertiary.withOpacity(0.3),
-              ),
-            ),
-          ),
+          BuscadorPedidosWidget(controllerSearch: controllerSearch, onSearch: cargarItems),
+          // Container(
+          //   padding: const EdgeInsets.all(10.0),
+          //   child: TextField(
+          //     decoration: InputDecoration(
+          //       hintText: 'Buscar Items',
+          //       prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.tertiary,),
+          //       border: UnderlineInputBorder(
+          //         borderRadius: BorderRadius.circular(10.0)
+          //       ),
+          //       filled: true,
+          //       fillColor: Theme.of(context).colorScheme.onTertiary.withOpacity(0.3),
+          //     ),
+          //   ),
+          // ),
           Expanded(
             child: BlocConsumer<ItemBloc, ItemState>(
               listener: (context, state) {

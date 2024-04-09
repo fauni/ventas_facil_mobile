@@ -7,6 +7,7 @@ class MapGeneric {
     Pedido pedido = Pedido(linesPedido: []);
     pedido.id = data.codigoSap;
     pedido.codigoSap = data.codigoSap;
+    pedido.numeroDocumento = data.numeroDocumento.toString();
     pedido.nombreFactura = data.nombreFactura;
     pedido.nitFactura = data.nitFactura;
     pedido.diasPlazo = 0;
@@ -41,6 +42,7 @@ class MapGeneric {
     List<ItemPedido> listaItem = [];
     for (var element in data) {
       ItemPedido item = ItemPedido();
+      item.numeroDeLinea = element.numeroDeLinea;
       item.codigo = element.codigo;
       item.descripcion = element.descripcion;
       item.descripcionAdicional = element.descripcionAdicional;

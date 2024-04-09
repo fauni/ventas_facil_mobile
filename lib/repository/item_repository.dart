@@ -7,10 +7,10 @@ import 'package:ventas_facil/models/producto/item.dart';
 
 class ItemRepository {
   final String _baseUrl = Environment.UrlApi;
-  Future<List<Item>> getAllItemsParaVenta(String sessionID) async {
+  Future<List<Item>> getAllItemsParaVenta(String sessionID, String text) async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/Items'),
+        Uri.parse('$_baseUrl/Items?text=$text'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Cookie': sessionID

@@ -10,6 +10,7 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
 
   PedidoBloc(this._pedidoRepository): super(PedidosLoading()){
     on<LoadPedidos>(_onLoadPedidos);
+    on<LoadPedidosSearch>(_onLoadPedidosSearch);
     on<SavePedido>(_onGuardarPedido);
     on<UpdatePedido>(_onUpdatePedido);
   }
@@ -20,7 +21,23 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
     emit(PedidosLoading());
     try {
       final pedidos = await _pedidoRepository.getOrdenesVentaAbiertos(token);
-      emit(PedidosLoaded(pedidos));
+      emit(PedidosLoadedSearch(pedidos));
+    } on UnauthorizedException catch(_){
+      emit(PedidosUnauthorized());
+    } on PedidosEmpty catch(_){
+      emit(PedidosEmpty());
+    }catch (e) {
+      emit(PedidosNotLoaded(e.toString()));
+    }
+  }
+
+  Future<void> _onLoadPedidosSearch(LoadPedidosSearch event, Emitter<PedidoState> emit) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.get('token').toString();
+    emit(PedidosLoading());
+    try {
+      final pedidos = await _pedidoRepository.getOrdenesForSearch(token, event.search);
+      emit(PedidosLoadedSearch(pedidos));
     } on UnauthorizedException catch(_){
       emit(PedidosUnauthorized());
     } on PedidosEmpty catch(_){

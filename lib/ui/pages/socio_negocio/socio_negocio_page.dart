@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
 import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
+import 'package:ventas_facil/ui/widgets/buscar_pedidos_widget.dart';
 import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
 import 'package:ventas_facil/ui/widgets/not_found_information_widget.dart';
 
 // ignore: must_be_immutable
 class SocioNegocioPage extends StatefulWidget {
-  // final SocioNegocio socioNegocioSeleccionado;
   SocioNegocio clienteSeleccionado;
   SocioNegocioPage({super.key, required this.clienteSeleccionado});
 
@@ -19,6 +19,7 @@ class SocioNegocioPage extends StatefulWidget {
 
 class _SocioNegocioPageState extends State<SocioNegocioPage> {
   final ScrollController _scrollController = ScrollController();
+  TextEditingController controllerSearch = TextEditingController();
   int lastItemIndex = 0;
   List<SocioNegocio> clientes = [];
   List<SocioNegocio> clientesNuevos = [];
@@ -29,6 +30,7 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
     cargarSocioDeNegocio();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       listenerControllerScroll();
+      controllerSearch.text = '';
     });
   }
 
@@ -55,7 +57,8 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
     BlocProvider.of<SocioNegocioBloc>(context).add(
       LoadSociosNegocio(
         top: 10, 
-        skip: clientes.length
+        skip: clientes.length,
+        text: controllerSearch.text
       )
     );
   }
@@ -63,71 +66,78 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarWidget(titulo: 'Socios de Negocio',),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   onPressed: () {
-      //     GoRouter.of(context).pop(widget.clienteSeleccionado);
-      //   }, 
-      //   label: const Text('Seleccionar'),
-      //   icon: const Icon(Icons.check),
-      // ),
-      body: BlocConsumer<SocioNegocioBloc, SocioNegocioState>(
-        listener: (context, state) {
-          if(state is SocioNegocioNotLoaded){
-            if (state.error.contains('UnauthorizedException')) {
-              LoginDialogWidget.mostrarDialogLogin(context);
-            }
-          } else if(state is SocioNegocioLoaded) {
-            clientesNuevos = state.clientes;
-            clientes = clientes..addAll(clientesNuevos); 
-            // if(_scrollController.hasClients) {
-            //   final position = _scrollController.position.maxScrollExtent;
-            //   _scrollController.animateTo(position, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-            // } else {
-            //   final position = _scrollController.position.maxScrollExtent;
-            //   _scrollController.animateTo(position, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-            // }
-          }
-        },
-        builder: (context, state) {
-          if(state is SocioNegocioLoading){
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if(state is SocioNegocioLoaded){
-            return ListView.separated(
-              controller: _scrollController,
-              itemBuilder: (context, index) {
-                SocioNegocio cliente = clientes[index];
-                bool isSelected = widget.clienteSeleccionado.codigoSn == cliente.codigoSn;
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.error,
-                    foregroundColor: Theme.of(context).colorScheme.surface,
-                    // backgroundColor: isSelected ? Colors.green : Colors.yellowAccent,
-                    child: isSelected 
-                      ? const Icon(Icons.check) 
-                      : const Icon(Icons.info_outline),
-                  ),
-                  selected: isSelected,
-                  title: Text(cliente.nombreSn!),
-                  onTap: () {
-                    widget.clienteSeleccionado = cliente;
-                    isSelected = true;
-                    setState(() {});
-                    GoRouter.of(context).pop(cliente);
-                  },
-                  trailing: const Icon(Icons.touch_app),
-                );
+      body: Column(
+        children: [
+          BuscadorPedidosWidget(controllerSearch: controllerSearch, onSearch: cargarSocioDeNegocio),
+          Expanded(
+            child: BlocConsumer<SocioNegocioBloc, SocioNegocioState>(
+              listener: (context, state) {
+                if(state is SocioNegocioNotLoaded){
+                  if (state.error.contains('UnauthorizedException')) {
+                    LoginDialogWidget.mostrarDialogLogin(context);
+                  }
+                } else if(state is SocioNegocioLoaded) {
+                  // if(clientes.isNotEmpty){
+                  //   WidgetsBinding.instance.addPostFrameCallback((_) { 
+                  //     if (_scrollController.hasClients) {
+                  //       int scrollIndex = max(0, clientes.length - 10);
+                  //       double position = scrollIndex * 60; // Asumiendo una altura aproximada por elemento
+                  //       _scrollController.animateTo(
+                  //         position,
+                  //         duration: const Duration(milliseconds: 300),
+                  //         curve: Curves.easeOut,
+                  //       );
+                  //     }
+                  //   });
+                  // }
+                  clientesNuevos = state.clientes;
+                  clientes = clientesNuevos; 
+                  // clientes = clientes..addAll(clientesNuevos); 
+                }
               },
-              separatorBuilder: (context, index) {
-                return const Divider();
-              },
-              itemCount: clientes.length,
-            );
-          } else {
-            return NotFoundInformationWidget(mensaje: 'Ocurrio un error al traer los socios de negocio.', onPush: () => cargarSocioDeNegocio(),);
-          }
-        }
+              builder: (context, state) {
+                if(state is SocioNegocioLoading){
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if(state is SocioNegocioLoaded){
+                  return ListView.separated(
+                    itemBuilder: (context, index) {
+                      SocioNegocio cliente = clientes[index];
+                      bool isSelected = widget.clienteSeleccionado.codigoSn == cliente.codigoSn;
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                          foregroundColor: Theme.of(context).colorScheme.surface,
+                          // backgroundColor: isSelected ? Colors.green : Colors.yellowAccent,
+                          child: isSelected 
+                            ? const Icon(Icons.check) 
+                            : const Icon(Icons.info_outline),
+                        ),
+                        selected: isSelected,
+                        title: Text(cliente.id!),
+                        subtitle: Text(cliente.nombreSn!),
+                        onTap: () {
+                          widget.clienteSeleccionado = cliente;
+                          isSelected = true;
+                          setState(() {});
+                          GoRouter.of(context).pop(cliente);
+                        },
+                        trailing: const Icon(Icons.touch_app),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return const Divider();
+                    },
+                    itemCount: clientes.length,
+                  );
+                } else {
+                  return NotFoundInformationWidget(mensaje: 'Ocurrio un error al traer los socios de negocio.', onPush: () => cargarSocioDeNegocio(),);
+                }
+              }
+            ),
+          ),
+        ],
       ),
     );
   }

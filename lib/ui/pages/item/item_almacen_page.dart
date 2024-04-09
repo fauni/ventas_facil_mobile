@@ -18,6 +18,7 @@ class ItemAlmacenPage extends StatefulWidget {
 class _ItemAlmacenPageState extends State<ItemAlmacenPage> {
   User user = User();
   List<ItemAlmacen> almacenes = [];
+  // ignore: non_constant_identifier_names
   List<ItemAlmacen> almacenes_filtrados = [];
   @override
   void initState() {
