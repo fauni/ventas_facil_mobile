@@ -345,6 +345,9 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                         setState((){});
                       },
                     ),
+                    const SizedBox(
+                      height: 5,
+                    ),
                     ItemAddPedidoWidget(
                       titulo: 'Fecha de Documento', 
                       valor: pedido.fechaRegistro == null ? '': formatDate(pedido.fechaRegistro!, [dd, '-', mm , '-', yyyy]), 
