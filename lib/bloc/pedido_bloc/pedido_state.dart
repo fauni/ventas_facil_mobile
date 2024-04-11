@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
 
@@ -72,6 +73,26 @@ class PedidoModificadoExitoso extends PedidoState {
 class PedidoModificadoError extends PedidoState {
   final String error;
   PedidoModificadoError(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
+
+// Region: Estados para modificar un pedido
+class EstadoLineaPedidoModificando extends PedidoState {}
+
+class EstadoLineaPedidoModificadoExitoso extends PedidoState {
+  final bool seModifico;
+  final ItemPedido item;
+
+  EstadoLineaPedidoModificadoExitoso(this.seModifico, this.item);
+  @override
+  List<Object> get props => [seModifico, item];
+}
+
+class EstadoLineaModificadoError extends PedidoState {
+  final String error;
+  EstadoLineaModificadoError(this.error);
 
   @override
   List<Object> get props => [error];

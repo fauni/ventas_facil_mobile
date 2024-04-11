@@ -91,7 +91,7 @@ class ItemPedido {
       unidadDeMedidaManual: json["unidadDeMedidaManual"]?.toDouble(),
       codigoUnidadMedida: json["codigoUnidadMedida"],
       nombreUnidadMedida: json["nombreUnidadMedida"],
-      fechaDeEntrega: json["fechaDeEntrega"]  
+      fechaDeEntrega: json["fechaDeEntrega"] == null ? null : DateTime.parse(json["fechaDeEntrega"]),
     );
 
   Map<String, dynamic> toJson() => {
@@ -106,6 +106,6 @@ class ItemPedido {
         "unidadDeMedidaManual": unidadDeMedidaManual,
         "codigoUnidadMedida": codigoUnidadMedida,
         "nombreUnidadMedida": nombreUnidadMedida,
-        "fechaDeEntrega": fechaDeEntrega
+        "fechaDeEntrega": fechaDeEntrega?.toIso8601String()
       };
 }

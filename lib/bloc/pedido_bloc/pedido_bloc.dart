@@ -13,6 +13,7 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
     on<LoadPedidosSearch>(_onLoadPedidosSearch);
     on<SavePedido>(_onGuardarPedido);
     on<UpdatePedido>(_onUpdatePedido);
+    on<UpdateEstadoLineaPedido>(_onUpdateEstadoLineaPedido);
   }
 
   Future<void> _onLoadPedidos(LoadPedidos event, Emitter<PedidoState> emit) async {
@@ -70,6 +71,18 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
       emit(PedidoModificadoExitoso(pedidoActualizado));
     } catch (e) {
       emit(PedidoModificadoError(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateEstadoLineaPedido(UpdateEstadoLineaPedido event, Emitter<PedidoState> emit) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.get('token').toString();
+    emit(EstadoLineaPedidoModificando());
+    try {
+      final pedidoActualizado = await _pedidoRepository.modificarEstadoLineaPedido(token, event.pedido, event.item);
+      emit(EstadoLineaPedidoModificadoExitoso(pedidoActualizado, event.item));
+    } catch (e) {
+      emit(EstadoLineaModificadoError(e.toString()));
     }
   }
 }

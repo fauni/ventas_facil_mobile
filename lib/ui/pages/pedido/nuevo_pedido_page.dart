@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -177,7 +176,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
               esNuevo = false;
               Navigator.of(context, rootNavigator: true).pop('dialog');
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Guardado con éxito pedido #${state.pedido.codigoSap}',), backgroundColor: Colors.green,)
+                SnackBar(content: Text('Guardado con éxito pedido #${state.pedido.codigoSap}',), backgroundColor: Colors.green, duration: const Duration(seconds: 4),)
               );
               // iniciarValores();
             } else if(state is PedidoGuardadoError){
@@ -205,7 +204,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Modificado con éxito'), backgroundColor: Colors.green,));
             } else if(state is PedidoModificadoError){
               Navigator.of(context, rootNavigator: true).pop('dialog');
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ocurrio un error, ${state.error}'), backgroundColor: Colors.red,));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ocurrio un error, ${state.error.replaceAll('Exception: ', '')}'), backgroundColor: Colors.red,));
             }
           },
           child: Stack(
@@ -223,12 +222,14 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                       isSeleccionable: false, 
                       onPush: (){},
                     ),
+                    const SizedBox(height: 5,),
                     ItemAddPedidoWidget(
                       titulo: 'Numero del Documento', 
                       valor: '${pedido.numeroDocumento ?? 0}', 
                       isSeleccionable: false, 
                       onPush: (){},
                     ),
+                    const SizedBox(height: 5,),
                     ItemAddPedidoWidget(
                       titulo: 'Estado del Pedido', 
                       valor: getEstado(), 
@@ -337,7 +338,10 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                       titulo: 'Fecha de Entrega', 
                       valor: pedido.fechaEntrega == null ? '' : formatDate(pedido.fechaEntrega!, [dd, '-', mm , '-', yyyy]),
                       isSeleccionable: true, onPush: () async {
-                        pedido.fechaEntrega = await _seleccionarFecha(context);
+                        var result = await _seleccionarFecha(context);
+                        if(result != null){
+                          pedido.fechaEntrega = result;
+                        }
                         setState((){});
                       },
                     ),
@@ -346,7 +350,10 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                       valor: pedido.fechaRegistro == null ? '': formatDate(pedido.fechaRegistro!, [dd, '-', mm , '-', yyyy]), 
                       isSeleccionable: true, 
                       onPush: () async {
-                        pedido.fechaRegistro = await _seleccionarFecha(context);
+                        var result = await _seleccionarFecha(context);
+                        if(result != null){
+                          pedido.fechaRegistro = result;
+                        }
                         setState((){});
                       },
                     ),

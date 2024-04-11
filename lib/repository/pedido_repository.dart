@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:ventas_facil/config/constants/environment.dart';
 import 'package:ventas_facil/config/helpers/exceptions.dart';
 import 'package:ventas_facil/config/helpers/helpers.dart';
+import 'package:ventas_facil/models/pedido/item_pedido.dart';
+import 'package:ventas_facil/models/pedido/update_status_item_order.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
 
@@ -106,10 +108,49 @@ class PedidoRepository {
         throw UnauthorizedException();
       }
       else {
-        throw FetchDataException('Error al guardar: ${response.body}');
+        final errorData = jsonDecode(response.body);
+        final errorSap = Helper.getErrorSap(errorData);
+        throw Exception('${errorSap.message}');
       }
     } catch (e) {
-      throw Exception('Error al guardar el pedido: $e');
+      throw Exception('$e');
+    }
+  }
+
+  Future<bool> modificarEstadoLineaPedido(String sessionID, Pedido data, ItemPedido item) async {
+    UpdateStatusItemOrder order = UpdateStatusItemOrder();
+    List<LinesPedido> lines = [];
+    for (var element in data.linesPedido) {
+      if (item.numeroDeLinea == element.numeroDeLinea){
+        lines.add(LinesPedido(numeroDeLinea: element.numeroDeLinea));
+      }
+    }
+    order.id = data.id;
+    order.codigoSap = data.codigoSap;
+    order.linesPedido = lines;
+
+
+    try {
+      final response = await http.patch(
+        Uri.parse('$_baseUrl/Orders/modificarEstadoLinea/${data.codigoSap}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID
+        },
+        body: jsonEncode(order)
+      );
+      if(response.statusCode == 200){
+        return true;
+      } else if(response.statusCode == 401) {
+        throw UnauthorizedException();
+      }
+      else {
+        final errorData = jsonDecode(response.body);
+        final errorSap = Helper.getErrorSap(errorData);
+        throw Exception('${errorSap.message}');
+      }
+    } catch (e) {
+      throw Exception('$e');
     }
   }
 

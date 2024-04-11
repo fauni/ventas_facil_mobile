@@ -1,5 +1,6 @@
 
 import 'package:equatable/equatable.dart';
+import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 
 abstract class PedidoEvent extends Equatable {
@@ -30,4 +31,12 @@ class UpdatePedido extends PedidoEvent{
   UpdatePedido(this.pedido);
   @override
   List<Object> get props => [pedido]; 
+}
+
+class UpdateEstadoLineaPedido extends PedidoEvent{
+  final Pedido pedido;
+  final ItemPedido item;
+  UpdateEstadoLineaPedido(this.pedido, this.item);
+  @override
+  List<Object> get props => [pedido, item]; 
 }
