@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:open_file/open_file.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_event.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_state.dart';
@@ -8,12 +10,13 @@ import 'package:ventas_facil/repository/pedido_repository.dart';
 class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
   final PedidoRepository _pedidoRepository;
 
-  PedidoBloc(this._pedidoRepository): super(PedidosLoading()){
+  PedidoBloc(this._pedidoRepository): super(ReporteInicial()){
     on<LoadPedidos>(_onLoadPedidos);
     on<LoadPedidosSearch>(_onLoadPedidosSearch);
     on<SavePedido>(_onGuardarPedido);
     on<UpdatePedido>(_onUpdatePedido);
     on<UpdateEstadoLineaPedido>(_onUpdateEstadoLineaPedido);
+    on<DescargarReportePedidoVenta>(_mapDownloadReportToState);
   }
 
   Future<void> _onLoadPedidos(LoadPedidos event, Emitter<PedidoState> emit) async {
@@ -84,5 +87,25 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
     } catch (e) {
       emit(EstadoLineaModificadoError(e.toString()));
     }
+  } 
+
+  Future<void> _mapDownloadReportToState(DescargarReportePedidoVenta event, Emitter<PedidoState> emit) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.get('token').toString();
+    emit(ReporteDescargaEnProgreso(0));
+    try {
+      final filePath = await _pedidoRepository.downloadReport(token, event.id);
+      emit(ReporteDescargaCorrecta(filePath));
+      final result = await OpenFile.open(filePath);
+      if (result.type != ResultType.done) {
+      //   emit(ReporteDescargaFallida("No se pudo abrir el archivo: ${result.message}"));
+      } else {
+        
+      }
+    } catch (error) {
+      emit(ReporteDescargaFallida(error.toString()));
+    }
   }
+
+  
 }

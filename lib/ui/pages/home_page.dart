@@ -76,8 +76,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
               _buildMenuItem(Icons.group, 'Socios Comerciales', ''),
               const Divider(),
               _buildMenuItem(Icons.inventory, 'Inventario', ''),
-              const Divider(),
-              _buildMenuItem(Icons.price_change, 'Listas de Precio', ''),
+              // const Divider(),
+              // _buildMenuItem(Icons.price_change, 'Listas de Precio', ''),
               const Divider(),
               _buildMenuItem(Icons.receipt, 'Ordenes de Venta', '/NuevoPedido'),
               // Text('${user!.almacen}')

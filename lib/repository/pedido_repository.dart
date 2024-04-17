@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:ventas_facil/bloc/pedido_bloc/pedido_state.dart';
 import 'package:ventas_facil/config/constants/environment.dart';
 import 'package:ventas_facil/config/helpers/exceptions.dart';
 import 'package:ventas_facil/config/helpers/helpers.dart';
@@ -151,6 +154,34 @@ class PedidoRepository {
       }
     } catch (e) {
       throw Exception('$e');
+    }
+  }
+
+  // Generar reporte del Pedido
+  Future<String> downloadReport(String sessionID, int id) async {
+
+    var response = await http.get(
+      Uri.parse('$_baseUrl/Orders/GenerarReporte/$id'),
+      headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID
+      },
+    );
+    
+    if(response.statusCode == 200){
+      var documentDirectory = await getApplicationDocumentsDirectory();
+      var filePath = '${documentDirectory.path}/pedido-$id.pdf';
+
+      File file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+      return filePath;
+    } else if(response.statusCode == 401) {
+      throw UnauthorizedException();
+    }
+    else {
+      final errorData = jsonDecode(response.body);
+      final errorSap = Helper.getErrorSap(errorData);
+      throw Exception('${errorSap.message}');
     }
   }
 

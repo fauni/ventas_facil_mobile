@@ -2,6 +2,8 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:open_file/open_file.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/database/user_local_provider.dart';
 import 'package:ventas_facil/models/authentication/user.dart';
@@ -126,6 +128,38 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           actions: [
+            BlocConsumer<PedidoBloc, PedidoState>(
+              listener: (context, state) {
+                if(state is ReporteDescargaCorrecta) {
+                  // OpenFile.open(state.filePath);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('El reporte se descargo correctamente! ${state.filePath}'), backgroundColor: Colors.green, duration: Duration(seconds: 3),));
+                } else if (state is ReporteDescargaFallida){
+                  if(state.error == "Instance of 'UnauthorizedException'"){
+                    LoginDialogWidget.mostrarDialogLogin(context);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error), backgroundColor: Colors.red, duration: const Duration(seconds: 5),));
+                  }
+                }
+              },
+              builder: (context, state) {
+                if (state is ReporteDescargaEnProgreso){
+                  return CircularProgressIndicator(value: state.progreso,);
+                } else {
+                  return esNuevo ? const SizedBox() : IconButton(
+                    onPressed: () async {
+                      BlocProvider.of<PedidoBloc>(context).add(DescargarReportePedidoVenta(pedido.codigoSap!));
+                    }, 
+                    icon: const Icon(Icons.print)
+                  );
+                }
+              },
+            ),
+            IconButton(
+              onPressed: () async {
+                BlocProvider.of<PedidoBloc>(context).add(DescargarReportePedidoVenta(54));
+              }, 
+              icon: const Icon(Icons.print)
+            ),
             IconButton(
               onPressed: (){
                 setState(() {

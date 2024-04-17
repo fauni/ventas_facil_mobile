@@ -40,3 +40,13 @@ class UpdateEstadoLineaPedido extends PedidoEvent{
   @override
   List<Object> get props => [pedido, item]; 
 }
+
+// Region del Reporte
+class DescargarReportePedidoVenta extends PedidoEvent {
+  final int id;
+  DescargarReportePedidoVenta(this.id);
+
+  @override
+  List<Object> get props => [id];  
+}
+

@@ -97,3 +97,23 @@ class EstadoLineaModificadoError extends PedidoState {
   @override
   List<Object> get props => [error];
 }
+
+// Region: Descargar Reporte de Pedido
+class ReporteInicial extends PedidoState{}
+
+class ReporteDescargaEnProgreso extends PedidoState {
+  final double progreso;
+
+  ReporteDescargaEnProgreso(this.progreso);
+}
+
+class ReporteDescargaCorrecta extends PedidoState {
+  final String filePath;
+  ReporteDescargaCorrecta(this.filePath);
+}
+
+class ReporteDescargaFallida extends PedidoState {
+  final String error;
+
+  ReporteDescargaFallida(this.error);
+}
