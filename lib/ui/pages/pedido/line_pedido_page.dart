@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +8,6 @@ import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/producto/item_unidad_medida.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/ui/widgets/item_add_pedido_observacion_widget.dart';
-import 'package:ventas_facil/ui/widgets/item_add_pedido_widget.dart';
 import 'package:ventas_facil/ui/widgets/update_item_pedido_dialog_widget.dart';
 
 class LinePedidoPage extends StatefulWidget {
@@ -230,11 +228,19 @@ Widget build(BuildContext context) {
                                     ),
                                   ) : const SizedBox(),
                                   widget.pedido.linesPedido[index].numeroDeLinea != null ? IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        ItemPedido itemSelected = widget.pedido.linesPedido[index];
-                                        BlocProvider.of<PedidoBloc>(context).add(UpdateEstadoLineaPedido(widget.pedido, itemSelected));
-                                      });
+                                    onPressed: () async {
+                                      if(await confirm(
+                                          context,
+                                          title: const Text('Confirmar'),
+                                          content: const Text('¿Estas seguro que quieres cerrar esta línea?'),
+                                          textOK: const Text('Si'),
+                                          textCancel: const Text('No')
+                                        )){
+                                        setState(() {
+                                          ItemPedido itemSelected = widget.pedido.linesPedido[index];
+                                          BlocProvider.of<PedidoBloc>(context).add(UpdateEstadoLineaPedido(widget.pedido, itemSelected));
+                                        });
+                                      }
                                     }, 
                                     icon: const Icon(
                                       Icons.close,
