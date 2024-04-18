@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +14,7 @@ import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/persona_contacto.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
 import 'package:ventas_facil/services/genericos_service.dart';
+import 'package:ventas_facil/ui/pages/pedido/view_pdf_page.dart';
 import 'package:ventas_facil/ui/widgets/icon_button_generic_widget.dart';
 import 'package:ventas_facil/ui/widgets/item_add_pedido_observacion_widget.dart';
 import 'package:ventas_facil/ui/widgets/item_add_pedido_widget.dart';
@@ -131,8 +134,15 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
             BlocConsumer<PedidoBloc, PedidoState>(
               listener: (context, state) {
                 if(state is ReporteDescargaCorrecta) {
-                  // OpenFile.open(state.filePath);
+                  OpenFile.open(state.filePath);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('El reporte se descargo correctamente! ${state.filePath}'), backgroundColor: Colors.green, duration: Duration(seconds: 3),));
+                } else if(state is MostrarReporteDescargaCorrecta){
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ViewPDFPage(
+                      pedido: pedido,
+                      fetchPDF: state.pdfData,
+                    ),
+                  ));
                 } else if (state is ReporteDescargaFallida){
                   if(state.error == "Instance of 'UnauthorizedException'"){
                     LoginDialogWidget.mostrarDialogLogin(context);
@@ -147,19 +157,23 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                 } else {
                   return esNuevo ? const SizedBox() : IconButton(
                     onPressed: () async {
-                      BlocProvider.of<PedidoBloc>(context).add(DescargarReportePedidoVenta(pedido.codigoSap!));
+                      if(Platform.isWindows){
+                        BlocProvider.of<PedidoBloc>(context).add(DescargarYGuardarReportePedidoVenta(pedido.codigoSap!));
+                      } else {
+                        BlocProvider.of<PedidoBloc>(context).add(DescargarReportePedidoVenta(pedido.codigoSap!));
+                      }
                     }, 
                     icon: const Icon(Icons.print)
                   );
                 }
               },
             ),
-            IconButton(
-              onPressed: () async {
-                BlocProvider.of<PedidoBloc>(context).add(DescargarReportePedidoVenta(54));
-              }, 
-              icon: const Icon(Icons.print)
-            ),
+            // IconButton(
+            //   onPressed: () async {
+            //     BlocProvider.of<PedidoBloc>(context).add(DescargarReportePedidoVenta(54));
+            //   }, 
+            //   icon: const Icon(Icons.print)
+            // ),
             IconButton(
               onPressed: (){
                 setState(() {

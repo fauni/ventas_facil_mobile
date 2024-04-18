@@ -16,7 +16,8 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
     on<SavePedido>(_onGuardarPedido);
     on<UpdatePedido>(_onUpdatePedido);
     on<UpdateEstadoLineaPedido>(_onUpdateEstadoLineaPedido);
-    on<DescargarReportePedidoVenta>(_mapDownloadReportToState);
+    on<DescargarYGuardarReportePedidoVenta>(_mapDownloadReportToState);
+    on<DescargarReportePedidoVenta>(_mapDescargaYMuestraReporte);
   }
 
   Future<void> _onLoadPedidos(LoadPedidos event, Emitter<PedidoState> emit) async {
@@ -89,23 +90,58 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
     }
   } 
 
-  Future<void> _mapDownloadReportToState(DescargarReportePedidoVenta event, Emitter<PedidoState> emit) async {
+  Future<void> _mapDownloadReportToState(DescargarYGuardarReportePedidoVenta event, Emitter<PedidoState> emit) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.get('token').toString();
     emit(ReporteDescargaEnProgreso(0));
-    try {
-      final filePath = await _pedidoRepository.downloadReport(token, event.id);
-      emit(ReporteDescargaCorrecta(filePath));
-      final result = await OpenFile.open(filePath);
-      if (result.type != ResultType.done) {
-      //   emit(ReporteDescargaFallida("No se pudo abrir el archivo: ${result.message}"));
-      } else {
-        
+    if(await _requestPermissions()){
+      try {
+        final filePath = await _pedidoRepository.downloadReport(token, event.id);
+        emit(ReporteDescargaCorrecta(filePath));
+        // final result = await OpenFile.open(filePath);
+        // if (result.type != ResultType.done) {
+        //   emit(ReporteDescargaFallida("No se pudo abrir el archivo: ${result.message}"));
+        // } else {
+        //   // Aquí puedes agregar lógica adicional si la apertura del archivo fue exitosa
+        // }
+      } catch (error) {
+        emit(ReporteDescargaFallida(error.toString()));
       }
-    } catch (error) {
-      emit(ReporteDescargaFallida(error.toString()));
+    } else {
+      emit(ReporteDescargaFallida("No se concedio los permisos necesarios para la descarga"));
     }
   }
 
+  Future<void> _mapDescargaYMuestraReporte(DescargarReportePedidoVenta event, Emitter<PedidoState> emit) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final token = prefs.get('token').toString();
+  emit(ReporteDescargaEnProgreso(0));
+  if (await _requestPermissions()) {
+    try {
+      // Aquí, en lugar de obtener una ruta de archivo, obtenemos directamente los bytes del PDF.
+      final pdfBytes = await _pedidoRepository.fetchReportePDF(token, event.id);
+      if(pdfBytes != null){
+        emit(MostrarReporteDescargaCorrecta(pdfBytes));
+      } else {
+        emit(ReporteDescargaFallida("No se recibio correctamente los datos"));
+      }
+
+      // Navegamos a la pantalla del visor de PDF
+    } catch (error) {
+      emit(ReporteDescargaFallida(error.toString()));
+    }
+  } else {
+    emit(ReporteDescargaFallida("No se concedieron los permisos necesarios para la descarga"));
+  }
+}
+
+  Future<bool> _requestPermissions() async {
+    var storageStatus = await Permission.storage.status;
+    if (!storageStatus.isGranted) {
+      var result = await Permission.storage.request();
+      return result.isGranted;
+    }
+    return true;
+  }
   
 }

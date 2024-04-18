@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -185,4 +186,27 @@ class PedidoRepository {
     }
   }
 
+  Future<Uint8List?> fetchReportePDF(String sessionID, int id) async {
+    try {
+      var response = await http.get(
+        Uri.parse('$_baseUrl/Orders/GenerarReporte/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.bodyBytes;
+      } else if (response.statusCode == 401) {
+        throw Exception('Unauthorized access');
+      } else {
+        final errorData = jsonDecode(response.body);
+        throw Exception('Error from SAP: ${errorData['message']}');
+      }
+    } catch (e) {
+      print('Error fetching PDF: $e');
+      return null;
+    }
+  }
 }

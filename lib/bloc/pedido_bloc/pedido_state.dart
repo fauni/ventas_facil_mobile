@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
@@ -110,6 +112,11 @@ class ReporteDescargaEnProgreso extends PedidoState {
 class ReporteDescargaCorrecta extends PedidoState {
   final String filePath;
   ReporteDescargaCorrecta(this.filePath);
+}
+
+class MostrarReporteDescargaCorrecta extends PedidoState {
+  final Uint8List pdfData;
+  MostrarReporteDescargaCorrecta(this.pdfData);
 }
 
 class ReporteDescargaFallida extends PedidoState {

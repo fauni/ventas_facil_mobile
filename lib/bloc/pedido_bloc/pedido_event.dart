@@ -42,6 +42,14 @@ class UpdateEstadoLineaPedido extends PedidoEvent{
 }
 
 // Region del Reporte
+class DescargarYGuardarReportePedidoVenta extends PedidoEvent {
+  final int id;
+  DescargarYGuardarReportePedidoVenta(this.id);
+
+  @override
+  List<Object> get props => [id];  
+}
+
 class DescargarReportePedidoVenta extends PedidoEvent {
   final int id;
   DescargarReportePedidoVenta(this.id);
