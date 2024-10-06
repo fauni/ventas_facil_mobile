@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_bloc.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_event.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_state.dart';
@@ -40,103 +41,81 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: const Text('Pedidos'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              onPressed: (){
-                if(controllerSearch.text.isEmpty){
-                  cargarPedidos();
-                } else{
-                  cargarPedidosSearch();
-                }
-              }, 
-              icon: const Icon(Icons.refresh)
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if(didPop){
+          return;
+        } 
+        context.pop();
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          title: const Text('Pedidos'),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: IconButton(
+                onPressed: (){
+                  if(controllerSearch.text.isEmpty){
+                    cargarPedidos();
+                  } else{
+                    cargarPedidosSearch();
+                  }
+                }, 
+                icon: const Icon(Icons.refresh)
+              ),
             ),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          BuscadorPedidosWidget(
-            controllerSearch: controllerSearch,
-            onSearch: cargarPedidosSearch,
-          ),
-          // Container(
-          //   padding: const EdgeInsets.all(10.0),
-          //   child: Row(
-          //     children: [
-          //       Expanded(
-          //         child: TextField(
-          //           controller: controllerSearch,
-          //           decoration: InputDecoration(
-          //             hintText: 'Buscar Pedidos',
-          //             prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.tertiary,),
-          //             border: const UnderlineInputBorder(
-          //               borderRadius: BorderRadius.only(
-          //                 topLeft: Radius.circular(10),
-          //                 bottomLeft: Radius.circular(10),
-          //               )
-          //             ),
-          //             filled: true,
-          //             fillColor: Theme.of(context).colorScheme.onTertiary.withOpacity(0.3),
-          //           ),
-          //         ),
-          //       ),
-          //       ButtonGenericAloneIconWidget(
-          //         icon: Icons.search,
-          //         height: 48,
-          //         onPressed: () {
-          //           cargarPedidosSearch();
-          //         },
-          //       )
-          //     ],
-          //   ),
-          // ),
-          Expanded(
-            child: BlocConsumer<PedidoBloc, PedidoState>(
-              listener: (context, state) {
-                if(state is PedidosUnauthorized){
-                  LoginDialogWidget.mostrarDialogLogin(context);
-                } 
-                else if(state is PedidosNotLoaded){
-                  if(state.error.contains("UnauthorizedException")){
+          ],
+        ),
+        body: Column(
+          children: [
+            BuscadorPedidosWidget(
+              controllerSearch: controllerSearch,
+              onSearch: cargarPedidosSearch,
+            ),
+            Expanded(
+              child: BlocConsumer<PedidoBloc, PedidoState>(
+                listener: (context, state) {
+                  if(state is PedidosUnauthorized){
                     LoginDialogWidget.mostrarDialogLogin(context);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Ocurrio un problema al obtener los Pedidos'), backgroundColor: Colors.red,)
+                  } 
+                  else if(state is PedidosNotLoaded){
+                    if(state.error.contains("UnauthorizedException")){
+                      LoginDialogWidget.mostrarDialogLogin(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Ocurrio un problema al obtener los Pedidos'), backgroundColor: Colors.red,)
+                      );
+                    }
+                  }
+                },
+                builder: (context, state) {
+                  if (state is PedidosLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator()
+                    );
+                  } else if (state is PedidosLoaded) {
+                    return ListaPedidosWidget(pedidos: state.pedidos,);
+                  } else if(state is PedidosLoadedSearch){
+                    return ListaPedidosWidget(pedidos: state.pedidos);
+                  }
+                  else {
+                    return NotFoundInformationWidget(
+                      mensaje: 'No se encontraron pedidos',
+                      onPush: () {
+                        cargarPedidos();
+                      },
                     );
                   }
-                }
-              },
-              builder: (context, state) {
-                if (state is PedidosLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator()
-                  );
-                } else if (state is PedidosLoaded) {
-                  return ListaPedidosWidget(pedidos: state.pedidos,);
-                } else if(state is PedidosLoadedSearch){
-                  return ListaPedidosWidget(pedidos: state.pedidos);
-                }
-                else {
-                  return NotFoundInformationWidget(
-                    mensaje: 'No se encontraron pedidos',
-                    onPush: () {
-                      cargarPedidos();
-                    },
-                  );
-                }
-              }, 
+                }, 
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -163,7 +142,7 @@ class ListaPedidosWidget extends StatelessWidget {
             color: Theme.of(context).colorScheme.background,
             borderRadius: BorderRadius.circular(10)
           ),
-          child: ItemListPedidoWidget(pedido: pedido)
+          child: ItemListPedidoWidget(pedido: pedido, status: 'Creado',)
         );
       }, 
       separatorBuilder: (context, index) {

@@ -25,6 +25,7 @@ class PedidoList {
   SocioNegocio? cliente;
   final int? codigoPersonaDeContacto;
   final PersonaContacto? contacto;
+  final int? idCondicionDePago;
   final String? moneda;
   final String? comentarios;
   final int? codigoEmpleadoDeVentas;
@@ -55,6 +56,7 @@ class PedidoList {
     this.cliente,
     this.codigoPersonaDeContacto,
     this.contacto,
+    this.idCondicionDePago,
     this.moneda,
     this.comentarios,
     this.codigoEmpleadoDeVentas,
@@ -107,6 +109,7 @@ class PedidoList {
     SocioNegocio? cliente,
     int? codigoPersonaDeContacto,
     PersonaContacto? contacto,
+    int? idCondicionDePago,
     String? moneda,
     String? comentarios,
     int? codigoEmpleadoDeVentas,
@@ -138,6 +141,7 @@ class PedidoList {
         codigoPersonaDeContacto:
             codigoPersonaDeContacto ?? this.codigoPersonaDeContacto,
         contacto: contacto ?? this.contacto,
+        idCondicionDePago: idCondicionDePago ?? this.idCondicionDePago,
         moneda: moneda ?? this.moneda,
         comentarios: comentarios ?? this.comentarios,
         codigoEmpleadoDeVentas:
@@ -178,6 +182,7 @@ class PedidoList {
         contacto: json["contacto"] == null
             ? null
             : PersonaContacto.fromJson(json["contacto"]),
+        idCondicionDePago: json["idCondicionDePago"],
         moneda: json["moneda"],
         comentarios: json["comentarios"],
         codigoEmpleadoDeVentas: json["codigoEmpleadoDeVentas"],
@@ -218,6 +223,7 @@ class PedidoList {
         "cliente": cliente,
         "codigoPersonaDeContacto": codigoPersonaDeContacto,
         "contacto": contacto,
+        "idCondicionDePago": idCondicionDePago,
         "moneda": moneda,
         "comentarios": comentarios,
         "codigoEmpleadoDeVentas": codigoEmpleadoDeVentas,

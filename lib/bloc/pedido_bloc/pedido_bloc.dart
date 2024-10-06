@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_event.dart';
 import 'package:ventas_facil/bloc/pedido_bloc/pedido_state.dart';
 import 'package:ventas_facil/config/helpers/exceptions.dart';
+import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/repository/pedido_repository.dart';
 
 class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
@@ -57,8 +57,12 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
     final token = prefs.get('token').toString();
     emit(PedidoGuardando());
     try {
-      final pedidoGuardado = await _pedidoRepository.guardarPedido(token, event.pedido);
-      emit(PedidoGuardadoExitoso(pedidoGuardado));
+      final pedidoGuardado = await _pedidoRepository.guardarPedido2(token, event.pedido);
+      if(pedidoGuardado){
+        emit(PedidoGuardadoExitoso(Pedido(linesPedido: [])));
+      } else {
+        throw Exception("No se pudo guardar");
+      }
     } on UnauthorizedException catch(_){
       emit(PedidosUnauthorized());
     } catch (e) {

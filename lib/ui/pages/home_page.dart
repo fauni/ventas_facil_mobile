@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ventas_facil/models/authentication/user.dart';
+import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/services/genericos_service.dart';
 import 'package:ventas_facil/services/location_service.dart';
 
@@ -70,16 +71,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
                   ),
                 ),
               ),
-              const Divider(),
+              // const Divider(),
               // _buildMenuItem(Icons.calendar_today, 'Actividades', ''),
               // const Divider(),
-              _buildMenuItem(Icons.group, 'Socios Comerciales', ''),
-              const Divider(),
-              _buildMenuItem(Icons.inventory, 'Inventario', ''),
+              // _buildMenuItem(Icons.group, 'Socios Comerciales', ''),
+              // const Divider(),
+              // _buildMenuItem(Icons.inventory, 'Inventario', ''),
               // const Divider(),
               // _buildMenuItem(Icons.price_change, 'Listas de Precio', ''),
               const Divider(),
-              _buildMenuItem(Icons.receipt, 'Ordenes de Venta', '/NuevoPedido'),
+              // _buildMenuItem(Icons.add_box_outlined, 'Crear Pedido', '/NuevoPedido'),
+              ListTile(
+                leading: Icon(Icons.add_box_outlined, color: Theme.of(context).colorScheme.onError,),
+                title: Text(
+                  'Crear Pedido',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                onTap: () {
+                  context.push('/NuevoPedido', extra: Pedido(linesPedido: []));
+                },
+                trailing: Icon(Icons.arrow_forward_ios, color: Theme.of(context).colorScheme.onError,),
+              ),
+              const Divider(),
+              _buildMenuItem(Icons.list, 'Pedidos Creados', '/Pedidos'),
+              const Divider(),
+              _buildMenuItem(Icons.pending_actions, 'Pedidos Pendientes', '/PedidosPendientes'),
+              const Divider(),
+              _buildMenuItem(Icons.checklist_rounded, 'Pedidos Autorizados', '/PedidosAutorizados'),
               // Text('${user!.almacen}')
               // const Divider(),
               // _buildMenuItem(Icons.local_shipping, 'Entrega', ''),

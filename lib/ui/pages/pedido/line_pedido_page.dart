@@ -397,7 +397,7 @@ Future<DateTime?> _seleccionarFecha(BuildContext context) async {
                     ),
                     controller: controllerDescripcionAdicional,
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 10,),
                   TextField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -408,7 +408,7 @@ Future<DateTime?> _seleccionarFecha(BuildContext context) async {
                     ),
                     controller: controllerCantidad,
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 10,),
                   TextField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -420,7 +420,7 @@ Future<DateTime?> _seleccionarFecha(BuildContext context) async {
                     ),
                     controller: controllerPrecio,
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 10,),
                   TextField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -432,7 +432,7 @@ Future<DateTime?> _seleccionarFecha(BuildContext context) async {
                     ),
                     controller: controllerDescuento,
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 10,),
                   ItemAddPedidoObservacionWidget(
                     titulo: 'Fecha de Entrega', 
                     valor: item.fechaDeEntrega == null ? '' : formatDate(item.fechaDeEntrega!, [dd, '-', mm , '-', yyyy]),
@@ -441,7 +441,8 @@ Future<DateTime?> _seleccionarFecha(BuildContext context) async {
                       setState((){});
                     },
                   ),
-                  const SizedBox(height: 20,),
+                  Text('${item.codigoUnidadMedida}'),
+                  const SizedBox(height: 10,),
                   BlocConsumer<UnidadMedidaBloc, UnidadMedidaState>(
                     listener: (context, state) {
                       

@@ -4,6 +4,7 @@ import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
+import 'package:ventas_facil/ui/pages/condicion_pago/condicion_pago_page.dart';
 import 'package:ventas_facil/ui/pages/home_page.dart';
 import 'package:ventas_facil/ui/pages/item/item_page.dart';
 import 'package:ventas_facil/ui/pages/login_page.dart';
@@ -13,8 +14,11 @@ import 'package:ventas_facil/ui/pages/pedido/empleado_venta_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/line_pedido_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/nuevo_pedido_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/pedido_page.dart';
+import 'package:ventas_facil/ui/pages/pedido/pedidos_autorizados_page.dart';
+import 'package:ventas_facil/ui/pages/pedido/pedidos_pendientes_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/persona_contacto_page.dart';
 import 'package:ventas_facil/ui/pages/producto_page.dart';
+import 'package:ventas_facil/ui/pages/serie_numeracion/serie_numeracion_page.dart';
 import 'package:ventas_facil/ui/pages/socio_negocio/socio_negocio_page.dart';
 import 'package:ventas_facil/ui/pages/usuarios_page.dart';
 
@@ -64,6 +68,14 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: '/PedidosPendientes',
+      builder: (context, state) => const PedidosPendientesPage(),
+    ),
+    GoRoute(
+      path: '/PedidosAutorizados',
+      builder: (context, state) => const PedidosAutorizadosPage(),
+    ),
+    GoRoute(
       path: '/Pedidos',
       builder: (context, state) => const PedidoPage(),
     ),
@@ -76,7 +88,10 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/NuevoPedido',
-      builder: (context, state) => const NuevoPedidoPage(),
+      builder: (context, state){
+        Pedido data = state.extra as Pedido;
+        return NuevoPedidoPage(pedido: data,);
+      },
     ),
     GoRoute(
       path: '/LineaDetallePedido',
@@ -106,5 +121,19 @@ final appRouter = GoRouter(
         return PersonaContactoPage(socioNegocio: data);
       },
     ),
+    GoRoute(
+      path: '/CondicionPago',
+      builder: (context, state) {
+        int id = state.extra as int;
+        return CondicionPagoPage(idCondicionSeleccionado: id);
+      },
+    ),
+    GoRoute(
+      path: '/SerieNumeracion',
+      builder: (context, state) {
+        int id = state.extra as int;
+        return SerieNumeracionPage(idSerieSeleccionada: id);
+      },
+    )
   ]
 );

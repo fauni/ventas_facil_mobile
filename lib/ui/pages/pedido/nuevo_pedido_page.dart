@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_file/open_file.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
+import 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_bloc.dart';
+import 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_event.dart';
 import 'package:ventas_facil/database/user_local_provider.dart';
 import 'package:ventas_facil/models/authentication/user.dart';
 import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
+import 'package:ventas_facil/models/serie_numeracion/serie_numeracion.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/persona_contacto.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
@@ -22,7 +24,9 @@ import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
 import 'package:ventas_facil/ui/widgets/view_detail_line_pedido_widget.dart';
 
 class NuevoPedidoPage extends StatefulWidget {
-  const NuevoPedidoPage({super.key});
+  NuevoPedidoPage({super.key, required this.pedido});
+
+  Pedido pedido;
 
   @override
   State<NuevoPedidoPage> createState() => _NuevoPedidoPageState();
@@ -43,18 +47,28 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
   }
 
   void iniciarValores(){
-    esNuevo = true;
-    pedido = Pedido(linesPedido: []);
-    pedido.cliente = SocioNegocio();
-    pedido.fechaRegistro = DateTime.now();
-    pedido.fechaEntrega = DateTime.now();
-    pedido.estado = 'bost_Open';
-    pedido.observacion = 'Creado por app mobile ${formatDate(DateTime.now(), [dd,'-',mm,'-',yyyy])}';
+    if(widget.pedido.codigoSap == null){
+      esNuevo = true;
+      pedido = Pedido(linesPedido: []);
+      pedido.cliente = SocioNegocio();
+      pedido.fechaRegistro = DateTime.now();
+      pedido.fechaEntrega = DateTime.now();
+      pedido.estado = 'bost_Open';
+      pedido.observacion = 'Creado por app mobile ${formatDate(DateTime.now(), [dd,'-',mm,'-',yyyy])}';
 
-    pedido.fechaRegistroApp = DateTime.now();
-    pedido.horaRegistroApp = DateTime.now();
-    _obtenerUbicacionActual();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp)=> obtenerUsuarioActual());
+      pedido.fechaRegistroApp = DateTime.now();
+      pedido.horaRegistroApp = DateTime.now();
+      _obtenerUbicacionActual();
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp)=> obtenerUsuarioActual());
+    } else {
+      esNuevo = false;
+      pedido = widget.pedido;
+      setState(() {
+        BlocProvider.of<SalesEmployeeBloc>(context).add(GetSalesEmployeeById(pedido.empleado!));  
+        BlocProvider.of<CondicionPagoBloc>(context).add(CargarCondicionPagoPorId(pedido.idCondicionDePago!));
+      });
+    }
+    
   }
 
   void _obtenerUbicacionActual()async  {
@@ -127,7 +141,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
         appBar: AppBar(
-          title: const Text('Pedido'),
+          title: esNuevo ? const Text('Crear Pedido') : const Text('Modificar Pedido'),
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           actions: [
@@ -174,7 +188,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
             //   }, 
             //   icon: const Icon(Icons.print)
             // ),
-            IconButton(
+            !esNuevo ? IconButton(
               onPressed: (){
                 setState(() {
                   esNuevo = true;
@@ -185,29 +199,30 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                 });
               }, 
               icon: const Icon(Icons.copy)
-            ),
+            ): const SizedBox(),
             IconButton(
               onPressed: () {
                 // pedidoController.text = jsonEncode(pedido);
                 setState(() {
                   // Clipboard.setData(ClipboardData(text: jsonEncode(pedido)));
                   // LoginDialogWidget.mostrarDialogLogin(context);
+                  widget.pedido = Pedido(linesPedido: []);
                   iniciarValores();
                 });
               }, 
               icon: const Icon(Icons.note_add_outlined)
             ),
-            IconButton(
-              onPressed: () async {
-                final result = await context.push<Pedido>('/Pedidos');
-                pedido = result!;  
-                esNuevo = false;
-                // ignore: use_build_context_synchronously
-                BlocProvider.of<SalesEmployeeBloc>(context).add(GetSalesEmployeeById(pedido.empleado!));
-                setState((){});
-              }, 
-              icon: const Icon(Icons.search),
-            )
+            // IconButton(
+            //   onPressed: () async {
+            //     final result = await context.push<Pedido>('/Pedidos');
+            //     pedido = result!;  
+            //     esNuevo = false;
+            //     // ignore: use_build_context_synchronously
+            //     BlocProvider.of<SalesEmployeeBloc>(context).add(GetSalesEmployeeById(pedido.empleado!));
+            //     setState((){});
+            //   }, 
+            //   icon: const Icon(Icons.search),
+            // )
           ],
         ),
         body: BlocListener<PedidoBloc, PedidoState>(
@@ -218,13 +233,18 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
               // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Guardando...')));
             } else if(state is PedidoGuardadoExitoso){
               setState(() {
-                
+                pedido = Pedido(linesPedido: []);
+                iniciarValores();
               });
-              pedido = state.pedido;
-              esNuevo = false;
+              // pedido = state.pedido;
+              // esNuevo = false;
+              // Navigator.of(context, rootNavigator: true).pop('dialog');
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(content: Text('Guardado con éxito pedido #${state.pedido.codigoSap}',), backgroundColor: Colors.green, duration: const Duration(seconds: 4),)
+              // );
               Navigator.of(context, rootNavigator: true).pop('dialog');
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Guardado con éxito pedido #${state.pedido.codigoSap}',), backgroundColor: Colors.green, duration: const Duration(seconds: 4),)
+                const SnackBar(content: Text('El pedido se guardo correctamente, sin embargo para la creación del documento necesita ser autorizado',), backgroundColor: Colors.green, duration: Duration(seconds: 4),)
               );
               // iniciarValores();
             } else if(state is PedidoGuardadoError){
@@ -279,6 +299,19 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                     ),
                     const SizedBox(height: 5,),
                     ItemAddPedidoWidget(
+                      titulo: 'Serie de Numeración', 
+                      valor: '', 
+                      isSeleccionable: true, 
+                      onPush: () async {
+                        final result = await context.push<SerieNumeracion>('/SerieNumeracion', extra: 0);
+                        print(result);
+                        // if(result != null){
+                        //   BlocProvider.of<SerieNumeracionBloc>(context).add(GetSerieNumeracionByIdDocument(17));
+                        // }
+                      },
+                    ),
+                    const SizedBox(height: 5,),
+                    ItemAddPedidoWidget(
                       titulo: 'Estado del Pedido', 
                       valor: getEstado(), 
                       isSeleccionable: false, 
@@ -295,6 +328,8 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                         if (result != null){
                           // ignore: use_build_context_synchronously
                           BlocProvider.of<SalesEmployeeBloc>(context).add(GetSalesEmployeeById(EmpleadoVenta(codigoEmpleado: result.codigoEmpleadoVentas)));
+                          // ignore: use_build_context_synchronously
+                          BlocProvider.of<CondicionPagoBloc>(context).add(CargarCondicionPagoPorId(result.codigoCondicionPago!));
                           setState(() {
                             PersonaContacto contactoSeleccionado = result.contactosEmpleado!.firstWhere(
                               (element) => element.nombreCliente == result.personaContacto,
@@ -306,9 +341,41 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                             pedido.moneda = result.monedaSn;
                             pedido.personaContacto = contactoSeleccionado.numeroInterno;
                             pedido.contacto = contactoSeleccionado.codigoCliente == null ? null: contactoSeleccionado; 
+                            pedido.idCondicionDePago = result.codigoCondicionPago;
                           });
                         }
                       }
+                    ),
+                    BlocConsumer<CondicionPagoBloc, CondicionPagoState>(
+                      listener: (context, state) {
+                        // TODO: implement listener
+                      },
+                      builder: (context, state) {
+                        if(state is CargarCondicionPagoLoading){
+                          return const CircularProgressIndicator();
+                        } else if (state is CargarCondicionPagoExitoso){
+                          pedido.idCondicionDePago = state.condicionPago.numeroGrupo;
+
+                          return ItemAddPedidoWidget(
+                            titulo: 'Condición de Pago', 
+                            valor: pedido.idCondicionDePago == null ? '': '${state.condicionPago.nombreCondicionPago}', 
+                            isSeleccionable: true, 
+                            onPush: () async {
+                              final result = await context.push<int>('/CondicionPago', extra: pedido.idCondicionDePago);
+                              BlocProvider.of<CondicionPagoBloc>(context).add(CargarCondicionPagoPorId(result!));
+                            },
+                          );
+                        } else {
+                            return ItemAddPedidoWidget(
+                            titulo: 'Condición de Pago', 
+                            valor: 'Requerido', 
+                            isSeleccionable: true, 
+                            onPush: () {
+                              
+                            },
+                          );
+                        }
+                      },
                     ),
                     ItemAddPedidoWidget(
                       titulo: 'Persona de Contacto', 
@@ -326,6 +393,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                         }
                       },
                     ),
+                    
                     // ItemAddPedidoWidget(
                     //   titulo: 'Moneda', 
                     //   valor: pedido.moneda == null ? '' : '${pedido.moneda}', 
@@ -392,9 +460,6 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                         }
                         setState((){});
                       },
-                    ),
-                    const SizedBox(
-                      height: 5,
                     ),
                     ItemAddPedidoWidget(
                       titulo: 'Fecha de Documento', 

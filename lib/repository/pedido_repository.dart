@@ -40,6 +40,31 @@ class PedidoRepository {
     }
   }
 
+  Future<bool> guardarPedido2(String sessionID, Pedido data) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/Orders'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID
+        },
+        body: jsonEncode(data)
+      );
+      if(response.statusCode == 200){
+        return true;
+      } else if(response.statusCode == 401) {
+        throw UnauthorizedException();
+      }
+      else {
+        final errorData = jsonDecode(response.body);
+        final errorSap = Helper.getErrorSap(errorData);
+        throw Exception('${errorSap.message}');
+      }
+    } catch (e) {
+      throw Exception('$e');
+    }
+  }
+
   Future<List<PedidoList>> getOrdenesVentaAbiertos(String sessionID) async {
     try {
       final response = await http.get(
@@ -207,6 +232,125 @@ class PedidoRepository {
     } catch (e) {
       print('Error fetching PDF: $e');
       return null;
+    }
+  }
+
+  // region: PEDIDOS PENDIENTES DE APROBACIÓN
+  Future<List<PedidoList>> getOrdenesPendientesAprobacion(String sessionID) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/OrdersPending?top=5&skip=0'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID
+        }
+      );
+
+      if(response.statusCode == 200){
+        final jsonData = jsonDecode(response.body) as List<dynamic>;
+        List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
+        if(orders.isEmpty){
+          throw GenericEmptyException();
+        }
+        return orders;
+      } else if(response.statusCode == 401){
+        throw UnauthorizedException();
+      } 
+      else {
+        throw FetchDataException('${response.statusCode}');
+      }
+    } catch(e){
+      throw Exception('$e');
+    }
+  }
+
+  Future<List<PedidoList>> getOrdenesPendientesAprobacionBySearch(String sessionID, String search) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/OrdersPending?top=5&skip=0&search=$search'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID
+        }
+      );
+
+      if(response.statusCode == 200){
+        final jsonData = jsonDecode(response.body) as List<dynamic>;
+        List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
+        if(orders.isEmpty){
+          throw GenericEmptyException();
+        }
+        return orders;
+      } else if(response.statusCode == 401){
+        throw UnauthorizedException();
+      } 
+      else {
+        throw FetchDataException('${response.statusCode}');
+      }
+    } catch(e){
+      throw Exception('$e');
+    }
+  }
+
+  // region: PEDIDOS PENDIENTES DE APROBACIÓN
+  Future<List<PedidoList>> getOrdenesPendientesAprobados(String sessionID, String search) async {
+    try {
+      final response = search.isEmpty
+      ? await http.get(
+        Uri.parse('$_baseUrl/OrdersPending/Aprobados?top=5&skip=0'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID
+        }
+      )
+      : await http.get(
+        Uri.parse('$_baseUrl/OrdersPending/Aprobados?top=5&skip=0&search=$search'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID
+        }
+      );
+
+      if(response.statusCode == 200){
+        final jsonData = jsonDecode(response.body) as List<dynamic>;
+        List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
+        if(orders.isEmpty){
+          throw GenericEmptyException();
+        }
+        return orders;
+      } else if(response.statusCode == 401){
+        throw UnauthorizedException();
+      } 
+      else {
+        throw FetchDataException('${response.statusCode}');
+      }
+    } catch(e){
+      throw Exception('$e');
+    }
+  }
+
+  // Crear documento aprobado
+  Future<bool> crearDocumentoAprobado(String sessionID, int id) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/OrdersPending/CrearDocumento/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID
+        }
+      );
+      if(response.statusCode == 200){
+        return true;
+      } else if(response.statusCode == 401) {
+        throw UnauthorizedException();
+      }
+      else {
+        final errorData = jsonDecode(response.body);
+        final errorSap = Helper.getErrorSap(errorData);
+        throw Exception('${errorSap.message}');
+      }
+    } catch (e) {
+      throw Exception('$e');
     }
   }
 }

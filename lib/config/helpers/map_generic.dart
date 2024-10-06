@@ -26,6 +26,7 @@ class MapGeneric {
     pedido.moneda = data.moneda;
     pedido.personaContacto = data.codigoPersonaDeContacto;
     pedido.contacto = data.contacto;
+    pedido.idCondicionDePago = data.idCondicionDePago;
     pedido.linesPedido = itemPedidoToLinesOrder(data.linesOrder!);
     pedido.usuarioVentaFacil = data.usuarioVentaFacil;
     pedido.latitud = data.latitud;

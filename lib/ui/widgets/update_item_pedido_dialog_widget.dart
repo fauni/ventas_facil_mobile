@@ -93,7 +93,7 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
                 ),
                 controller: controllerDescripcionAdicional,
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 10,),
               TextField(
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -104,7 +104,7 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
                 ),
                 controller: controllerCantidad,
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 10,),
               TextField(
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -116,7 +116,7 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
                 ),
                 controller: controllerPrecio,
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 10,),
               TextField(
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -128,7 +128,7 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
                 ),
                 controller: controllerDescuento,
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 10,),
               ItemFieldLabelIconWidget(
                 titulo: 'Fecha de Entrega', 
                 icono: Icons.date_range,
@@ -141,7 +141,7 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
                   setState((){});
                 },
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 10,),
               BlocConsumer<UnidadMedidaBloc, UnidadMedidaState>(
                 listener: (context, state) {
                   
@@ -163,8 +163,8 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
                       children: 
                       state.unidades.map((it){
                         return ChoiceChip(
-                          label: Text(it.code!), 
-                          selected: selectedEntry == it.absEntry,
+                          label: Text(it.code!, style: Theme.of(context).textTheme.labelSmall,), 
+                          selected: it.absEntry == widget.itemPedido.codigoUnidadMedida ? true: false, // selectedEntry == it.absEntry,
                           onSelected: (bool selected) {
                             setState(() {
                               
@@ -174,7 +174,7 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
                             widget.pedido.linesPedido[widget.indexLine].codigoUnidadMedida = nuevaSeleccion.absEntry;
                             widget.pedido.linesPedido[widget.indexLine].nombreUnidadMedida = nuevaSeleccion.code;
                           },
-                          selectedColor: Colors.blue,
+                          selectedColor: Theme.of(context).colorScheme.error.withOpacity(0.5),
                         );
                       }).toList(),
                     )

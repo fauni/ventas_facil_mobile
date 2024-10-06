@@ -30,3 +30,15 @@ export 'package:ventas_facil/bloc/item_bloc/item_bloc.dart';
 export 'package:ventas_facil/bloc/unidad_medida_bloc/unidad_medida_event.dart';
 export 'package:ventas_facil/bloc/unidad_medida_bloc/unidad_medida_state.dart';
 export 'package:ventas_facil/bloc/unidad_medida_bloc/unidad_medida_bloc.dart';
+
+export 'package:ventas_facil/bloc/pedido_pendiente_bloc/pedido_pendiente_event.dart';
+export 'package:ventas_facil/bloc/pedido_pendiente_bloc/pedido_pendiente_bloc.dart';
+export 'package:ventas_facil/bloc/pedido_pendiente_bloc/pedido_pendiente_state.dart';
+
+export 'package:ventas_facil/bloc/condicion_pago_bloc/condicion_pago_event.dart';
+export 'package:ventas_facil/bloc/condicion_pago_bloc/condicion_pago_state.dart';
+export 'package:ventas_facil/bloc/condicion_pago_bloc/condicion_pago_bloc.dart';
+
+export 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_bloc.dart';
+export 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_event.dart';
+export 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_state.dart';

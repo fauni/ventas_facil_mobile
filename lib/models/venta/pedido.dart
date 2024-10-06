@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final ordenVentaList = ordenVentaListFromJson(jsonString);
-
 import 'dart:convert';
 
 import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
@@ -10,12 +6,12 @@ import 'package:ventas_facil/models/venta/persona_contacto.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
 
 Pedido pedidoFromJson(String str) => Pedido.fromJson(json.decode(str));
-
 String pedidoToJson(Pedido data) => json.encode(data.toJson());
 
 class Pedido {
     int? id;
     int? codigoSap;
+    String? serieNumeracion;
     String? numeroDocumento;
     String? nombreFactura;
     String? nitFactura;
@@ -34,6 +30,7 @@ class Pedido {
     EmpleadoVenta? empleado;
     String? moneda;
     int? personaContacto;
+    int? idCondicionDePago;
     PersonaContacto? contacto;
     List<ItemPedido> linesPedido;
     String? usuarioVentaFacil;
@@ -45,10 +42,10 @@ class Pedido {
     double? impuesto;
     double? total;
 
-
     Pedido({
         this.id,
         this.codigoSap,
+        this.serieNumeracion,
         this.numeroDocumento,
         this.nombreFactura,
         this.nitFactura,
@@ -67,6 +64,7 @@ class Pedido {
         this.empleado,
         this.moneda,
         this.personaContacto,
+        this.idCondicionDePago,
         this.contacto,
         required this.linesPedido,
         this.usuarioVentaFacil,
@@ -111,6 +109,7 @@ class Pedido {
     Pedido copyWith({
         int? id,
         int? codigoSap,
+        String? serieNumeracion,
         String? numeroDocumento,
         String? nombreFactura,
         String? nitFactura,
@@ -131,6 +130,7 @@ class Pedido {
         EmpleadoVenta? empleado,
         String? moneda,
         int? personaContacto,
+        int? idCondicionDePago,
         PersonaContacto? contacto,
         List<ItemPedido>? linesPedido,
         String? usuarioVentaFacil,
@@ -142,6 +142,7 @@ class Pedido {
         Pedido(
             id: id ?? this.id,
             codigoSap: codigoSap ?? this.codigoSap,
+            serieNumeracion: serieNumeracion ?? this.serieNumeracion,
             numeroDocumento: numeroDocumento ?? this.numeroDocumento,
             nombreFactura: nombreFactura ?? this.nombreFactura,
             nitFactura: nitFactura ?? this.nitFactura,
@@ -162,6 +163,7 @@ class Pedido {
             empleado: empleado ?? this.empleado,
             moneda: moneda ?? this.moneda,
             personaContacto: personaContacto ?? this.personaContacto,
+            idCondicionDePago: idCondicionDePago ?? this.idCondicionDePago,
             contacto: contacto ?? this.contacto,
             linesPedido: linesPedido ?? this.linesPedido,
             usuarioVentaFacil: usuarioVentaFacil ?? this.usuarioVentaFacil,
@@ -174,6 +176,7 @@ class Pedido {
     factory Pedido.fromJson(Map<String, dynamic> json) => Pedido(
         id: json["id"],
         codigoSap: json["codigoSap"],
+        serieNumeracion: json["serieNumeracion"],
         numeroDocumento: json["numeroDocumento"],
         nombreFactura: json["nombreFactura"],
         nitFactura: json["nitFactura"],
@@ -194,6 +197,7 @@ class Pedido {
         empleado: json["empleado"] == null ? null : EmpleadoVenta.fromJson(json["empleado"]),
         moneda: json["moneda"],
         personaContacto: json["personaContacto"],
+        idCondicionDePago: json["idCondicionDePago"],
         contacto: json["contacto"] == null ? null : PersonaContacto.fromJson(json["contacto"]),
         linesPedido: json["linesPedido"] == null ? [] : List<ItemPedido>.from(json["linesPedido"]!.map((x) => ItemPedido.fromJson(x))),
         usuarioVentaFacil: json["usuarioVentaFacil"],
@@ -206,6 +210,7 @@ class Pedido {
     Map<String, dynamic> toJson() => {
         "id": id,
         "codigoSap": codigoSap,
+        "serieNumeracion": serieNumeracion,
         "numeroDocumento": numeroDocumento,
         "nombreFactura": nombreFactura,
         "nitFactura": nitFactura,
@@ -226,6 +231,7 @@ class Pedido {
         "empleado": empleado,
         "moneda": moneda,
         "personaContacto": personaContacto,
+        "idCondicionDePago": idCondicionDePago,
         "contacto": contacto,
         "linesPedido": linesPedido.isEmpty ? [] : List<dynamic>.from(linesPedido.map((x) => x.toJson())),
         "usuarioVentaFacil": usuarioVentaFacil,
