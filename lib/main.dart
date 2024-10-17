@@ -14,7 +14,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({ Key? key }) : super(key: key);
+  const MyApp({ super.key });
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +50,9 @@ class MyApp extends StatelessWidget {
                 error: config.Colors().verde59BColor(1), 
                 onError: config.Colors().azul8FFColor(1), 
                 // Fondo de toda la pantalla
-                background: config.Colors().blancoColor(1), 
+                // background: config.Colors().blancoColor(1), 
                 // COlor de las lineas del input
-                onBackground: config.Colors().gris7BDColor(1),  
+                //onBackground: config.Colors().gris7BDColor(1),  
                 // Fondo de App bar, botones
                 surface: config.Colors().blancoColor(1), 
                 // color de texto general

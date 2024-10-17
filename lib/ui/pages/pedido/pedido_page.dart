@@ -43,7 +43,13 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      // onPopInvoked: (didPop) async {
+      //   if(didPop){
+      //     return;
+      //   } 
+      //   context.pop();
+      // },
+      onPopInvokedWithResult: (didPop, result) {
         if(didPop){
           return;
         } 
@@ -139,7 +145,7 @@ class ListaPedidosWidget extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(10)
           ),
           child: ItemListPedidoWidget(pedido: pedido, status: 'Creado',)

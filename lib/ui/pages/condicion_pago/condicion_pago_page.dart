@@ -29,15 +29,15 @@ class _CondicionPagoPageState extends State<CondicionPagoPage> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      // onPopInvoked: (didPop) async {
+      //   context.pop(widget.idCondicionSeleccionado);
+      // },
+      onPopInvokedWithResult: (didPop, result) {
         context.pop(widget.idCondicionSeleccionado);
       },
       child: Scaffold(
         appBar: const AppBarWidget(titulo: 'Condiciones de Pago'),
-        body: BlocConsumer<CondicionPagoBloc, CondicionPagoState>(
-          listener: (context, state) {
-            // TODO: implement listener
-          },
+        body: BlocBuilder<CondicionPagoBloc, CondicionPagoState>(
           builder: (context, state) {
             if (state is CargarCondicionPagoLoading) 
             {

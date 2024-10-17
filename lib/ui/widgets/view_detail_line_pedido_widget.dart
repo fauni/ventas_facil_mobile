@@ -19,7 +19,7 @@ class ViewDetailLinePedidoWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       padding: const EdgeInsets.only(left: 20,right: 20, top: 0, bottom: 5),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(10)
       ),
       child: Column(

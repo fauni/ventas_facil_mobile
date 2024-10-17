@@ -7,7 +7,6 @@ import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/producto/item_unidad_medida.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
-import 'package:ventas_facil/ui/widgets/item_add_pedido_observacion_widget.dart';
 import 'package:ventas_facil/ui/widgets/update_item_pedido_dialog_widget.dart';
 
 class LinePedidoPage extends StatefulWidget {
@@ -128,7 +127,7 @@ Widget build(BuildContext context) {
                     margin: const EdgeInsets.symmetric(vertical: 3),
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
@@ -324,18 +323,18 @@ Widget build(BuildContext context) {
   );
 }
 
-Future<DateTime?> _seleccionarFecha(BuildContext context) async {
-  final DateTime? picked = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime(2000),
-    lastDate: DateTime(2025),
-  );
-  if (picked != null) {
-    return picked;
-  }
-  return null;
-}
+// Future<DateTime?> _seleccionarFecha(BuildContext context) async {
+//   final DateTime? picked = await showDatePicker(
+//     context: context,
+//     initialDate: DateTime.now(),
+//     firstDate: DateTime(2000),
+//     lastDate: DateTime(2025),
+//   );
+//   if (picked != null) {
+//     return picked;
+//   }
+//   return null;
+// }
 
   void mostrarMensajeDialog(BuildContext context){
     showDialog(
@@ -359,167 +358,167 @@ Future<DateTime?> _seleccionarFecha(BuildContext context) async {
     );
   }
 
-  void _showUpdateItemPedido(BuildContext context, ItemPedido item, int indexLine){
-    showDialog(
-      context: context, 
-      barrierDismissible: false,
-      builder: (BuildContext bc) { 
-        controllerDescripcionAdicional.text = item.descripcionAdicional ?? '';
-        controllerCantidad.text = item.cantidad.toString();
-        controllerPrecio.text = item.precioPorUnidad.toString();
-        controllerDescuento.text = item.descuento.toString();
+  // void _showUpdateItemPedido(BuildContext context, ItemPedido item, int indexLine){
+  //   showDialog(
+  //     context: context, 
+  //     barrierDismissible: false,
+  //     builder: (BuildContext bc) { 
+  //       controllerDescripcionAdicional.text = item.descripcionAdicional ?? '';
+  //       controllerCantidad.text = item.cantidad.toString();
+  //       controllerPrecio.text = item.precioPorUnidad.toString();
+  //       controllerDescuento.text = item.descuento.toString();
 
-        int? selectedEntry;
+  //       int? selectedEntry;
 
-        return AlertDialog(
-          title: Row(
-            children: [
-              Text('Detalle del Item', style: Theme.of(context).textTheme.titleLarge,),
-              IconButton(onPressed: (){
-                context.pop();
-              }, icon: const Icon(Icons.close))
-            ],
-          ),
-          // padding: const EdgeInsets.all(20),
-          content: SizedBox(
-            height: 420,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  TextField(
-                    maxLines: 2,
-                    maxLength: 150,
-                    decoration: InputDecoration(
-                      label: const Text('Descripción Adicional'),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      )
-                    ),
-                    controller: controllerDescripcionAdicional,
-                  ),
-                  const SizedBox(height: 10,),
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      label: const Text('Cantidad'),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      )
-                    ),
-                    controller: controllerCantidad,
-                  ),
-                  const SizedBox(height: 10,),
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      label: const Text('Precio Unitario'),
-                      suffixText: '${widget.pedido.moneda}',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      )
-                    ),
-                    controller: controllerPrecio,
-                  ),
-                  const SizedBox(height: 10,),
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      label: const Text('Descuento'),
-                      suffixText: '%',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      )
-                    ),
-                    controller: controllerDescuento,
-                  ),
-                  const SizedBox(height: 10,),
-                  ItemAddPedidoObservacionWidget(
-                    titulo: 'Fecha de Entrega', 
-                    valor: item.fechaDeEntrega == null ? '' : formatDate(item.fechaDeEntrega!, [dd, '-', mm , '-', yyyy]),
-                    isSeleccionable: true, onPush: () async {
-                      item.fechaDeEntrega = await _seleccionarFecha(context);
-                      setState((){});
-                    },
-                  ),
-                  Text('${item.codigoUnidadMedida}'),
-                  const SizedBox(height: 10,),
-                  BlocConsumer<UnidadMedidaBloc, UnidadMedidaState>(
-                    listener: (context, state) {
+  //       return AlertDialog(
+  //         title: Row(
+  //           children: [
+  //             Text('Detalle del Item', style: Theme.of(context).textTheme.titleLarge,),
+  //             IconButton(onPressed: (){
+  //               context.pop();
+  //             }, icon: const Icon(Icons.close))
+  //           ],
+  //         ),
+  //         // padding: const EdgeInsets.all(20),
+  //         content: SizedBox(
+  //           height: 420,
+  //           child: SingleChildScrollView(
+  //             child: Column(
+  //               children: [
+  //                 TextField(
+  //                   maxLines: 2,
+  //                   maxLength: 150,
+  //                   decoration: InputDecoration(
+  //                     label: const Text('Descripción Adicional'),
+  //                     border: OutlineInputBorder(
+  //                       borderRadius: BorderRadius.circular(10)
+  //                     )
+  //                   ),
+  //                   controller: controllerDescripcionAdicional,
+  //                 ),
+  //                 const SizedBox(height: 10,),
+  //                 TextField(
+  //                   keyboardType: TextInputType.number,
+  //                   decoration: InputDecoration(
+  //                     label: const Text('Cantidad'),
+  //                     border: OutlineInputBorder(
+  //                       borderRadius: BorderRadius.circular(10)
+  //                     )
+  //                   ),
+  //                   controller: controllerCantidad,
+  //                 ),
+  //                 const SizedBox(height: 10,),
+  //                 TextField(
+  //                   keyboardType: TextInputType.number,
+  //                   decoration: InputDecoration(
+  //                     label: const Text('Precio Unitario'),
+  //                     suffixText: '${widget.pedido.moneda}',
+  //                     border: OutlineInputBorder(
+  //                       borderRadius: BorderRadius.circular(10)
+  //                     )
+  //                   ),
+  //                   controller: controllerPrecio,
+  //                 ),
+  //                 const SizedBox(height: 10,),
+  //                 TextField(
+  //                   keyboardType: TextInputType.number,
+  //                   decoration: InputDecoration(
+  //                     label: const Text('Descuento'),
+  //                     suffixText: '%',
+  //                     border: OutlineInputBorder(
+  //                       borderRadius: BorderRadius.circular(10)
+  //                     )
+  //                   ),
+  //                   controller: controllerDescuento,
+  //                 ),
+  //                 const SizedBox(height: 10,),
+  //                 ItemAddPedidoObservacionWidget(
+  //                   titulo: 'Fecha de Entrega', 
+  //                   valor: item.fechaDeEntrega == null ? '' : formatDate(item.fechaDeEntrega!, [dd, '-', mm , '-', yyyy]),
+  //                   isSeleccionable: true, onPush: () async {
+  //                     item.fechaDeEntrega = await _seleccionarFecha(context);
+  //                     setState((){});
+  //                   },
+  //                 ),
+  //                 Text('${item.codigoUnidadMedida}'),
+  //                 const SizedBox(height: 10,),
+  //                 BlocConsumer<UnidadMedidaBloc, UnidadMedidaState>(
+  //                   listener: (context, state) {
                       
-                    },
-                    builder: (context, state) {
-                      if(state is UnidadMedidaLoading){
-                        return const Center(child: CircularProgressIndicator(),);
-                      } else if (state is UnidadMedidaLoaded){
-                        if(item.unidadDeMedidaManual == 1){
-                          selectedUnidad = ItemUnidadMedida();
-                          selectedUnidad?.absEntry = item.codigoUnidadMedida;
-                          selectedUnidad?.code = item.nombreUnidadMedida;
-                        }
+  //                   },
+  //                   builder: (context, state) {
+  //                     if(state is UnidadMedidaLoading){
+  //                       return const Center(child: CircularProgressIndicator(),);
+  //                     } else if (state is UnidadMedidaLoaded){
+  //                       if(item.unidadDeMedidaManual == 1){
+  //                         selectedUnidad = ItemUnidadMedida();
+  //                         selectedUnidad?.absEntry = item.codigoUnidadMedida;
+  //                         selectedUnidad?.code = item.nombreUnidadMedida;
+  //                       }
 
                         
-                        return 
-                        widget.pedido.linesPedido[indexLine].unidadDeMedidaManual !=null && widget.pedido.linesPedido[indexLine].unidadDeMedidaManual == 1
-                        ? Wrap(
-                          children: 
-                          state.unidades.map((it){
-                            return ChoiceChip(
-                              label: Text(it.code!), 
-                              selected: selectedEntry == it.absEntry,
-                              onSelected: (bool selected) {
-                                setState(() {
+  //                       return 
+  //                       widget.pedido.linesPedido[indexLine].unidadDeMedidaManual !=null && widget.pedido.linesPedido[indexLine].unidadDeMedidaManual == 1
+  //                       ? Wrap(
+  //                         children: 
+  //                         state.unidades.map((it){
+  //                           return ChoiceChip(
+  //                             label: Text(it.code!), 
+  //                             selected: selectedEntry == it.absEntry,
+  //                             onSelected: (bool selected) {
+  //                               setState(() {
                                   
-                                });
-                                selectedEntry = selected ? it.absEntry : null;
-                                ItemUnidadMedida? nuevaSeleccion = state.unidades.firstWhere((element) => element.absEntry == selectedEntry);
-                                widget.pedido.linesPedido[indexLine].codigoUnidadMedida = nuevaSeleccion.absEntry;
-                                widget.pedido.linesPedido[indexLine].nombreUnidadMedida = nuevaSeleccion.code;
-                              },
-                              selectedColor: Colors.blue,
-                            );
-                          }).toList(),
-                        )
-                        : const SizedBox();
-                      } else {
-                        return const Text('Ocurrio un error ');
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                minimumSize: const Size(double.infinity, 40),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10))
-                )
-              ),
-              onPressed: () {
-                setState(() {
-                  widget.pedido.linesPedido[indexLine].descripcionAdicional = controllerDescripcionAdicional.text;
-                  widget.pedido.linesPedido[indexLine].cantidad = double.parse(controllerCantidad.text);
-                  widget.pedido.linesPedido[indexLine].precioPorUnidad = double.parse(controllerPrecio.text);
-                  widget.pedido.linesPedido[indexLine].descuento = double.parse(controllerDescuento.text);
-                  // widget.pedido.linesPedido[indexLine].codigoUnidadMedida = int.parse(controllerUnidadMedida.text);
-                  // widget.pedido.linesPedido[indexLine].nombreUnidadMedida = controllerNombreUnidadMedida.text;
-                });
-                context.pop();
-              }, 
-              icon: const Icon(Icons.save),
-              label: const Text('Guardar Cambios'),
-            )
-          ],
-        );
-      },
-    ).then((result){
-      if(result != null){
-        context.pop(result);
-      }
-    });
-  }
+  //                               });
+  //                               selectedEntry = selected ? it.absEntry : null;
+  //                               ItemUnidadMedida? nuevaSeleccion = state.unidades.firstWhere((element) => element.absEntry == selectedEntry);
+  //                               widget.pedido.linesPedido[indexLine].codigoUnidadMedida = nuevaSeleccion.absEntry;
+  //                               widget.pedido.linesPedido[indexLine].nombreUnidadMedida = nuevaSeleccion.code;
+  //                             },
+  //                             selectedColor: Colors.blue,
+  //                           );
+  //                         }).toList(),
+  //                       )
+  //                       : const SizedBox();
+  //                     } else {
+  //                       return const Text('Ocurrio un error ');
+  //                     }
+  //                   },
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //         actions: [
+  //           ElevatedButton.icon(
+  //             style: ElevatedButton.styleFrom(
+  //               backgroundColor: Theme.of(context).colorScheme.primary,
+  //               foregroundColor: Theme.of(context).colorScheme.onPrimary,
+  //               minimumSize: const Size(double.infinity, 40),
+  //               shape: const RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.all(Radius.circular(10))
+  //               )
+  //             ),
+  //             onPressed: () {
+  //               setState(() {
+  //                 widget.pedido.linesPedido[indexLine].descripcionAdicional = controllerDescripcionAdicional.text;
+  //                 widget.pedido.linesPedido[indexLine].cantidad = double.parse(controllerCantidad.text);
+  //                 widget.pedido.linesPedido[indexLine].precioPorUnidad = double.parse(controllerPrecio.text);
+  //                 widget.pedido.linesPedido[indexLine].descuento = double.parse(controllerDescuento.text);
+  //                 // widget.pedido.linesPedido[indexLine].codigoUnidadMedida = int.parse(controllerUnidadMedida.text);
+  //                 // widget.pedido.linesPedido[indexLine].nombreUnidadMedida = controllerNombreUnidadMedida.text;
+  //               });
+  //               context.pop();
+  //             }, 
+  //             icon: const Icon(Icons.save),
+  //             label: const Text('Guardar Cambios'),
+  //           )
+  //         ],
+  //       );
+  //     },
+  //   ).then((result){
+  //     if(result != null){
+  //       context.pop(result);
+  //     }
+  //   });
+  // }
 }

@@ -122,10 +122,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ),
           ListTile(
             onTap: () {
+              // ignore: use_build_context_synchronously
               logout().then((value) => context.go('/Login'));
-              // logout().then((value) {
-              //   Navigator.of(context).pushNamedAndRemoveUntil('/Login', (Route<dynamic> route) => false);
-              // });
             },
             leading: Icon(
               Icons.exit_to_app,

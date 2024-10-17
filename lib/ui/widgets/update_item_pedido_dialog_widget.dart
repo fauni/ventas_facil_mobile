@@ -15,11 +15,11 @@ class UpdateItemPedidoDialog extends StatefulWidget {
   final Pedido pedido;
 
   const UpdateItemPedidoDialog({
-    Key? key,
+    super.key,
     required this.itemPedido,
     required this.indexLine,
     required this.pedido,
-  }) : super(key: key);
+  });
 
   @override
   State<UpdateItemPedidoDialog> createState() => _UpdateItemPedidoDialogState();

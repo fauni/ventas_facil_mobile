@@ -10,9 +10,10 @@ class ViewPDFPage extends StatefulWidget {
   final Pedido pedido;
   final Uint8List fetchPDF;
 
-  ViewPDFPage({Key? key, required this.pedido, required this.fetchPDF}) : super(key: key);
+  const ViewPDFPage({super.key, required this.pedido, required this.fetchPDF});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ViewPDFPageState createState() => _ViewPDFPageState();
 }
 
@@ -36,8 +37,9 @@ class _ViewPDFPageState extends State<ViewPDFPage> {
     );
   }
 
-  void sharePdf(String filePath) {
-    Share.shareFiles([filePath], text: 'Aquí tienes el PDF que querías ver.');
+  void sharePdf(String filePath) async {
+    // Share.shareFiles([filePath], text: 'Aquí tienes el PDF que querías ver.');
+    await Share.shareXFiles([XFile(filePath)], text: 'Aquí tienes el PDF que querías ver.');
   }
 
   Future<String> saveTemporaryPdfFile(Uint8List pdfData, String fileName) async {

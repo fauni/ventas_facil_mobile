@@ -229,7 +229,7 @@ class PedidoRepository {
         throw Exception('Error from SAP: ${errorData['message']}');
       }
     } catch (e) {
-      print('Error fetching PDF: $e');
+      // print('Error fetching PDF: $e');
       return null;
     }
   }

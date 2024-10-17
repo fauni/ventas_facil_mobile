@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
-import 'package:ventas_facil/models/serie_numeracion/serie_numeracion.dart';
 import 'package:ventas_facil/models/serie_numeracion/user_serie.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';

@@ -26,7 +26,7 @@ class _ItemListItemWidgetState extends State<ItemListItemWidget> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(10)
       ),
       child: Container(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ventas_facil/models/serie_numeracion/serie_numeracion.dart';
 import 'package:ventas_facil/models/serie_numeracion/user_serie.dart';
 import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
 

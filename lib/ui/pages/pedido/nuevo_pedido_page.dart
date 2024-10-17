@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:date_format/date_format.dart';
@@ -10,7 +9,6 @@ import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/database/user_local_provider.dart';
 import 'package:ventas_facil/models/authentication/user.dart';
 import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
-import 'package:ventas_facil/models/serie_numeracion/serie_numeracion.dart';
 import 'package:ventas_facil/models/serie_numeracion/user_serie.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/persona_contacto.dart';
@@ -23,6 +21,7 @@ import 'package:ventas_facil/ui/widgets/item_add_pedido_widget.dart';
 import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
 import 'package:ventas_facil/ui/widgets/view_detail_line_pedido_widget.dart';
 
+// ignore: must_be_immutable
 class NuevoPedidoPage extends StatefulWidget {
   NuevoPedidoPage({super.key, required this.pedido});
 
@@ -138,7 +137,13 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
     
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      // onPopInvoked: (didPop) async {
+      //   if(didPop){
+      //     return;
+      //   } 
+      //   _showBackDialog();
+      // },
+      onPopInvokedWithResult: (didPop, result) {
         if(didPop){
           return;
         } 
@@ -155,7 +160,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
               listener: (context, state) {
                 if(state is ReporteDescargaCorrecta) {
                   OpenFile.open(state.filePath);
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('El reporte se descargo correctamente! ${state.filePath}'), backgroundColor: Colors.green, duration: Duration(seconds: 3),));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('El reporte se descargo correctamente! ${state.filePath}'), backgroundColor: Colors.green, duration: const Duration(seconds: 3),));
                 } else if(state is MostrarReporteDescargaCorrecta){
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => ViewPDFPage(
@@ -401,10 +406,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                         }
                       }
                     ),
-                    BlocConsumer<CondicionPagoBloc, CondicionPagoState>(
-                      listener: (context, state) {
-                        // TODO: implement listener
-                      },
+                    BlocBuilder<CondicionPagoBloc, CondicionPagoState>(
                       builder: (context, state) {
                         if(state is CargarCondicionPagoLoading){
                           return const CircularProgressIndicator();
@@ -417,6 +419,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                             isSeleccionable: true, 
                             onPush: () async {
                               final result = await context.push<int>('/CondicionPago', extra: pedido.idCondicionDePago);
+                              // ignore: use_build_context_synchronously
                               BlocProvider.of<CondicionPagoBloc>(context).add(CargarCondicionPagoPorId(result!));
                             },
                           );

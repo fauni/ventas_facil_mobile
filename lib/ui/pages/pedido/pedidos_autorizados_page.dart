@@ -66,7 +66,7 @@ class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with Ti
         children: [
           BuscadorPedidosWidget(
             controllerSearch: controllerSearch,
-            onSearch: controllerSearch.text.length > 0 
+            onSearch: controllerSearch.text.isNotEmpty 
               ? cargarPedidosSearch 
               : cargarPedidos
           ),
@@ -158,7 +158,7 @@ class ListaPedidosWidget extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(10)
           ),
           child: ItemListPedidoWidget(pedido: pedido, status: 'Autorizado')
