@@ -11,6 +11,7 @@ String pedidoToJson(Pedido data) => json.encode(data.toJson());
 class Pedido {
     int? id;
     int? codigoSap;
+    int? codigoSerieNumeracion;
     String? serieNumeracion;
     String? numeroDocumento;
     String? nombreFactura;
@@ -45,6 +46,7 @@ class Pedido {
     Pedido({
         this.id,
         this.codigoSap,
+        this.codigoSerieNumeracion,
         this.serieNumeracion,
         this.numeroDocumento,
         this.nombreFactura,
@@ -109,6 +111,7 @@ class Pedido {
     Pedido copyWith({
         int? id,
         int? codigoSap,
+        int? codigoSerieNumeracion,
         String? serieNumeracion,
         String? numeroDocumento,
         String? nombreFactura,
@@ -142,6 +145,7 @@ class Pedido {
         Pedido(
             id: id ?? this.id,
             codigoSap: codigoSap ?? this.codigoSap,
+            codigoSerieNumeracion: codigoSerieNumeracion ?? this.codigoSerieNumeracion,
             serieNumeracion: serieNumeracion ?? this.serieNumeracion,
             numeroDocumento: numeroDocumento ?? this.numeroDocumento,
             nombreFactura: nombreFactura ?? this.nombreFactura,
@@ -176,6 +180,7 @@ class Pedido {
     factory Pedido.fromJson(Map<String, dynamic> json) => Pedido(
         id: json["id"],
         codigoSap: json["codigoSap"],
+        codigoSerieNumeracion: json["codigoSerieNumeracion"],
         serieNumeracion: json["serieNumeracion"],
         numeroDocumento: json["numeroDocumento"],
         nombreFactura: json["nombreFactura"],
@@ -210,6 +215,7 @@ class Pedido {
     Map<String, dynamic> toJson() => {
         "id": id,
         "codigoSap": codigoSap,
+        "codigoSerieNumeracion": codigoSerieNumeracion,
         "serieNumeracion": serieNumeracion,
         "numeroDocumento": numeroDocumento,
         "nombreFactura": nombreFactura,

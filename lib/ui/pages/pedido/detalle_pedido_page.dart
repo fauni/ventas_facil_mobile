@@ -32,6 +32,8 @@ class DetallePedidoPage extends StatelessWidget {
                       children: [
                         Flexible(child: PedidoItemFieldWidget(titulo: 'Codigo Pedido', valor: '${pedido.codigoSap}',)),
                         const SizedBox(width: 10,),
+                        Flexible(child: PedidoItemFieldWidget(titulo: 'Nro.', valor: '${pedido.nombreSerieNumeracion}',)),
+                        const SizedBox(width: 10,),
                         Flexible(child: PedidoItemFieldWidget(titulo: 'Codigo Sap', valor: '${pedido.numeroDocumento}',)),
                       ],
                     ),

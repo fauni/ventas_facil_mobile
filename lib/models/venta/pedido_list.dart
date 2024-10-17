@@ -43,6 +43,8 @@ class PedidoList {
   final String? longitud;
   final DateTime? fechaRegistroApp;
   final DateTime? horaRegistroApp;
+  final int? codigoSerieNumeracion;
+  final String? nombreSerieNumeracion;
 
   PedidoList({
     this.id,
@@ -74,6 +76,8 @@ class PedidoList {
     this.longitud,
     this.fechaRegistroApp,
     this.horaRegistroApp,
+    this.codigoSerieNumeracion,
+    this.nombreSerieNumeracion
   });
 
   double get totalAntesDelDescuento {
@@ -127,6 +131,8 @@ class PedidoList {
     String? longitud,
     DateTime? fechaRegistroApp,
     DateTime? horaRegistroApp,
+    int? codigoSerieNumeracion,
+    String? nombreSerieNumeracion
   }) =>
       PedidoList(
         id: id ?? this.id,
@@ -160,6 +166,8 @@ class PedidoList {
         longitud: longitud ?? this.longitud,
         fechaRegistroApp: fechaRegistroApp ?? this.fechaRegistroApp,
         horaRegistroApp: horaRegistroApp ?? this.horaRegistroApp,
+        codigoSerieNumeracion: codigoSerieNumeracion ?? this.codigoSerieNumeracion,
+        nombreSerieNumeracion: nombreSerieNumeracion ?? this.nombreSerieNumeracion
       );
 
   factory PedidoList.fromJson(Map<String, dynamic> json) => PedidoList(
@@ -209,6 +217,8 @@ class PedidoList {
         horaRegistroApp: json["horaRegistroApp"] == null
             ? null
             : DateTime.parse(json["horaRegistroApp"]),
+        codigoSerieNumeracion: json["codigoSerieNumeracion"],
+        nombreSerieNumeracion: json["nombreSerieNumeracion"]
       );
 
   Map<String, dynamic> toJson() => {
@@ -243,6 +253,8 @@ class PedidoList {
         "longitud": longitud,
         "fechaRegistroApp": fechaRegistroApp?.toIso8601String(),
         "horaRegistroApp": horaRegistroApp?.toIso8601String(),
+        "codigoSerieNumeracion": codigoSerieNumeracion,
+        "nombreSerieNumeracion": nombreSerieNumeracion
       };
 }
 

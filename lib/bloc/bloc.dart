@@ -42,3 +42,7 @@ export 'package:ventas_facil/bloc/condicion_pago_bloc/condicion_pago_bloc.dart';
 export 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_bloc.dart';
 export 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_event.dart';
 export 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_state.dart';
+
+export 'package:ventas_facil/bloc/user_serie_bloc/user_serie_bloc.dart';
+export 'package:ventas_facil/bloc/user_serie_bloc/user_serie_state.dart';
+export 'package:ventas_facil/bloc/user_serie_bloc/user_serie_event.dart';

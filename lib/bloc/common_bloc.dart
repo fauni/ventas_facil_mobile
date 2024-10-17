@@ -10,6 +10,7 @@ import 'package:ventas_facil/repository/producto_repository.dart';
 import 'package:ventas_facil/repository/sales_employee_repository.dart';
 import 'package:ventas_facil/repository/serie_numeracion_repository.dart';
 import 'package:ventas_facil/repository/socio_negocio_repository.dart';
+import 'package:ventas_facil/repository/user_serie_repository.dart';
 import 'package:ventas_facil/repository/usuarios_repository.dart';
 import 'package:ventas_facil/services/auth_service.dart';
 import 'package:ventas_facil/services/usuario_service.dart';
@@ -27,6 +28,7 @@ class CommonBloc {
   static final itemUnidadMedidaBloc = UnidadMedidaBloc(ItemUnidadMedidaRepository());
   static final condicionPagoBloc = CondicionPagoBloc(CondicionPagoRepository());
   static final serieNumeracionBloc = SerieNumeracionBloc(SerieNumeracionRepository());
+  static final userSerieBloc = UserSerieBloc(UserSerieRepository());
 
 
   static final List<BlocProvider> blocProviders = [
@@ -65,6 +67,9 @@ class CommonBloc {
     ),
     BlocProvider<SerieNumeracionBloc>(
       create: (context) => serieNumeracionBloc,
+    ),
+    BlocProvider<UserSerieBloc>(
+      create: (context) => userSerieBloc
     )
   ];
 
@@ -82,6 +87,7 @@ class CommonBloc {
     itemBloc.close();
     condicionPagoBloc.close();
     serieNumeracionBloc.close();
+    userSerieBloc.close();
   }
 
   static final CommonBloc _instance = CommonBloc._internal();

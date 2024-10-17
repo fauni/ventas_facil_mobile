@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:date_format/date_format.dart';
@@ -6,12 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_file/open_file.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
-import 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_bloc.dart';
-import 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_event.dart';
 import 'package:ventas_facil/database/user_local_provider.dart';
 import 'package:ventas_facil/models/authentication/user.dart';
 import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
 import 'package:ventas_facil/models/serie_numeracion/serie_numeracion.dart';
+import 'package:ventas_facil/models/serie_numeracion/user_serie.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/persona_contacto.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
@@ -71,6 +71,10 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
     
   }
 
+  void obtenerSeriesPorUsuario(String idUsuario){
+    BlocProvider.of<UserSerieBloc>(context).add(GetUserSerieByUser(idUsuario));
+  }
+
   void _obtenerUbicacionActual()async  {
     await GenericosService().getLatitud().then((value) => pedido.latitud = value.toString());
     await GenericosService().getLongitud().then((value) => pedido.longitud = value.toString());
@@ -89,6 +93,8 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
       empleadoSeleccionado.codigoEmpleado = user.idEmpleadoSap;
       pedido.idEmpleado = user.idEmpleadoSap;
       pedido.usuarioVentaFacil = user.userName;
+      // print(user.id);
+      obtenerSeriesPorUsuario(user.id!);
     });
   }
 
@@ -298,18 +304,67 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                       onPush: (){},
                     ),
                     const SizedBox(height: 5,),
-                    ItemAddPedidoWidget(
-                      titulo: 'Serie de Numeración', 
-                      valor: '', 
-                      isSeleccionable: true, 
-                      onPush: () async {
-                        final result = await context.push<SerieNumeracion>('/SerieNumeracion', extra: 0);
-                        print(result);
-                        // if(result != null){
-                        //   BlocProvider.of<SerieNumeracionBloc>(context).add(GetSerieNumeracionByIdDocument(17));
-                        // }
+                    BlocConsumer<UserSerieBloc, UserSerieState>(
+                      listener: (context, state) {
+                        if(state.props.isNotEmpty && state.props[0] == "Exception: Error en la solicitud: Instance of 'UnauthorizedException'"){
+                          LoginDialogWidget.mostrarDialogLogin(context);
+                        } else if(state is UserSerieLoaded){
+                          // print('Se cargo ${state.series.first.idSerie}');
+                          pedido.serieNumeracion = state.series.first.nombreSerie;
+                          pedido.codigoSerieNumeracion = state.series.first.idSerie;
+                        }
+                      },
+                      builder: (context, state) {
+                        if(state is UserSerieLoading){
+                          return const CircularProgressIndicator();
+                        } else if(state is UserSerieLoaded){
+                          return ItemAddPedidoWidget(
+                            titulo: 'Serie de Numeración', 
+                            valor: pedido.serieNumeracion == null ? 'Requerido': pedido.serieNumeracion!, 
+                            isSeleccionable: true, 
+                            onPush: () async {
+                              final result = await context.push<UserSerie>(
+                                '/SerieNumeracionUsuario/${state.series.first.idSerie}', 
+                                extra: state.series
+                              );
+                              if(result != null){
+                                setState(() {
+                                  pedido.serieNumeracion = result.nombreSerie;
+                                  pedido.codigoSerieNumeracion = result.idSerie;
+                                });
+                              }
+                            }
+                          );
+                        } else {
+                          return ItemAddPedidoWidget(
+                            titulo: 'Serie de Numeración', 
+                            valor: 'Requerido', 
+                            isSeleccionable: true, 
+                            onPush: (){}
+                          );
+                        }
                       },
                     ),
+                    // ItemAddPedidoWidget(
+                    //   titulo: 'Serie de Numeración', 
+                    //   valor: pedido.serieNumeracion == null 
+                    //     ? 'Requerido' 
+                    //     : '${pedido.serieNumeracion}', 
+                    //   isSeleccionable: true, 
+                    //   onPush: () async {
+                    //     final result = await context.push<SerieNumeracion>(
+                    //       '/SerieNumeracion', 
+                    //       extra: pedido.serieNumeracion ?? ''
+                    //     );
+                    //     if(result != null){
+                    //       pedido.serieNumeracion = result.nombre;
+                    //       pedido.codigoSerieNumeracion = result.series;
+                    //       setState(() {
+                            
+                    //       });        
+                    //     }
+                    //   },
+                    // ),
                     const SizedBox(height: 5,),
                     ItemAddPedidoWidget(
                       titulo: 'Estado del Pedido', 

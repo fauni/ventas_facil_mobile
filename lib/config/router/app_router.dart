@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
+import 'package:ventas_facil/models/serie_numeracion/serie_numeracion.dart';
+import 'package:ventas_facil/models/serie_numeracion/user_serie.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
@@ -19,6 +21,7 @@ import 'package:ventas_facil/ui/pages/pedido/pedidos_pendientes_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/persona_contacto_page.dart';
 import 'package:ventas_facil/ui/pages/producto_page.dart';
 import 'package:ventas_facil/ui/pages/serie_numeracion/serie_numeracion_page.dart';
+import 'package:ventas_facil/ui/pages/serie_numeracion/serie_numeracion_user_page.dart';
 import 'package:ventas_facil/ui/pages/socio_negocio/socio_negocio_page.dart';
 import 'package:ventas_facil/ui/pages/usuarios_page.dart';
 
@@ -131,8 +134,22 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/SerieNumeracion',
       builder: (context, state) {
-        int id = state.extra as int;
-        return SerieNumeracionPage(idSerieSeleccionada: id);
+        String id = state.extra as String;
+        return SerieNumeracionPage(serieSeleccionada: id);
+      },
+    ),
+    GoRoute(
+      path: '/SerieNumeracionUsuario/:serieSeleccionada',
+      builder: (context, state) {
+        // Recuperamos el parámetro desde pathParameters
+        final String serieSeleccionada = state.pathParameters['serieSeleccionada'] ?? '';
+        
+        // Recuperamos la lista de series desde `extra`
+        final List<UserSerie> series = state.extra as List<UserSerie>;
+        return SerieNumeracionUserPage(
+          serieSeleccionada: serieSeleccionada,
+          series: series,
+        );
       },
     )
   ]

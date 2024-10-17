@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
-import 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_bloc.dart';
-import 'package:ventas_facil/bloc/serie_numeracion_bloc/serie_numeracion_state.dart';
 import 'package:ventas_facil/models/serie_numeracion/serie_numeracion.dart';
 import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
 
 class SerieNumeracionPage extends StatefulWidget {
 
-  const SerieNumeracionPage({super.key, required this.idSerieSeleccionada});
+  const SerieNumeracionPage({super.key, required this.serieSeleccionada});
 
-  final int idSerieSeleccionada;
+  final String serieSeleccionada;
 
 
   @override
@@ -44,7 +42,7 @@ class _SerieNumeracionPageState extends State<SerieNumeracionPage> {
             return ListView.separated(
               itemBuilder: (context, index) {
                 SerieNumeracion serie = state.series[index];
-                bool isSelected = false;
+                bool isSelected = widget.serieSeleccionada == serie.nombre ? true : false;
 
                 return ListTile(
                   leading: CircleAvatar(
@@ -54,6 +52,7 @@ class _SerieNumeracionPageState extends State<SerieNumeracionPage> {
                   ),
                   selected: isSelected,
                   title: Text(serie.nombre!),
+                  subtitle: Text(serie.series.toString()),
                   onTap: (){
                     GoRouter.of(context).pop(serie);
                   },

@@ -36,6 +36,8 @@ class MapGeneric {
     pedido.descuento = data.descuento;
     pedido.impuesto = data.impuesto;
     pedido.total = data.total;
+    pedido.codigoSerieNumeracion = data.codigoSerieNumeracion;
+    pedido.serieNumeracion = data.nombreSerieNumeracion;
     return pedido;
   }
 

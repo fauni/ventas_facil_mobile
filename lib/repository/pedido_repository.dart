@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:ventas_facil/bloc/pedido_bloc/pedido_state.dart';
 import 'package:ventas_facil/config/constants/environment.dart';
 import 'package:ventas_facil/config/helpers/exceptions.dart';
 import 'package:ventas_facil/config/helpers/helpers.dart';
