@@ -468,7 +468,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                           return ItemAddPedidoObservacionWidget(
                             titulo: 'Empleado de Venta: ', 
                             valor: pedido.empleado!.nombreEmpleado!, 
-                            isSeleccionable: true, 
+                            isSeleccionable: false, 
                             onPush: () async {
                               setState(() {
                                 

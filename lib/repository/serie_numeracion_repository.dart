@@ -8,6 +8,7 @@ import 'package:ventas_facil/models/serie_numeracion/serie_numeracion.dart';
 
 class SerieNumeracionRepository {
   final String _baseUrl = Environment.UrlApi;
+  final String _databaseSelector = Environment.databaseSelector;
 
   Future<List<SerieNumeracion>> getSeriesNumeracionPorDocumento(String sessionID, int codigo) async {
     try {
@@ -15,6 +16,7 @@ class SerieNumeracionRepository {
         Uri.parse('$_baseUrl/DocumentSeries/$codigo'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );

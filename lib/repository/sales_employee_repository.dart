@@ -8,12 +8,15 @@ import 'package:http/http.dart' as http;
 
 class SalesEmployeeRepository {
   final String _baseUrl = Environment.UrlApi;
+  final String _databaseSelector = Environment.databaseSelector;
+
   Future<List<EmpleadoVenta>> getAllEmpleados(String sessionID) async {
     try {
       final response = await http.get(
         Uri.parse('$_baseUrl/SalesPerson'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );
@@ -42,6 +45,7 @@ class SalesEmployeeRepository {
         Uri.parse('$_baseUrl/SalesPerson/${empleado.codigoEmpleado}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );

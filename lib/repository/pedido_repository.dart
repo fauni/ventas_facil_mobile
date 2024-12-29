@@ -14,12 +14,15 @@ import 'package:ventas_facil/models/venta/pedido_list.dart';
 
 class PedidoRepository {
   final String _baseUrl = Environment.UrlApi;
+  final String _databaseSelector = Environment.databaseSelector;
+
   Future<Pedido> guardarPedido(String sessionID, Pedido data) async {
     try {
       final response = await http.post(
         Uri.parse('$_baseUrl/Orders'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         },
         body: jsonEncode(data)
@@ -45,6 +48,7 @@ class PedidoRepository {
         Uri.parse('$_baseUrl/Orders'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         },
         body: jsonEncode(data)
@@ -70,6 +74,7 @@ class PedidoRepository {
         Uri.parse('$_baseUrl/Orders?top=5&skip=0'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );
@@ -98,6 +103,7 @@ class PedidoRepository {
         Uri.parse('$_baseUrl/Orders?top=5&skip=0&search=$search'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );
@@ -126,6 +132,7 @@ class PedidoRepository {
         Uri.parse('$_baseUrl/Orders/${data.codigoSap}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         },
         body: jsonEncode(data)
@@ -163,6 +170,7 @@ class PedidoRepository {
         Uri.parse('$_baseUrl/Orders/modificarEstadoLinea/${data.codigoSap}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         },
         body: jsonEncode(order)
@@ -189,6 +197,7 @@ class PedidoRepository {
       Uri.parse('$_baseUrl/Orders/GenerarReporte/$id'),
       headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
       },
     );
@@ -216,6 +225,7 @@ class PedidoRepository {
         Uri.parse('$_baseUrl/Orders/GenerarReporte/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID,
         },
       );
@@ -241,6 +251,7 @@ class PedidoRepository {
         Uri.parse('$_baseUrl/OrdersPending?top=5&skip=0'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );
@@ -269,6 +280,7 @@ class PedidoRepository {
         Uri.parse('$_baseUrl/OrdersPending?top=5&skip=0&search=$search'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );
@@ -299,6 +311,7 @@ class PedidoRepository {
         Uri.parse('$_baseUrl/OrdersPending/Aprobados?top=5&skip=0'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       )
@@ -335,6 +348,7 @@ class PedidoRepository {
         Uri.parse('$_baseUrl/OrdersPending/CrearDocumento/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );

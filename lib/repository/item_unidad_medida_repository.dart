@@ -7,12 +7,15 @@ import 'package:ventas_facil/models/producto/item_unidad_medida.dart';
 
 class ItemUnidadMedidaRepository {
   final String _baseUrl = Environment.UrlApi;
+  final String _databaseSelector = Environment.databaseSelector;
+
   Future<List<ItemUnidadMedida>> getUnidadesDeMedida(String sessionID) async {
     try {
       final response = await http.get(
         Uri.parse('$_baseUrl/ItemUnidadMedida'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );

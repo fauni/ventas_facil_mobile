@@ -43,8 +43,6 @@ final appRouter = GoRouter(
           );
         },
       ),
-      // builder: (context, state) => const HomePage(),
-
     ),
     GoRoute(
       path: '/Modulos',

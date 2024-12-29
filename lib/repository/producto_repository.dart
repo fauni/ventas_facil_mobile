@@ -8,12 +8,15 @@ import 'package:http/http.dart' as http;
 
 class ProductoRepository {
   final String _baseUrl = Environment.UrlApi;
+  final String _databaseSelector = Environment.databaseSelector;
+
   Future<List<Producto>> getAllProductos(String sessionID) async {
     try {
       final response = await http.get(
         Uri.parse('$_baseUrl/Items'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );

@@ -8,12 +8,14 @@ import 'package:ventas_facil/models/condicion_pago/condicion_pago.dart';
 
 class CondicionPagoRepository {
   final String _baseUrl = Environment.UrlApi;
+  final String _databaseSelector = Environment.databaseSelector;
   Future<List<CondicionDePago>> getAllCondicionDePago(String sessionID) async {
     try {
       final response = await http.get(
         Uri.parse('$_baseUrl/PaymentTermsTypes'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );
@@ -42,6 +44,7 @@ class CondicionPagoRepository {
         Uri.parse('$_baseUrl/PaymentTermsTypes/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           'Cookie': sessionID
         }
       );

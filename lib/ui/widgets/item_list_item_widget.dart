@@ -167,8 +167,7 @@ class _ItemListItemWidgetState extends State<ItemListItemWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Fec. Vencimiento', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),),
-                        Text(formatDate(lote.fechaVencimiento!, [dd, '-', mm , '-', yyyy]), style: Theme.of(context).textTheme.bodySmall,)
-                      ],
+                        lote.fechaVencimiento != null ? Text(formatDate(lote.fechaVencimiento!, [dd, '-', mm , '-', yyyy]), style: Theme.of(context).textTheme.bodySmall,): Text('Sin fecha')] 
                     ),
                   ],
                 );
@@ -179,7 +178,7 @@ class _ItemListItemWidgetState extends State<ItemListItemWidget> {
                 borderRadius: BorderRadius.circular(10),
                 // border: Border.all()
               ),
-              child: const Text('El Item seleccionado no tiene lotes creados.'),
+              child: const Text('El Item seleccionado no tiene lotes ni número de serie creado.'),
             )
           )
         );

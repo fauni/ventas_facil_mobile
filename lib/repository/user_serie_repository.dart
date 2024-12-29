@@ -8,6 +8,7 @@ import 'package:ventas_facil/models/serie_numeracion/user_serie.dart';
 
 class UserSerieRepository {
   final String _baseUrl = Environment.UrlApi;
+  final String _databaseSelector = Environment.databaseSelector;
 
   Future<List<UserSerie>> getUserSerieByUser(String idUsuario) async {
     try {
@@ -15,6 +16,7 @@ class UserSerieRepository {
         Uri.parse('$_baseUrl/UserSerie/GetSerieByUser/$idUsuario'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
           // 'Cookie': sessionID
         }
       );

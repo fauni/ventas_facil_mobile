@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                             foregroundColor: Theme.of(context).colorScheme.onPrimary,
                             minimumSize: const Size(double.infinity, 50),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(8)
                             )
                           ),
                           label: const Text('INICIAR SESIÓN'),
