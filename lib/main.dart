@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
               hintColor: config.Colors().textoGris4A3Color(1),
               colorScheme: ColorScheme(
                 brightness: Brightness.light, 
-                primary: config.Colors().naranja721Color(1), 
+                primary: const Color.fromRGBO(2, 90, 94, 1), // config.Colors().naranja721Color(1), 
                 // Letras del navigation bar unselected
                 onPrimary: config.Colors().blancoColor(1), 
                 secondary: config.Colors().amarilloA67Color(1), 

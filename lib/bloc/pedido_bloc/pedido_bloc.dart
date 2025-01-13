@@ -18,6 +18,7 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
     on<UpdateEstadoLineaPedido>(_onUpdateEstadoLineaPedido);
     on<DescargarYGuardarReportePedidoVenta>(_mapDownloadReportToState);
     on<DescargarReportePedidoVenta>(_mapDescargaYMuestraReporte);
+    on<LoadPedidosByDate>(_onLoadPedidosByDate);
   }
 
   Future<void> _onLoadPedidos(LoadPedidos event, Emitter<PedidoState> emit) async {
@@ -26,6 +27,23 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
     emit(PedidosLoading());
     try {
       final pedidos = await _pedidoRepository.getOrdenesVentaAbiertos(token);
+      emit(PedidosLoadedSearch(pedidos));
+    } on UnauthorizedException catch(_){
+      emit(PedidosUnauthorized());
+    } on PedidosEmpty catch(_){
+      emit(PedidosEmpty());
+    }catch (e) {
+      emit(PedidosNotLoaded(e.toString()));
+    }
+  }
+
+  Future<void> _onLoadPedidosByDate(LoadPedidosByDate event, Emitter<PedidoState> emit) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.get('token').toString();
+    emit(PedidosLoading());
+    try {
+      // TODO: Revisar parametro de entrada event.date
+      final pedidos = await _pedidoRepository.getOrdenesForDate(token, event.date.toString());
       emit(PedidosLoadedSearch(pedidos));
     } on UnauthorizedException catch(_){
       emit(PedidosUnauthorized());

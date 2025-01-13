@@ -14,12 +14,12 @@ PedidoList pedidoListFromJson(String str) =>
 String pedidoListToJson(PedidoList data) => json.encode(data.toJson());
 
 class PedidoList {
-  final int? id;
-  final int? codigoSap;
-  final int? numeroDocumento;
+  int? id;
+  int? codigoSap;
+  int? numeroDocumento;
   final String? tipoDocumento;
-  final DateTime? fechaDeEntrega;
-  final DateTime? fechaDelDocumento;
+  DateTime? fechaDeEntrega;
+  DateTime? fechaDelDocumento;
   final String? codigoCliente;
   final String? nombreCliente;
   SocioNegocio? cliente;
@@ -41,8 +41,8 @@ class PedidoList {
   final String? usuarioVentaFacil;
   final String? latitud;
   final String? longitud;
-  final DateTime? fechaRegistroApp;
-  final DateTime? horaRegistroApp;
+  DateTime? fechaRegistroApp;
+  DateTime? horaRegistroApp;
   final int? codigoSerieNumeracion;
   final String? nombreSerieNumeracion;
 

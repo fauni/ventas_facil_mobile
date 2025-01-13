@@ -18,6 +18,14 @@ class LoadPedidosSearch extends PedidoEvent{
   List<Object> get props => [search];
 }
 
+class LoadPedidosByDate extends PedidoEvent{
+  final DateTime date;
+  LoadPedidosByDate(this.date);
+
+  @override
+  List<Object> get props => [date];
+}
+
 class SavePedido extends PedidoEvent {
   final Pedido pedido;
   SavePedido(this.pedido);

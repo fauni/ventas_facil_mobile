@@ -22,8 +22,8 @@ class _LoginPageState extends State<LoginPage> {
   
   @override
   void initState() {
-    usernameController.text = 'faruni';
-    passwordController.text = 'Inbolsa1';
+    usernameController.text = 'mines';
+    passwordController.text = '12345';
     super.initState();
   }
 
@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                 color: Theme.of(context).colorScheme.onPrimary
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   HeroMode(
                     enabled: true,
@@ -48,9 +48,14 @@ class _LoginPageState extends State<LoginPage> {
                       tag: 'heroIcono',
                       child: Image.asset(
                         'assets/icons/tomatefacilbanner.jpg',
-                        height: 150,
+                        height: 100,
                       ),
                     ),
+                  ),
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    height: 80,
+                    child: Image.asset('assets/icons/novanexa.png'),
                   ),
                 ],
               ),
@@ -70,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                   if(state is LoginLoading){
                     return const Center(child: CircularProgressIndicator(),);
                   }
-                  return Container(
+                  return SingleChildScrollView(
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,6 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                             'assets/icons/icono-logo.png'
                           ),
                         ),
+                        const SizedBox(height: 30,),
                         TextField(
                           controller: usernameController,
                           decoration: const InputDecoration(
@@ -99,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                             )  
                           ),
                         ),
+                        const SizedBox(height: 20,),
                         TextField(
                           controller: passwordController,
                           decoration: InputDecoration(
@@ -120,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           obscureText: !visible,
                         ),
+                        const SizedBox(height: 20,),
                         ElevatedButton.icon(
                           onPressed: () {
                             // TODO: Aqui cambiar el idCompany por el que corresponda

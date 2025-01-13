@@ -17,6 +17,7 @@ import 'package:ventas_facil/ui/pages/pedido/nuevo_pedido_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/pedido_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/pedidos_autorizados_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/pedidos_pendientes_page.dart';
+import 'package:ventas_facil/ui/pages/pedido/pedidos_rechazados_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/persona_contacto_page.dart';
 import 'package:ventas_facil/ui/pages/producto_page.dart';
 import 'package:ventas_facil/ui/pages/serie_numeracion/serie_numeracion_page.dart';
@@ -76,6 +77,10 @@ final appRouter = GoRouter(
       builder: (context, state) => const PedidosAutorizadosPage(),
     ),
     GoRoute(
+      path: '/PedidosRechazados',
+      builder: (context, state) => const PedidosRechazadosPage(),
+    ),
+    GoRoute(
       path: '/Pedidos',
       builder: (context, state) => const PedidoPage(),
     ),
@@ -89,8 +94,11 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/NuevoPedido',
       builder: (context, state){
-        Pedido data = state.extra as Pedido;
-        return NuevoPedidoPage(pedido: data,);
+        // Extraer los argumentos pasados a la ruta
+        final arguments = state.extra as Map<String, dynamic>;
+        Pedido data = arguments['pedido'] as Pedido;// state.extra as Pedido;
+        final String esRecuperado = arguments['esRecuperado'] as String;
+        return NuevoPedidoPage(pedido: data, esRecuperado: esRecuperado,);
       },
     ),
     GoRoute(

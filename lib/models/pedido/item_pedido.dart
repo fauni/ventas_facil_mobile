@@ -21,6 +21,9 @@ class ItemPedido {
   int? codigoUnidadMedida;
   String? nombreUnidadMedida;
   DateTime? fechaDeEntrega;
+  String? codigoAlmacen;
+  String? codigoProveedor;
+  String? nombreProveedor;
   // double? porcentajeDescuento;
   // double? precioTrasElDescuento;
   // String? monedaPrecio;
@@ -37,7 +40,10 @@ class ItemPedido {
       this.unidadDeMedidaManual,
       this.codigoUnidadMedida,
       this.nombreUnidadMedida,
-      this.fechaDeEntrega
+      this.fechaDeEntrega,
+      this.codigoAlmacen,
+      this.codigoProveedor,
+      this.nombreProveedor
   });
 
   double? get total => cantidad != null && precioPorUnidad != null
@@ -59,7 +65,10 @@ class ItemPedido {
           double? unidadDeMedidaManual,
           int? codigoUnidadMedida,
           String? nombreUnidadMedida,
-          DateTime? fechaDeEntrega
+          DateTime? fechaDeEntrega,
+          String? codigoAlmacen,
+          String? codigoProveedor,
+          String? nombreProveedor
           }) =>
       ItemPedido(
           numeroDeLinea: numeroDeLinea ?? this.numeroDeLinea,
@@ -76,7 +85,10 @@ class ItemPedido {
               unidadDeMedidaManual ?? this.unidadDeMedidaManual,
           codigoUnidadMedida: codigoUnidadMedida ?? this.codigoUnidadMedida,
           nombreUnidadMedida: nombreUnidadMedida ?? this.nombreUnidadMedida,
-          fechaDeEntrega: fechaDeEntrega ?? this.fechaDeEntrega  
+          fechaDeEntrega: fechaDeEntrega ?? this.fechaDeEntrega,
+          codigoAlmacen: codigoAlmacen ?? this.codigoAlmacen,
+          codigoProveedor: codigoProveedor ?? this.codigoProveedor,
+          nombreProveedor: nombreProveedor ?? this.nombreProveedor
         );
 
   factory ItemPedido.fromJson(Map<String, dynamic> json) => ItemPedido(
@@ -92,6 +104,9 @@ class ItemPedido {
       codigoUnidadMedida: json["codigoUnidadMedida"],
       nombreUnidadMedida: json["nombreUnidadMedida"],
       fechaDeEntrega: json["fechaDeEntrega"] == null ? null : DateTime.parse(json["fechaDeEntrega"]),
+      codigoAlmacen: json["codigoAlmacen"],
+      codigoProveedor: json["codigoProveedor"],
+      nombreProveedor: json["nombreProveedor"]
     );
 
   Map<String, dynamic> toJson() => {
@@ -106,6 +121,9 @@ class ItemPedido {
         "unidadDeMedidaManual": unidadDeMedidaManual,
         "codigoUnidadMedida": codigoUnidadMedida,
         "nombreUnidadMedida": nombreUnidadMedida,
-        "fechaDeEntrega": fechaDeEntrega?.toIso8601String()
+        "fechaDeEntrega": fechaDeEntrega?.toIso8601String(),
+        "codigoAlmacen": codigoAlmacen,
+        "codigoProveedor": codigoProveedor,
+        "nombreProveedor": nombreProveedor
       };
 }

@@ -41,22 +41,23 @@ class _ItemListItemWidgetState extends State<ItemListItemWidget> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(child: Text('Codigo', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),)),
-                          Expanded(child: Text('${widget.item.codigo}', style: Theme.of(context).textTheme.bodyMedium,))
+                          Text('${widget.item.codigo}', style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Theme.of(context).colorScheme.onError),),
+                          Text('${widget.item.cantidadEnStock} ${widget.item.unidadMedidaVenta ?? ''}', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),),
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(child: Text('Descripción', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),)),
+                          // Expanded(child: Text('Descripción', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),)),
                           Expanded(child: Text('${widget.item.descripcion}', style: Theme.of(context).textTheme.bodyMedium,))
                         ],
                       ),
+                      const Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(child: Text('Cantidad en Stock', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),)),
-                          Expanded(child: Text('${widget.item.cantidadEnStock} ${widget.item.unidadMedidaVenta ?? ''}', style: Theme.of(context).textTheme.bodyMedium,))
+                          Text('Proveedor: ', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),),
+                          Expanded(child: Text(widget.item.proveedorPrincipal!.nombreSn ?? '', style: Theme.of(context).textTheme.titleSmall,))
                         ],
                       ),
                     ],
@@ -149,13 +150,20 @@ class _ItemListItemWidgetState extends State<ItemListItemWidget> {
                         Text('${lote.almacen}', style: Theme.of(context).textTheme.bodyMedium,)
                       ],
                     ),
-                    Row(
+                    item.esGestionadoNumeroLote == 'tYES' ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Número de Lote', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),),
                         Text('${lote.numeroLote}', style: Theme.of(context).textTheme.bodyMedium,)
                       ],
-                    ),
+                    ): const SizedBox(),
+                    item.esGestionadoPorNumeroSerie == 'tYES' ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Número de Serie', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),),
+                        Text('${lote.numeroLote}', style: Theme.of(context).textTheme.bodyMedium,)
+                      ],
+                    ): const SizedBox(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

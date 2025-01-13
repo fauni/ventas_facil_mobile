@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ventas_facil/ui/widgets/button_generic_alone_icon_widget.dart';
 
-class BuscadorPedidosWidget extends StatelessWidget {
+class BuscadorItemsWidget extends StatelessWidget {
   final TextEditingController controllerSearch;
   final Function onSearch;
-  final Function onSearchDate;
 
-  const BuscadorPedidosWidget({
+  const BuscadorItemsWidget({
     super.key,
     required this.controllerSearch,
     required this.onSearch,
-    required this.onSearchDate,
   });
 
   @override
@@ -44,13 +42,7 @@ class BuscadorPedidosWidget extends StatelessWidget {
             icon: Icons.search,
             height: 48,
             onPressed: () => onSearch(),
-          ),
-          const SizedBox(width: 2),
-          ButtonGenericAloneIconWidget(
-            icon: Icons.calendar_month, 
-            height: 48, 
-            onPressed: () => onSearchDate()
-          ),
+          )
         ],
       ),
     );

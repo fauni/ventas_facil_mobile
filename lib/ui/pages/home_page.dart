@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ventas_facil/models/authentication/user.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
@@ -19,6 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
   User? user;
+  double latitude = 0;
+  double longitude = 0;
   @override
   void initState(){
     super.initState();
@@ -27,9 +30,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
   }
 
   void _saveCurrentLocation() async {
+    bool gpsEnabled = false;
     try{
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      while(!serviceEnabled){
+        // Solicitar habilitar los servicios de ubicación
+        gpsEnabled = await Geolocator.openLocationSettings(); 
+        serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      }
+     
+      // Verificar si el usuario tiene permisos de ubicación
+      var status = await Permission.location.status;
+      if(!status.isGranted){
+        // Solicitar permisos de ubicación
+        status = await Permission.location.request();
+        if(!status.isGranted){
+          // Si los permisos no se otorgan, salir del método
+          return;
+        }
+      } 
       Position position = await LocationService().getCurrentLocation();
+      latitude = position.latitude;
+      longitude = position.longitude;
+      setState(() {});
       await GenericosService().saveLocation(position.latitude, position.longitude) ;
+
     } catch (e){
       return;
     }
@@ -40,17 +65,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        foregroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: const Text(''),
         centerTitle: true,
         actions: [
+          CircleAvatar(
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            child: Text(
+              user!=null ? '${user!.nombre![0]}${user!.apellido![0]}': 'FA',
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+            ),
+          ),
           IconButton(
             onPressed: (){
               logout();
             }, 
             icon: const Icon(Icons.logout, size: 30,),
-          )
+          ),
         ],
       ),
       // drawer: const DrawerWidget(),
@@ -59,6 +91,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
         children: [
           ListView(
             children: [
+              Container(
+                alignment: Alignment.topRight,
+                height: 50,
+                child: Image.asset('assets/icons/novanexa.png')
+              ),
               Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.onPrimary,
@@ -88,7 +125,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 onTap: () {
-                  context.push('/NuevoPedido', extra: Pedido(linesPedido: []));
+                  context.push('/NuevoPedido', extra: {
+                    'pedido': Pedido(linesPedido: []),
+                    'esRecuperado': 'SI'
+                  } );
                 },
                 trailing: Icon(Icons.arrow_forward_ios, color: Theme.of(context).colorScheme.onError,),
               ),
@@ -98,6 +138,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
               _buildMenuItem(Icons.pending_actions, 'Pedidos Pendientes', '/PedidosPendientes'),
               const Divider(),
               _buildMenuItem(Icons.checklist_rounded, 'Pedidos Autorizados', '/PedidosAutorizados'),
+              const Divider(),
+              _buildMenuItem(Icons.cancel, 'Pedidos Rechazados', '/PedidosRechazados'),
               // Text('${user!.almacen}')
               // const Divider(),
               // _buildMenuItem(Icons.local_shipping, 'Entrega', ''),
@@ -109,9 +151,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
             bottom: 0,
             right: 10,
             
-            child: Image.asset(
-              'assets/icons/tomatefaciltoolbar.jpg',
-              height: 80,
+            child: Column(
+              children: [
+                // Text('Ubicación: $latitude, $longitude'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text('V.1.0.1'),// user != null ? Text('Usuario: ${user!.nombre} ${user!.apellido}') : const SizedBox(),
+                    Image.asset(
+                      'assets/icons/tomatefaciltoolbar.jpg',
+                      height: 80,
+                    ),
+                  ],
+                ),
+              ],
             )
           )
         ],

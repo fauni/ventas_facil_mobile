@@ -16,6 +16,8 @@ class PedidosPendientesPage extends StatefulWidget {
 
 class _PedidosPendientesPageState extends State<PedidosPendientesPage> with TickerProviderStateMixin{
   TextEditingController controllerSearch = TextEditingController();
+  DateTime? fechaSeleccionada;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +36,26 @@ class _PedidosPendientesPageState extends State<PedidosPendientesPage> with Tick
 
   void cargarPedidosSearch(){
     BlocProvider.of<PedidoPendienteBloc>(context).add(LoadPedidosPendientesBySearch(controllerSearch.text, 'Pendiente'));
+  }
+
+  void cargarPedidosPorFecha(DateTime date){
+    BlocProvider.of<PedidoPendienteBloc>(context).add(LoadPedidosPendientesByDate(date, 'Pendiente'));
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    controllerSearch.text = '';
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2021),
+      lastDate: DateTime(2100)
+    );
+    if (picked != null && picked != fechaSeleccionada){
+      setState(() {
+        fechaSeleccionada = picked;
+      });
+      cargarPedidosPorFecha(picked);
+    }
   }
 
   @override
@@ -66,7 +88,10 @@ class _PedidosPendientesPageState extends State<PedidosPendientesPage> with Tick
             controllerSearch: controllerSearch,
             onSearch: controllerSearch.text.isNotEmpty 
               ? cargarPedidosSearch 
-              : cargarPedidos
+              : cargarPedidos,
+            onSearchDate: (){
+              _selectDate(context);
+            }
           ),
           Expanded(
             child: BlocConsumer<PedidoPendienteBloc, PedidoPendienteState>(
@@ -77,6 +102,10 @@ class _PedidosPendientesPageState extends State<PedidosPendientesPage> with Tick
                 else if(state is PedidosPendientesNotLoaded){
                   if(state.error.contains("UnauthorizedException")){
                     LoginDialogWidget.mostrarDialogLogin(context);
+                  } else if (state.error.contains("GenericEmptyException")) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('No se encontraron pedidos'), backgroundColor: Colors.blue,)
+                    );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Ocurrio un problema al obtener los Pedidos'), backgroundColor: Colors.red,)

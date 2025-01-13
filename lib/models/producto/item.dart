@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:ventas_facil/models/venta/socio_negocio.dart';
+
 Item itemFromJson(String str) => Item.fromJson(json.decode(str));
 
 String itemToJson(Item data) => json.encode(data.toJson());
@@ -17,10 +19,13 @@ class Item {
     final String? esArticuloDeInventario;
     final String? esArticuloDeVenta;
     final String? esGestionadoNumeroLote;
+    final String? esGestionadoPorNumeroSerie;
     final String? unidadMedidaVenta;
     final String? unidadMedidaInventario;
     final double? cantidadEnStock;
     final double? grupoUnidadMedida;
+    final String? codigoProveedor;
+    final SocioNegocio? proveedorPrincipal;
     final List<ListaPrecio>? listaPrecios;
     final List<ItemAlmacen>? informacionItemAlmacen;
     final List<ItemLote>? informacionItemLote;
@@ -34,9 +39,12 @@ class Item {
         this.esArticuloDeInventario,
         this.esArticuloDeVenta,
         this.esGestionadoNumeroLote,
+        this.esGestionadoPorNumeroSerie,
         this.unidadMedidaVenta,
         this.unidadMedidaInventario,
         this.grupoUnidadMedida,
+        this.codigoProveedor,
+        this.proveedorPrincipal,
         this.cantidadEnStock,
         this.listaPrecios,
         this.informacionItemAlmacen,
@@ -52,9 +60,12 @@ class Item {
         String? esArticuloDeInventario,
         String? esArticuloDeVenta,
         String? esGestionadoNumeroLote,
+        String? esGestionadoPorNumeroSerie,
         String? unidadMedidaVenta,
         String? unidadMedidaInventario,
         double? grupoUnidadMedida,
+        String? codigoProveedor,
+        SocioNegocio? proveedorPrincipal,
         double? cantidadEnStock,
         List<ListaPrecio>? listaPrecios,
         List<ItemAlmacen>? informacionItemAlmacen,
@@ -69,9 +80,12 @@ class Item {
             esArticuloDeInventario: esArticuloDeInventario ?? this.esArticuloDeInventario,
             esArticuloDeVenta: esArticuloDeVenta ?? this.esArticuloDeVenta,
             esGestionadoNumeroLote: esGestionadoNumeroLote ?? this.esGestionadoNumeroLote,
+            esGestionadoPorNumeroSerie: esGestionadoPorNumeroSerie ?? this.esGestionadoPorNumeroSerie,
             unidadMedidaVenta: unidadMedidaVenta ?? this.unidadMedidaVenta,
             unidadMedidaInventario: unidadMedidaInventario ?? this.unidadMedidaInventario,
             grupoUnidadMedida: grupoUnidadMedida ?? this.grupoUnidadMedida,
+            codigoProveedor: codigoProveedor ?? this.codigoProveedor,
+            proveedorPrincipal: proveedorPrincipal ?? this.proveedorPrincipal,
             cantidadEnStock: cantidadEnStock ?? this.cantidadEnStock,
             listaPrecios: listaPrecios ?? this.listaPrecios,
             informacionItemAlmacen: informacionItemAlmacen ?? this.informacionItemAlmacen,
@@ -87,9 +101,12 @@ class Item {
         esArticuloDeInventario: json["esArticuloDeInventario"],
         esArticuloDeVenta: json["esArticuloDeVenta"],
         esGestionadoNumeroLote: json["esGestionadoNumeroLote"],
+        esGestionadoPorNumeroSerie: json["esGestionadoPorNumeroSerie"],
         unidadMedidaVenta: json["unidadMedidaVenta"],
         unidadMedidaInventario: json["unidadMedidaInventario"],
         grupoUnidadMedida: json["grupoUnidadMedida"]?.toDouble(),
+        codigoProveedor: json["codigoProveedor"],
+        proveedorPrincipal: json["proveedorPrincipal"] == null ? null : SocioNegocio.fromJson(json["proveedorPrincipal"]),
         cantidadEnStock: json["cantidadEnStock"]?.toDouble(),
         listaPrecios: json["listaPrecios"] == null ? [] : List<ListaPrecio>.from(json["listaPrecios"]!.map((x) => ListaPrecio.fromJson(x))),
         informacionItemAlmacen: json["informacionItemAlmacen"] == null ? [] : List<ItemAlmacen>.from(json["informacionItemAlmacen"]!.map((x) => ItemAlmacen.fromJson(x))),
@@ -105,9 +122,12 @@ class Item {
         "esArticuloDeInventario": esArticuloDeInventario,
         "esArticuloDeVenta": esArticuloDeVenta,
         "esGestionadoNumeroLote": esGestionadoNumeroLote,
+        "esGestionadoPorNumeroSerie": esGestionadoPorNumeroSerie,
         "unidadMedidaVenta": unidadMedidaVenta,
         "unidadMedidaInventario": unidadMedidaInventario,
         "grupoUnidadMedida": grupoUnidadMedida,
+        "codigoProveedor": codigoProveedor,
+        "proveedorPrincipal": proveedorPrincipal?.toJson(),
         "cantidadEnStock": cantidadEnStock,
         "listaPrecios": listaPrecios == null ? [] : List<dynamic>.from(listaPrecios!.map((x) => x.toJson())),
         "informacionItemAlmacen": informacionItemAlmacen == null ? [] : List<dynamic>.from(informacionItemAlmacen!.map((x) => x.toJson())),

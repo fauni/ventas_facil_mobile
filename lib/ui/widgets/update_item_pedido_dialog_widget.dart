@@ -57,7 +57,7 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      lastDate: DateTime(2030),
     );
     if (picked != null) {
       return picked;
@@ -191,13 +191,13 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              minimumSize: const Size(double.infinity, 40),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))
-              )
-            ),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            minimumSize: const Size(double.infinity, 40),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))
+            )
+          ),
           onPressed: () {
             // Lógica para guardar los cambios
             widget.itemPedido.descripcionAdicional = controllerDescripcionAdicional.text;

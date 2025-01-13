@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
 import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
-import 'package:ventas_facil/ui/widgets/buscar_pedidos_widget.dart';
+import 'package:ventas_facil/ui/widgets/buscar_items_widget.dart';
 import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
 import 'package:ventas_facil/ui/widgets/not_found_information_widget.dart';
 
@@ -68,7 +68,7 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
       appBar: const AppBarWidget(titulo: 'Socios de Negocio',),
       body: Column(
         children: [
-          BuscadorPedidosWidget(controllerSearch: controllerSearch, onSearch: cargarSocioDeNegocio),
+          BuscadorItemsWidget(controllerSearch: controllerSearch, onSearch: cargarSocioDeNegocio),
           Expanded(
             child: BlocConsumer<SocioNegocioBloc, SocioNegocioState>(
               listener: (context, state) {
@@ -115,8 +115,40 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                             : const Icon(Icons.info_outline),
                         ),
                         selected: isSelected,
-                        title: Text(cliente.id!),
-                        subtitle: Text(cliente.nombreSn!),
+                        title: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(cliente.id!),
+                            Text(cliente.nombreSn!)
+                          ],
+                        ),
+                        subtitle: Column(
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('NIT:', style: TextStyle(fontWeight: FontWeight.bold),),
+                                const SizedBox(width: 5,),
+                                Text(cliente.nit!),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Razon Social:', style: TextStyle(fontWeight: FontWeight.bold),),
+                                const SizedBox(width: 10,),
+                                Expanded(
+                                  child: Text(cliente.nombreSn!,)
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        
                         onTap: () {
                           widget.clienteSeleccionado = cliente;
                           isSelected = true;

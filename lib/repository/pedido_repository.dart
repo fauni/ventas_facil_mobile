@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:ventas_facil/config/constants/environment.dart';
 import 'package:ventas_facil/config/helpers/exceptions.dart';
 import 'package:ventas_facil/config/helpers/helpers.dart';
+import 'package:ventas_facil/database/user_local_provider.dart';
 import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/pedido/update_status_item_order.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
@@ -43,6 +44,8 @@ class PedidoRepository {
   }
 
   Future<bool> guardarPedido2(String sessionID, Pedido data) async {
+    // final usuario = await getCurrentUser();
+    // data.observacion = '${usuario.userName} : ${data.observacion}';
     try {
       final response = await http.post(
         Uri.parse('$_baseUrl/Orders'),
@@ -70,8 +73,39 @@ class PedidoRepository {
 
   Future<List<PedidoList>> getOrdenesVentaAbiertos(String sessionID) async {
     try {
+      final usuario = await getCurrentUser();
       final response = await http.get(
-        Uri.parse('$_baseUrl/Orders?top=5&skip=0'),
+        Uri.parse('$_baseUrl/Orders?&top=20&skip=0&username=${usuario.userName}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
+          'Cookie': sessionID
+        }
+      );
+
+      if(response.statusCode == 200){
+        final jsonData = jsonDecode(response.body) as List<dynamic>;
+        List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
+        if(orders.isEmpty){
+          throw GenericEmptyException();
+        }
+        return orders;
+      } else if(response.statusCode == 401){
+        throw UnauthorizedException();
+      } 
+      else {
+        throw FetchDataException('${response.statusCode}');
+      }
+    } catch(e){
+      throw Exception('$e');
+    }
+  }
+
+  Future<List<PedidoList>> getOrdenesForDate(String sessionID, String date) async {
+    try {
+      final usuario = await getCurrentUser();
+      final response = await http.get(
+        Uri.parse('$_baseUrl/Orders/GetByDate?date=$date&username=${usuario.userName}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'X-Database-Identifier': _databaseSelector,
@@ -99,8 +133,9 @@ class PedidoRepository {
 
   Future<List<PedidoList>> getOrdenesForSearch(String sessionID, String search) async {
     try {
+      final usuario = await getCurrentUser();
       final response = await http.get(
-        Uri.parse('$_baseUrl/Orders?top=5&skip=0&search=$search'),
+        Uri.parse('$_baseUrl/Orders?top=20&skip=0&search=$search&username=${usuario.userName}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'X-Database-Identifier': _databaseSelector,
@@ -245,10 +280,10 @@ class PedidoRepository {
   }
 
   // region: PEDIDOS PENDIENTES DE APROBACIÓN
-  Future<List<PedidoList>> getOrdenesPendientesAprobacion(String sessionID) async {
+  Future<List<PedidoList>> getOrdenesPendientesAprobacion(String sessionID, String username) async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/OrdersPending?top=5&skip=0'),
+        Uri.parse('$_baseUrl/OrdersPending?top=20&skip=0&username=$username'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'X-Database-Identifier': _databaseSelector,
@@ -274,10 +309,10 @@ class PedidoRepository {
     }
   }
 
-  Future<List<PedidoList>> getOrdenesPendientesAprobacionBySearch(String sessionID, String search) async {
+  Future<List<PedidoList>> getOrdenesPendientesAprobacionByDate(String sessionID, String date, String username) async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/OrdersPending?top=5&skip=0&search=$search'),
+        Uri.parse('$_baseUrl/OrdersPending/PendientesPorFecha?date=$date&username=$username'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'X-Database-Identifier': _databaseSelector,
@@ -303,12 +338,70 @@ class PedidoRepository {
     }
   }
 
-  // region: PEDIDOS PENDIENTES DE APROBACIÓN
-  Future<List<PedidoList>> getOrdenesPendientesAprobados(String sessionID, String search) async {
+  Future<List<PedidoList>> getOrdenesPendientesAprobacionBySearch(String sessionID, String search, String username) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/OrdersPending?top=20&skip=0&search=$search&username=$username'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
+          'Cookie': sessionID
+        }
+      );
+
+      if(response.statusCode == 200){
+        final jsonData = jsonDecode(response.body) as List<dynamic>;
+        List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
+        if(orders.isEmpty){
+          throw GenericEmptyException();
+        }
+        return orders;
+      } else if(response.statusCode == 401){
+        throw UnauthorizedException();
+      } 
+      else {
+        throw FetchDataException('${response.statusCode}');
+      }
+    } catch(e){
+      throw Exception('$e');
+    }
+  }
+
+  // region: PEDIDOS PENDIENTES DE RECHAZO
+  Future<List<PedidoList>> getOrdenesPendientesRechazadosByDate(String sessionID, String date, String username) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/OrdersPending/RechazadosPorFecha?date=$date&username=$username'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
+          'Cookie': sessionID
+        }
+      );
+
+      if(response.statusCode == 200){
+        final jsonData = jsonDecode(response.body) as List<dynamic>;
+        List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
+        if(orders.isEmpty){
+          throw GenericEmptyException();
+        }
+        return orders;
+      } else if(response.statusCode == 401){
+        throw UnauthorizedException();
+      } 
+      else {
+        throw FetchDataException('${response.statusCode}');
+      }
+    } catch(e){
+      throw Exception('$e');
+    }
+  }
+
+  Future<List<PedidoList>> getOrdenesPendientesRechazadosBySearch(String sessionID, String search, String username) async {  
     try {
       final response = search.isEmpty
       ? await http.get(
-        Uri.parse('$_baseUrl/OrdersPending/Aprobados?top=5&skip=0'),
+        Uri.parse('$_baseUrl/OrdersPending/Rechazados?top=20&skip=0&skip=0&username=$username'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'X-Database-Identifier': _databaseSelector,
@@ -316,7 +409,73 @@ class PedidoRepository {
         }
       )
       : await http.get(
-        Uri.parse('$_baseUrl/OrdersPending/Aprobados?top=5&skip=0&search=$search'),
+        Uri.parse('$_baseUrl/OrdersPending/Rechazados?top=20&skip=0&skip=0&username=$username&search=$search'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Cookie': sessionID
+        }
+      );
+
+      if(response.statusCode == 200){
+        final jsonData = jsonDecode(response.body) as List<dynamic>;
+        List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
+        if(orders.isEmpty){
+          throw GenericEmptyException();
+        }
+        return orders;
+      } else if(response.statusCode == 401){
+        throw UnauthorizedException();
+      } 
+      else {
+        throw FetchDataException('${response.statusCode}');
+      }
+    } catch(e){
+      throw Exception('$e');
+    }
+  }
+  // region: PEDIDOS PENDIENTES DE APROBACIÓN
+  Future<List<PedidoList>> getOrdenesPendientesAprobadosByDate(String sessionID, String date, String username) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/OrdersPending/AprobadosPorFecha?date=$date&username=$username'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
+          'Cookie': sessionID
+        }
+      );
+
+      if(response.statusCode == 200){
+        final jsonData = jsonDecode(response.body) as List<dynamic>;
+        List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
+        if(orders.isEmpty){
+          throw GenericEmptyException();
+        }
+        return orders;
+      } else if(response.statusCode == 401){
+        throw UnauthorizedException();
+      } 
+      else {
+        throw FetchDataException('${response.statusCode}');
+      }
+    } catch(e){
+      throw Exception('$e');
+    }
+  }
+  
+  Future<List<PedidoList>> getOrdenesPendientesAprobados(String sessionID, String search, String username) async {
+    try {
+      final response = search.isEmpty
+      ? await http.get(
+        Uri.parse('$_baseUrl/OrdersPending/Aprobados?top=20&skip=0&username=$username'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-Database-Identifier': _databaseSelector,
+          'Cookie': sessionID
+        }
+      )
+      : await http.get(
+        Uri.parse('$_baseUrl/OrdersPending/Aprobados?top=20&skip=0&search=$search&username=$username'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Cookie': sessionID

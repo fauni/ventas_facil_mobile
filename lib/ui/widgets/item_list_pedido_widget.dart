@@ -50,6 +50,7 @@ class ItemListPedidoWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Text(pedido.usuarioVentaFacil!),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -100,6 +101,25 @@ class ItemListPedidoWidget extends StatelessWidget {
                     // });
                     BlocProvider.of<PedidoPendienteBloc>(context).add(CrearDocumentoPedidoAprobado(pedido.id!));
                   }
+                ): const SizedBox(),
+                status == 'Rechazado'
+                ? ButtonGenericWidget(
+                  icon: Icons.check,
+                  label: 'Recuperar Pedido', 
+                  height: 40, 
+                  width: double.infinity,
+                  onPressed: (){
+                    final newpedido = pedido;
+                    newpedido.id = 0;
+                    newpedido.codigoSap = 0;
+                    newpedido.numeroDocumento = 0;
+                    newpedido.fechaRegistroApp = DateTime.now();
+                    newpedido.horaRegistroApp = DateTime.now();
+                    context.push('/NuevoPedido', extra: {
+                      'pedido': MapGeneric.pedidoListToPedido(pedido),
+                      'esRecuperado': 'SI'
+                    });
+                  }
                 ): const SizedBox()
               ],
             ),
@@ -110,7 +130,10 @@ class ItemListPedidoWidget extends StatelessWidget {
             color: Theme.of(context).colorScheme.onError,
             onPressed: (){
               // context.pop(MapGeneric.pedidoListToPedido(pedido));
-              context.push('/NuevoPedido', extra: MapGeneric.pedidoListToPedido(pedido));
+              context.push('/NuevoPedido', extra: {
+                'pedido': MapGeneric.pedidoListToPedido(pedido),
+                'esRecuperado': 'NO'
+              });
             }, 
             icon: const Icon(Icons.arrow_forward_ios)
           )

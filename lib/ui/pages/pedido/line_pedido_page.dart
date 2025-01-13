@@ -262,7 +262,7 @@ Widget build(BuildContext context) {
           SliverToBoxAdapter(
             child: Container(
               height: 150,
-              margin: const EdgeInsets.only(left: 5, right: 5),
+              margin: const EdgeInsets.only(left: 5, right: 5, top: 5),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onSurface,

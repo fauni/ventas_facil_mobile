@@ -23,9 +23,10 @@ import 'package:ventas_facil/ui/widgets/view_detail_line_pedido_widget.dart';
 
 // ignore: must_be_immutable
 class NuevoPedidoPage extends StatefulWidget {
-  NuevoPedidoPage({super.key, required this.pedido});
+  NuevoPedidoPage({super.key, required this.pedido, required this.esRecuperado});
 
   Pedido pedido;
+  String esRecuperado;
 
   @override
   State<NuevoPedidoPage> createState() => _NuevoPedidoPageState();
@@ -43,9 +44,18 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
   void initState() {
     super.initState();
     iniciarValores();
+    setState(() {
+      if(widget.esRecuperado == 'SI'){
+        esNuevo = true;
+      } else {
+        esNuevo = false;
+      }  
+    });
+    
   }
 
   void iniciarValores(){
+    print(widget.esRecuperado);
     if(widget.pedido.codigoSap == null){
       esNuevo = true;
       pedido = Pedido(linesPedido: []);
@@ -53,10 +63,10 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
       pedido.fechaRegistro = DateTime.now();
       pedido.fechaEntrega = DateTime.now();
       pedido.estado = 'bost_Open';
-      pedido.observacion = 'Creado por app mobile ${formatDate(DateTime.now(), [dd,'-',mm,'-',yyyy])}';
 
       pedido.fechaRegistroApp = DateTime.now();
       pedido.horaRegistroApp = DateTime.now();
+      pedido.observacion = 'Creado por app mobile ${formatDate(DateTime.now(), [dd,'-',mm,'-',yyyy])}';
       _obtenerUbicacionActual();
       WidgetsBinding.instance.addPostFrameCallback((timeStamp)=> obtenerUsuarioActual());
     } else {
@@ -134,7 +144,6 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return PopScope(
       canPop: false,
       // onPopInvoked: (didPop) async {
@@ -213,27 +222,14 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
             ): const SizedBox(),
             IconButton(
               onPressed: () {
-                // pedidoController.text = jsonEncode(pedido);
                 setState(() {
-                  // Clipboard.setData(ClipboardData(text: jsonEncode(pedido)));
-                  // LoginDialogWidget.mostrarDialogLogin(context);
                   widget.pedido = Pedido(linesPedido: []);
                   iniciarValores();
                 });
               }, 
               icon: const Icon(Icons.note_add_outlined)
             ),
-            // IconButton(
-            //   onPressed: () async {
-            //     final result = await context.push<Pedido>('/Pedidos');
-            //     pedido = result!;  
-            //     esNuevo = false;
-            //     // ignore: use_build_context_synchronously
-            //     BlocProvider.of<SalesEmployeeBloc>(context).add(GetSalesEmployeeById(pedido.empleado!));
-            //     setState((){});
-            //   }, 
-            //   icon: const Icon(Icons.search),
-            // )
+            
           ],
         ),
         body: BlocListener<PedidoBloc, PedidoState>(
@@ -402,6 +398,13 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                             pedido.personaContacto = contactoSeleccionado.numeroInterno;
                             pedido.contacto = contactoSeleccionado.codigoCliente == null ? null: contactoSeleccionado; 
                             pedido.idCondicionDePago = result.codigoCondicionPago;
+                            pedido.nombreFactura = result.cardFName;
+                            pedido.nitFactura = result.nit;
+
+                            final contieneUsuario = pedido.observacion!.contains(user.userName!) ? true : false;
+                            if(!contieneUsuario){
+                              pedido.observacion = '${user.userName} : ${pedido.observacion}';
+                            }
                           });
                         }
                       }
@@ -414,7 +417,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                           pedido.idCondicionDePago = state.condicionPago.numeroGrupo;
 
                           return ItemAddPedidoWidget(
-                            titulo: 'Condición de Pago', 
+                            titulo: 'C. de Pago', 
                             valor: pedido.idCondicionDePago == null ? '': '${state.condicionPago.nombreCondicionPago}', 
                             isSeleccionable: true, 
                             onPush: () async {
@@ -522,7 +525,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                     ItemAddPedidoWidget(
                       titulo: 'Fecha de Documento', 
                       valor: pedido.fechaRegistro == null ? '': formatDate(pedido.fechaRegistro!, [dd, '-', mm , '-', yyyy]), 
-                      isSeleccionable: true, 
+                      isSeleccionable: false, 
                       onPush: () async {
                         var result = await _seleccionarFecha(context);
                         if(result != null){
@@ -532,6 +535,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                       },
                     ),
                     ViewDetailLinePedidoWidget(
+                      habilitado: true,// esNuevo ? true : false,
                       pedido: pedido, 
                       onPressed: () async {
                         if(validaSeleccionCliente()){
@@ -601,7 +605,7 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
                           Text('${pedido.totalDespuesDelDescuento} ${pedido.moneda ?? 'BS'}', style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.surface),),
                         ],
                       ),
-                      pedido.estado == 'bost_Open' 
+                      pedido.estado == 'bost_Open'
                       ? ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).colorScheme.primary,
@@ -645,8 +649,8 @@ class _NuevoPedidoPageState extends State<NuevoPedidoPage> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2030),
     );
     if (picked != null) {
       // Formatea la fecha como desees.

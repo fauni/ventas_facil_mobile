@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
+import 'package:ventas_facil/database/user_local_provider.dart';
 import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/producto/item.dart';
 import 'package:ventas_facil/models/venta/socio_negocio.dart';
 import 'package:ventas_facil/ui/widgets/app_bar_widget.dart';
-import 'package:ventas_facil/ui/widgets/buscar_pedidos_widget.dart';
+import 'package:ventas_facil/ui/widgets/buscar_items_widget.dart';
 import 'package:ventas_facil/ui/widgets/item_list_item_widget.dart';
 import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
 import 'package:ventas_facil/ui/widgets/not_found_information_widget.dart';
@@ -44,21 +45,7 @@ class _ItemPageState extends State<ItemPage> {
       appBar: const AppBarWidget(titulo: 'Items',),
       body: Column(
         children: [
-          BuscadorPedidosWidget(controllerSearch: controllerSearch, onSearch: cargarItems),
-          // Container(
-          //   padding: const EdgeInsets.all(10.0),
-          //   child: TextField(
-          //     decoration: InputDecoration(
-          //       hintText: 'Buscar Items',
-          //       prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.tertiary,),
-          //       border: UnderlineInputBorder(
-          //         borderRadius: BorderRadius.circular(10.0)
-          //       ),
-          //       filled: true,
-          //       fillColor: Theme.of(context).colorScheme.onTertiary.withOpacity(0.3),
-          //     ),
-          //   ),
-          // ),
+          BuscadorItemsWidget(controllerSearch: controllerSearch, onSearch: cargarItems),
           Expanded(
             child: BlocConsumer<ItemBloc, ItemState>(
               listener: (context, state) {
@@ -82,7 +69,7 @@ class _ItemPageState extends State<ItemPage> {
                       return ItemListItemWidget(
                         index: index,
                         item: item,
-                        onTap: () {
+                        onTap: () async {
                           // print(item.grupoUnidadMedida);
                           // print(jsonEncode(item));
                           line = ItemPedido();
@@ -99,8 +86,12 @@ class _ItemPageState extends State<ItemPage> {
                             orElse: () => ListaPrecio()
                           );
 
-                          line.precioPorUnidad = precio.precio;
-
+                          line.precioPorUnidad = precio.precio ?? 0;
+                          // Obtenemos datos del usuario de shared preferences
+                          final usuario = await getCurrentUser();
+                          line.codigoAlmacen = usuario.almacen;
+                          line.codigoProveedor = item.codigoProveedor;
+                          line.nombreProveedor = item.proveedorPrincipal!.nombreSn;
                           context.pop(line);
                         },
                       );

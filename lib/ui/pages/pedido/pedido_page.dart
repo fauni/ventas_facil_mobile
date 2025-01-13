@@ -19,9 +19,15 @@ class PedidoPage extends StatefulWidget {
 
 class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
   TextEditingController controllerSearch = TextEditingController();
+  DateTime? fechaSeleccionada;
   @override
   void initState() {
     super.initState();
+    controllerSearch.addListener(() {
+      setState(() {
+        
+      });
+    });
     cargarPedidos();
   }
 
@@ -39,6 +45,25 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
     BlocProvider.of<PedidoBloc>(context).add(LoadPedidosSearch(controllerSearch.text));
   }
 
+  void cargarPedidosPorFecha(DateTime date){
+    BlocProvider.of<PedidoBloc>(context).add(LoadPedidosByDate(date));
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    controllerSearch.text = '';
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2021),
+      lastDate: DateTime(2100)
+    );
+    if (picked != null && picked != fechaSeleccionada){
+      setState(() {
+        fechaSeleccionada = picked;
+      });
+      cargarPedidosPorFecha(picked);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -81,7 +106,10 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
           children: [
             BuscadorPedidosWidget(
               controllerSearch: controllerSearch,
-              onSearch: cargarPedidosSearch,
+              onSearch: controllerSearch.text.isEmpty ? cargarPedidos : cargarPedidosSearch,
+              onSearchDate:(){
+                _selectDate(context);
+              },
             ),
             Expanded(
               child: BlocConsumer<PedidoBloc, PedidoState>(

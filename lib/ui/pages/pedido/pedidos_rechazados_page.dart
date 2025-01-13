@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
 import 'package:ventas_facil/ui/widgets/buscar_pedidos_widget.dart';
-import 'package:ventas_facil/ui/widgets/dialog_loading_widget.dart';
 import 'package:ventas_facil/ui/widgets/item_list_pedido_widget.dart';
 import 'package:ventas_facil/ui/widgets/login_dialog_widget.dart';
 import 'package:ventas_facil/ui/widgets/not_found_information_widget.dart';
 
-class PedidosAutorizadosPage extends StatefulWidget {
-  const PedidosAutorizadosPage({super.key});
+class PedidosRechazadosPage extends StatefulWidget {
+  const PedidosRechazadosPage({super.key});
 
   @override
-  State<PedidosAutorizadosPage> createState() => _PedidosAutorizadosPageState();
+  State<PedidosRechazadosPage> createState() => _PedidosRechazadosPageState();
 }
 
-class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with TickerProviderStateMixin{
+class _PedidosRechazadosPageState extends State<PedidosRechazadosPage> with TickerProviderStateMixin{
   TextEditingController controllerSearch = TextEditingController();
   DateTime? fechaSeleccionada;
   @override
   void initState() {
     super.initState();
-    cargarPedidos();
+    cargarPedidosSearch();
   }
 
   @override
@@ -31,16 +29,16 @@ class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with Ti
     super.dispose();
   }
 
-  void cargarPedidos(){
-    BlocProvider.of<PedidoPendienteBloc>(context).add(LoadPedidosPendientes('Autorizado'));
-  }
+  // void cargarPedidos(){
+  //   BlocProvider.of<PedidoRechazadoBloc>(context).add(LoadPedidosRechazados('Autorizado'));
+  // }
 
   void cargarPedidosSearch(){
-    BlocProvider.of<PedidoPendienteBloc>(context).add(LoadPedidosPendientesBySearch(controllerSearch.text, 'Autorizado'));
+    BlocProvider.of<PedidoRechazadoBloc>(context).add(LoadPedidosRechazadosBySearch(controllerSearch.text,));
   }
 
   void cargarPedidosPorFecha(DateTime date){
-    BlocProvider.of<PedidoPendienteBloc>(context).add(LoadPedidosPendientesByDate(date, 'Autorizado'));
+    BlocProvider.of<PedidoRechazadoBloc>(context).add(LoadPedidosRechazadosByDate(date));
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -66,17 +64,13 @@ class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with Ti
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: const Text('Pendientes Autorizados'),
+        title: const Text('Pendientes Rechazados'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: (){
-                if(controllerSearch.text.isEmpty){
-                  cargarPedidos();
-                } else{
-                  cargarPedidosSearch();
-                }
+                cargarPedidosSearch();
               }, 
               icon: const Icon(Icons.refresh)
             ),
@@ -87,71 +81,45 @@ class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with Ti
         children: [
           BuscadorPedidosWidget(
             controllerSearch: controllerSearch,
-            onSearch: controllerSearch.text.isNotEmpty 
-              ? cargarPedidosSearch 
-              : cargarPedidos,
+            onSearch: cargarPedidosSearch,
             onSearchDate: (){
               _selectDate(context);
             },
           ),
           Expanded(
-            child: BlocConsumer<PedidoPendienteBloc, PedidoPendienteState>(
+            child: BlocConsumer<PedidoRechazadoBloc, PedidoRechazadoState>(
               listener: (context, state) {
-                if(state is PedidosPendientesUnauthorized){
+                if(state is PedidosRechazadosUnauthorized){
                   LoginDialogWidget.mostrarDialogLogin(context);
                 } 
-                else if(state is PedidosPendientesNotLoaded){
+                else if(state is PedidosRechazadosNotLoaded){
                   if(state.error.contains("UnauthorizedException")){
                     LoginDialogWidget.mostrarDialogLogin(context);
                   } else if (state.error.contains("GenericEmptyException")) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('No se encontraron pedidos aprobados'), backgroundColor: Colors.blue,)
+                      const SnackBar(content: Text('No se encontraron pedidos rechazados'), backgroundColor: Colors.blue,)
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Ocurrio un problema al obtener los Pedidos'), backgroundColor: Colors.red,)
+                      const SnackBar(content: Text('Ocurrio un problema al obtener los Pedidos rechazados'), backgroundColor: Colors.red,)
                     );
                   }
-                } else if(state is CreacionPedidoAprobadoExitoso) {
-                  context.pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Se creo el documento correctamente!'), backgroundColor: Colors.green, duration: Duration(seconds: 5),)
-                  );
-
-                  if(controllerSearch.text.isEmpty){
-                    cargarPedidos();
-                  } else{
-                    cargarPedidosSearch();
-                  }
-                  // context.pop();
-                } else if(state is CreacionPedidoAprobadoLoading){
-                  DialogLoadingWidget.mostrarMensajeDialog(context);
-                } else if(state is PedidosPendientesError){
-                  context.pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Ocurrio un error: ${state.error}'), backgroundColor: Colors.red,)
-                  );
                 }
               },
               builder: (context, state) {
-                if (state is PedidosPendientesLoading) {
+                if (state is PedidosRechazadosLoading) {
                   return const Center(
                     child: CircularProgressIndicator()
                   );
-                } else if (state is PedidosPendientesLoaded) {
+                } else if (state is PedidosRechazadosLoaded) {
                   return ListaPedidosWidget(pedidos: state.pedidos,);
-                } else if(state is PedidosPendientesLoadedSearch){
+                } else if(state is PedidosRechazadosLoaded){
                   return ListaPedidosWidget(pedidos: state.pedidos);
-                } else if(state is CreacionPedidoAprobadoLoading){
-                  return const SizedBox();
-                } else if (state is CreacionPedidoAprobadoExitoso){
-                  return const SizedBox();
-                }
-                else {
+                } else {
                   return NotFoundInformationWidget(
                     mensaje: '',
                     onPush: () {
-                      cargarPedidos();
+                      cargarPedidosSearch();
                     },
                   );
                 }
@@ -185,7 +153,7 @@ class ListaPedidosWidget extends StatelessWidget {
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(10)
           ),
-          child: ItemListPedidoWidget(pedido: pedido, status: 'Autorizado')
+          child: ItemListPedidoWidget(pedido: pedido, status: 'Rechazado')
         );
       }, 
       separatorBuilder: (context, index) {

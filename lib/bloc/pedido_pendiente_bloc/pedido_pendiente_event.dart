@@ -19,6 +19,15 @@ class LoadPedidosPendientesBySearch extends PedidoPendienteEvent{
   List<Object> get props => [search];
 }
 
+class LoadPedidosPendientesByDate extends PedidoPendienteEvent{
+  final DateTime date;
+  final String status;
+  LoadPedidosPendientesByDate(this.date, this.status);
+
+  @override
+  List<Object> get props => [date];
+}
+
 class CrearDocumentoPedidoAprobado extends PedidoPendienteEvent{
   final int id;
   CrearDocumentoPedidoAprobado(this.id);
