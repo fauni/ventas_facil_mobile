@@ -80,7 +80,8 @@ class _ItemPageState extends State<ItemPage> {
                           line.descuento = 0;
                           // ignore: unrelated_type_equality_checks
                           line.unidadDeMedidaManual = item.grupoUnidadMedida; 
-
+                          line.nombreUnidadMedida= item.unidadMedidaVenta;
+                          line.codigoUnidadMedida = item.grupoUnidadMedida!.toInt();
                           ListaPrecio precio = item.listaPrecios!.firstWhere(
                             (element) => element.numero == widget.socioNegocio.numeroListaPrecio, 
                             orElse: () => ListaPrecio()
@@ -92,6 +93,8 @@ class _ItemPageState extends State<ItemPage> {
                           line.codigoAlmacen = usuario.almacen;
                           line.codigoProveedor = item.codigoProveedor;
                           line.nombreProveedor = item.proveedorPrincipal!.nombreSn;
+                          line.codigoTfeUnidad = item.codigoUnidadTfe;
+                          line.nombreTfeUnidad = item.unidadMedidaVenta;
                           context.pop(line);
                         },
                       );
@@ -102,6 +105,7 @@ class _ItemPageState extends State<ItemPage> {
                   );
                 } else {
                   return NotFoundInformationWidget(
+                    textoBoton: 'Volver a cargar',
                     mensaje: 'No se pudo cargar los Items, intente nuevamente!', 
                     onPush: () {
                       cargarItems();

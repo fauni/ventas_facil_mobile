@@ -9,15 +9,13 @@ class UnidadMedidaBloc extends Bloc<UnidadMedidaEvent, UnidadMedidaState>{
   final ItemUnidadMedidaRepository _repository;
 
   UnidadMedidaBloc(this._repository): super(UnidadMedidaLoading()){
-    on<LoadUnidadMedida>(_onLoadUnidadMedida);
+    on<CargarUnidadesDeMedida>(_onLoadUnidadMedida);
   }
 
-  Future<void> _onLoadUnidadMedida(LoadUnidadMedida event, Emitter<UnidadMedidaState> emit)async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final token = prefs.get('token').toString();
+  Future<void> _onLoadUnidadMedida(CargarUnidadesDeMedida event, Emitter<UnidadMedidaState> emit)async {
     emit(UnidadMedidaLoading());
     try {
-      final unidades = await _repository.getUnidadesDeMedida(token);
+      final unidades = await _repository.getUnidadesDeMedidaPorCodigoItem(event.itemCode);
       emit(UnidadMedidaLoaded(unidades));
     } on UnauthorizedException catch(_){
       emit(UnidadMedidaUnauthorized());

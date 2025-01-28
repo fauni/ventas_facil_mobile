@@ -26,6 +26,7 @@ class Item {
     final double? grupoUnidadMedida;
     final String? codigoProveedor;
     final SocioNegocio? proveedorPrincipal;
+    final String? codigoUnidadTfe;
     final List<ListaPrecio>? listaPrecios;
     final List<ItemAlmacen>? informacionItemAlmacen;
     final List<ItemLote>? informacionItemLote;
@@ -46,6 +47,7 @@ class Item {
         this.codigoProveedor,
         this.proveedorPrincipal,
         this.cantidadEnStock,
+        this.codigoUnidadTfe,
         this.listaPrecios,
         this.informacionItemAlmacen,
         this.informacionItemLote
@@ -67,6 +69,7 @@ class Item {
         String? codigoProveedor,
         SocioNegocio? proveedorPrincipal,
         double? cantidadEnStock,
+        String? codigoUnidadTfe,
         List<ListaPrecio>? listaPrecios,
         List<ItemAlmacen>? informacionItemAlmacen,
         List<ItemLote>? informacionItemLote
@@ -87,6 +90,7 @@ class Item {
             codigoProveedor: codigoProveedor ?? this.codigoProveedor,
             proveedorPrincipal: proveedorPrincipal ?? this.proveedorPrincipal,
             cantidadEnStock: cantidadEnStock ?? this.cantidadEnStock,
+            codigoUnidadTfe: codigoUnidadTfe ?? this.codigoUnidadTfe,
             listaPrecios: listaPrecios ?? this.listaPrecios,
             informacionItemAlmacen: informacionItemAlmacen ?? this.informacionItemAlmacen,
             informacionItemLote: informacionItemLote ?? this.informacionItemLote,
@@ -108,6 +112,7 @@ class Item {
         codigoProveedor: json["codigoProveedor"],
         proveedorPrincipal: json["proveedorPrincipal"] == null ? null : SocioNegocio.fromJson(json["proveedorPrincipal"]),
         cantidadEnStock: json["cantidadEnStock"]?.toDouble(),
+        codigoUnidadTfe: json["codigoUnidadTfe"],
         listaPrecios: json["listaPrecios"] == null ? [] : List<ListaPrecio>.from(json["listaPrecios"]!.map((x) => ListaPrecio.fromJson(x))),
         informacionItemAlmacen: json["informacionItemAlmacen"] == null ? [] : List<ItemAlmacen>.from(json["informacionItemAlmacen"]!.map((x) => ItemAlmacen.fromJson(x))),
         informacionItemLote: json["informacionItemLote"] == null ? [] : List<ItemLote>.from(json["informacionItemLote"]!.map((x) => ItemLote.fromJson(x))),
@@ -129,6 +134,7 @@ class Item {
         "codigoProveedor": codigoProveedor,
         "proveedorPrincipal": proveedorPrincipal?.toJson(),
         "cantidadEnStock": cantidadEnStock,
+        "codigoUnidadTfe": codigoUnidadTfe,
         "listaPrecios": listaPrecios == null ? [] : List<dynamic>.from(listaPrecios!.map((x) => x.toJson())),
         "informacionItemAlmacen": informacionItemAlmacen == null ? [] : List<dynamic>.from(informacionItemAlmacen!.map((x) => x.toJson())),
         "informacionItemLote": informacionItemLote == null ? [] : List<dynamic>.from(informacionItemLote!.map((x) => x.toJson())),

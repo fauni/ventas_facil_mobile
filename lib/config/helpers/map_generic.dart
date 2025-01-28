@@ -56,6 +56,9 @@ class MapGeneric {
       item.codigoUnidadMedida = element.codigoUnidadMedida;
       item.nombreUnidadMedida = element.unidadDeMedida;
       item.fechaDeEntrega = element.fechaDeEntrega;
+      item.codigoAlmacen = element.codigoAlmacen;
+      item.codigoTfeUnidad = element.codigoTfeUnidad;
+      item.nombreTfeUnidad = element.nombreTfeUnidad;
       listaItem.add(item);
     }
     return listaItem;

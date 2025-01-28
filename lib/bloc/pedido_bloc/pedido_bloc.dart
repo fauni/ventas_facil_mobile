@@ -47,10 +47,10 @@ class PedidoBloc extends Bloc<PedidoEvent, PedidoState>{
       emit(PedidosLoadedSearch(pedidos));
     } on UnauthorizedException catch(_){
       emit(PedidosUnauthorized());
-    } on PedidosEmpty catch(_){
+    } on GenericEmptyException{
       emit(PedidosEmpty());
-    }catch (e) {
-      emit(PedidosNotLoaded(e.toString()));
+    } catch (e) {
+      emit(PedidosError());
     }
   }
 

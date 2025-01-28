@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class NotFoundInformationWidget extends StatelessWidget {
   const NotFoundInformationWidget({
     super.key,
+    required this.textoBoton,
     required this.mensaje,
-    required this.onPush
+    required this.onPush, 
   });
 
+  final String textoBoton;
   final String mensaje;
   final Function() onPush;
   @override
@@ -34,7 +36,7 @@ class NotFoundInformationWidget extends StatelessWidget {
             ),
             onPressed: onPush, 
             icon: const Icon(Icons.refresh), 
-            label: const Text('Volver a cargar')
+            label: Text(textoBoton)
           )
         ],
       ),

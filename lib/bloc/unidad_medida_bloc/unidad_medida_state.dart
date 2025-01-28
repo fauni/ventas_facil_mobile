@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:ventas_facil/models/producto/item_unidad_medida.dart';
+import 'package:ventas_facil/models/producto/unidad_medida.dart';
 
 abstract class UnidadMedidaState extends Equatable {
   @override
@@ -9,7 +9,7 @@ abstract class UnidadMedidaState extends Equatable {
 class UnidadMedidaLoading extends UnidadMedidaState{}
 class UnidadMedidaUnauthorized extends UnidadMedidaState{}
 class UnidadMedidaLoaded extends UnidadMedidaState{
-  final List<ItemUnidadMedida> unidades;
+  final List<UnidadMedida> unidades;
   UnidadMedidaLoaded(this.unidades);
 
   @override
@@ -23,3 +23,5 @@ class UnidadMedidaNotLoaded extends UnidadMedidaState {
   @override
   List<Object?> get props => [error];
 }
+
+class UnidadMedidaEmpty extends UnidadMedidaState{}

@@ -142,7 +142,7 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                                 const Text('Razon Social:', style: TextStyle(fontWeight: FontWeight.bold),),
                                 const SizedBox(width: 10,),
                                 Expanded(
-                                  child: Text(cliente.nombreSn!,)
+                                  child: Text(cliente.cardFName!,)
                                 ),
                               ],
                             ),
@@ -164,7 +164,11 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                     itemCount: clientes.length,
                   );
                 } else {
-                  return NotFoundInformationWidget(mensaje: 'Ocurrio un error al traer los socios de negocio.', onPush: () => cargarSocioDeNegocio(),);
+                  return NotFoundInformationWidget(
+                    textoBoton: 'Volver a cargar',
+                    mensaje: 'Ocurrio un error al traer los socios de negocio.', 
+                    onPush: () => cargarSocioDeNegocio(),
+                  );
                 }
               }
             ),

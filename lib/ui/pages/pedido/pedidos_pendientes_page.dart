@@ -21,7 +21,7 @@ class _PedidosPendientesPageState extends State<PedidosPendientesPage> with Tick
   @override
   void initState() {
     super.initState();
-    cargarPedidos();
+    cargarPedidosPorFecha(DateTime.now());
   }
 
   @override
@@ -119,12 +119,31 @@ class _PedidosPendientesPageState extends State<PedidosPendientesPage> with Tick
                     child: CircularProgressIndicator()
                   );
                 } else if (state is PedidosPendientesLoaded) {
+                  if(state.pedidos.isEmpty){
+                    return NotFoundInformationWidget(
+                      textoBoton: 'Volver a cargar',
+                      mensaje: 'No se encontraron pedidos',
+                      onPush: () {
+                        cargarPedidos();
+                      },
+                    );
+                  }
                   return ListaPedidosWidget(pedidos: state.pedidos,);
                 } else if(state is PedidosPendientesLoadedSearch){
+                  if(state.pedidos.isEmpty){
+                    return NotFoundInformationWidget(
+                      textoBoton: 'Cargar los últimos pedidos',
+                      mensaje: 'No se encontraron pedidos con el criterio de busqueda',
+                      onPush: () {
+                        cargarPedidos();
+                      },
+                    );
+                  }
                   return ListaPedidosWidget(pedidos: state.pedidos);
                 }
                 else {
                   return NotFoundInformationWidget(
+                    textoBoton: 'Volver a cargar',
                     mensaje: 'No se encontraron pedidos',
                     onPush: () {
                       cargarPedidos();

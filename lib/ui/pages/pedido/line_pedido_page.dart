@@ -29,7 +29,7 @@ class _LinePedidoPageState extends State<LinePedidoPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<UnidadMedidaBloc>(context).add(LoadUnidadMedida());
+    // BlocProvider.of<UnidadMedidaBloc>(context).add(LoadUnidadMedida());
   }
 
   @override
@@ -109,20 +109,35 @@ Widget build(BuildContext context) {
                 ItemPedido articulo = widget.pedido.linesPedido.elementAt(index);
                 return GestureDetector(
                   // onTap: () => _showUpdateItemPedido(context, articulo, index),
-                  onTap: () => showDialog(
-                    context: context, 
-                    builder: (context) => UpdateItemPedidoDialog(
-                      itemPedido: articulo, 
-                      indexLine: index, 
-                      pedido: widget.pedido
-                    ),
-                  ).then((value){
-                    if(value != null){
+                  // onTap: () => showDialog(
+                  //   context: context, 
+                  //   builder: (context) => UpdateItemPedidoDialog(
+                  //     itemPedido: articulo, 
+                  //     indexLine: index, 
+                  //     pedido: widget.pedido
+                  //   ),
+                  // ).then((value){
+                  //   if(value != null){
+                  //     setState(() {
+                  //       widget.pedido.linesPedido[index] = value;
+                  //     });
+                  //   }
+                  // }),
+                  onTap: () async  {
+                    BlocProvider.of<UnidadMedidaFacturaBloc>(context).add(LoadTfeUnidadMedida());
+                    BlocProvider.of<UnidadMedidaBloc>(context).add(CargarUnidadesDeMedida(articulo.codigo!));
+                    final resultado = await context.push<ItemPedido>('/actualizar-item-pedido', extra: {
+                      'itemPedido': articulo,
+                      'indexLine': index,
+                      'pedido': widget.pedido,
+                    });
+
+                    if(resultado != null){
                       setState(() {
-                        widget.pedido.linesPedido[index] = value;
+                        widget.pedido.linesPedido[index] = resultado;
                       });
                     }
-                  }),
+                  },
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 3),
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -166,6 +181,21 @@ Widget build(BuildContext context) {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
+                                        Text('Unidad de Medida: ', style: Theme.of(context).textTheme.titleMedium,),
+                                        Text('${articulo.nombreUnidadMedida}'),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Unidad de Medida Facturación: ', style: Theme.of(context).textTheme.titleMedium,),
+                                        Text(articulo.nombreTfeUnidad!=null ? '${articulo.nombreTfeUnidad}' : 'No asignado'),
+                                      ],
+                                    ),
+                                    const Divider(),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
                                         Text('Fecha de Entrega:', style: Theme.of(context).textTheme.titleMedium,),
                                         Text(formatDate(articulo.fechaDeEntrega!, [d,'-',mm,'-', yyyy]), style: Theme.of(context).textTheme.bodyMedium,),
                                       ],
@@ -179,15 +209,15 @@ Widget build(BuildContext context) {
                                     ),
                                     // Text('${articulo.unidadDeMedidaManual} ${articulo.codigoUnidadMedida} ${articulo.nombreUnidadMedida}'),
                                     
-                                    articulo.unidadDeMedidaManual != null && articulo.unidadDeMedidaManual == 1
-                                    ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('Unidad de Medida:', style: Theme.of(context).textTheme.titleMedium,),
-                                        Text(articulo.nombreUnidadMedida ?? 'Requerido', style: Theme.of(context).textTheme.bodyMedium,),
-                                      ],
-                                    )
-                                    : const SizedBox(),
+                                    // articulo.unidadDeMedidaManual != null && articulo.unidadDeMedidaManual == 1
+                                    // ? Row(
+                                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    //   children: [
+                                    //     Text('Unidad de Medida:', style: Theme.of(context).textTheme.titleMedium,),
+                                    //     Text(articulo.nombreUnidadMedida ?? 'Requerido', style: Theme.of(context).textTheme.bodyMedium,),
+                                    //   ],
+                                    // )
+                                    // : const SizedBox(),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [

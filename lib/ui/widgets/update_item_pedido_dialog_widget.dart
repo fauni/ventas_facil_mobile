@@ -2,12 +2,14 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ventas_facil/bloc/unidad_medida_bloc/unidad_medida_bloc.dart';
-import 'package:ventas_facil/bloc/unidad_medida_bloc/unidad_medida_state.dart';
 import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/producto/item_unidad_medida.dart';
+import 'package:ventas_facil/models/producto/tfe.dart';
+import 'package:ventas_facil/models/producto/unidad_medida.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/ui/widgets/item_field_label_icon_widget.dart';
+
+import '../../bloc/bloc.dart';
 
 class UpdateItemPedidoDialog extends StatefulWidget {
   final ItemPedido itemPedido;
@@ -32,6 +34,8 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
   late TextEditingController controllerDescuento;
 
   ItemUnidadMedida? selectedUnidad;
+  UnidadMedida? selectedUnidadMedida;
+  Tfe? tfeSeleccionada;
   int? selectedEntry;
 
   @override
@@ -41,6 +45,21 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
     controllerCantidad = TextEditingController(text: widget.itemPedido.cantidad.toString());
     controllerPrecio = TextEditingController(text: widget.itemPedido.precioPorUnidad.toString());
     controllerDescuento = TextEditingController(text: widget.itemPedido.descuento.toString());
+    cargarTfeUnidades();
+    
+    // Cargar unidades solo una vez cuando se abre el diálogo
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      cargarUnidadesDeMedida();
+    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   final state = context.read<UnidadMedidaBloc>().state;
+    //   if(state is UnidadMedidaLoaded){
+    //    selectedUnidadMedida = state.unidades.firstWhere(
+    //       (unidad) => unidad.uomEntry == widget.itemPedido.codigoUnidadMedida, 
+    //       orElse: () => state.unidades.first
+    //     );
+    //   }
+    // });
   }
 
   @override
@@ -65,12 +84,20 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
     return null;
   }
   
+  void cargarTfeUnidades(){
+    BlocProvider.of<UnidadMedidaFacturaBloc>(context).add(LoadTfeUnidadMedida());
+  }
+
+  void cargarUnidadesDeMedida(){
+    BlocProvider.of<UnidadMedidaBloc>(context).add(CargarUnidadesDeMedida(widget.itemPedido.codigo!));
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Row(
         children: [
-          Text('Detalle del Item', style: Theme.of(context).textTheme.titleLarge),
+          Text('Detalle del Item ${widget.itemPedido.codigoUnidadMedida}', style: Theme.of(context).textTheme.titleLarge),
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(Icons.close),
@@ -142,45 +169,108 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
                 },
               ),
               const SizedBox(height: 10,),
+              
+              const SizedBox(height: 10,),
+              BlocBuilder<UnidadMedidaFacturaBloc, UnidadMedidaFacturaState>(
+                builder: (context, state) {
+                  if(state is TfeUnidadMedidaLoading){
+                    return const Center(child: CircularProgressIndicator(),);
+                  } else if(state is TfeUnidadMedidaLoaded){
+                    return DropdownButtonFormField<Tfe>(
+                      value: tfeSeleccionada,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                        ),
+                        labelText: 'Unidad de Medida para Facturación',
+                      ),
+                      hint: const Text('Modificar Unidad de Medida'),
+                      items: state.unidades.map((Tfe tfe){
+                        return DropdownMenuItem<Tfe>(
+                          value: tfe,
+                          child: Text(tfe.name!, overflow: TextOverflow.ellipsis,),
+                        );
+                      }).toList(),
+                      onChanged: (Tfe? value){
+                        setState(() {
+                          tfeSeleccionada = value;
+                        });
+                      },
+                    );
+                  }
+                  return Text('* No se pudo cargar las unidades de medida para facturación.', style: TextStyle(color: Colors.orange),);
+                },
+              ),
+              const SizedBox(height: 10,),
               BlocConsumer<UnidadMedidaBloc, UnidadMedidaState>(
                 listener: (context, state) {
-                  
+                  if (state is UnidadMedidaLoaded && selectedUnidadMedida == null) {
+                    setState(() {
+                      selectedUnidadMedida = state.unidades.firstWhere(
+                        (unidad) => unidad.uomEntry == widget.itemPedido.codigoUnidadMedida,
+                        orElse: () => state.unidades.first
+                      );
+                    });
+                  }
                 },
                 builder: (context, state) {
                   if(state is UnidadMedidaLoading){
                     return const Center(child: CircularProgressIndicator(),);
                   } else if (state is UnidadMedidaLoaded){
-                    if(widget.itemPedido.unidadDeMedidaManual == 1){
-                      selectedUnidad = ItemUnidadMedida();
-                      selectedUnidad?.absEntry = widget.itemPedido.codigoUnidadMedida;
-                      selectedUnidad?.code = widget.itemPedido.nombreUnidadMedida;
+                    // Verifica si la unidad seleccionada está en la lista
+                    if (!state.unidades.any((unidad) => unidad.uomEntry == widget.itemPedido.codigoUnidadMedida)) {
+                      selectedUnidadMedida = null; // Evita errores si no existe en la lista
+                    } else {
+                      selectedUnidadMedida = state.unidades.firstWhere(
+                        (unidad) => unidad.uomEntry == widget.itemPedido.codigoUnidadMedida,
+                        orElse: () => state.unidades.first,
+                      );
                     }
-
-                    
-                    return 
-                    widget.pedido.linesPedido[widget.indexLine].unidadDeMedidaManual !=null && widget.pedido.linesPedido[widget.indexLine].unidadDeMedidaManual == 1
-                    ? Wrap(
-                      children: 
-                      state.unidades.map((it){
-                        return ChoiceChip(
-                          label: Text(it.code!, style: Theme.of(context).textTheme.labelSmall,), 
-                          selected: it.absEntry == widget.itemPedido.codigoUnidadMedida ? true: false, // selectedEntry == it.absEntry,
-                          onSelected: (bool selected) {
-                            setState(() {
-                              
-                            });
-                            selectedEntry = selected ? it.absEntry : null;
-                            ItemUnidadMedida? nuevaSeleccion = state.unidades.firstWhere((element) => element.absEntry == selectedEntry);
-                            widget.pedido.linesPedido[widget.indexLine].codigoUnidadMedida = nuevaSeleccion.absEntry;
-                            widget.pedido.linesPedido[widget.indexLine].nombreUnidadMedida = nuevaSeleccion.code;
-                          },
-                          selectedColor: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                    return DropdownButtonFormField<UnidadMedida>(
+                      value: selectedUnidadMedida,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                        ),
+                        labelText: 'Unidad de Medida',
+                      ),
+                      hint: const Text('Modificar Unidad de Medida 1'),
+                      items: state.unidades.map((UnidadMedida unidad){
+                        return DropdownMenuItem<UnidadMedida>(
+                          value: unidad,
+                          child: Text('${unidad.uomEntry} ${unidad.uomCode}', overflow: TextOverflow.ellipsis,),
                         );
                       }).toList(),
-                    )
-                    : const SizedBox();
+                      onChanged: (UnidadMedida? value){
+                        setState(() {
+                          selectedUnidadMedida = value;
+                        });
+                      },
+                    );
+                    // return 
+                    // widget.pedido.linesPedido[widget.indexLine].unidadDeMedidaManual !=null && widget.pedido.linesPedido[widget.indexLine].unidadDeMedidaManual == 1
+                    // ? Wrap(
+                    //   children: 
+                    //   state.unidades.map((it){
+                    //     return ChoiceChip(
+                    //       label: Text(it.code!, style: Theme.of(context).textTheme.labelSmall,), 
+                    //       selected: it.absEntry == widget.itemPedido.codigoUnidadMedida ? true: false, // selectedEntry == it.absEntry,
+                    //       onSelected: (bool selected) {
+                    //         setState(() {
+                              
+                    //         });
+                    //         selectedEntry = selected ? it.absEntry : null;
+                    //         ItemUnidadMedida? nuevaSeleccion = state.unidades.firstWhere((element) => element.absEntry == selectedEntry);
+                    //         widget.pedido.linesPedido[widget.indexLine].codigoUnidadMedida = nuevaSeleccion.absEntry;
+                    //         widget.pedido.linesPedido[widget.indexLine].nombreUnidadMedida = nuevaSeleccion.code;
+                    //       },
+                    //       selectedColor: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                    //     );
+                    //   }).toList(),
+                    // )
+                    // : const SizedBox();
                   } else {
-                    return const Text('Ocurrio un error ');
+                    return const Text('* Este item no tiene unidades de medida manual', style: TextStyle(color: Colors.orange),);
                   }
                 },
               ),
@@ -204,6 +294,15 @@ class _UpdateItemPedidoDialogState extends State<UpdateItemPedidoDialog> {
             widget.itemPedido.cantidad = double.parse(controllerCantidad.text);
             widget.itemPedido.precioPorUnidad = double.parse(controllerPrecio.text);
             widget.itemPedido.descuento = double.parse(controllerDescuento.text);
+            widget.itemPedido.codigoUnidadMedida = selectedUnidadMedida?.uomEntry;
+            widget.itemPedido.nombreUnidadMedida = selectedUnidadMedida?.uomCode;
+
+
+            if(tfeSeleccionada != null){
+              widget.itemPedido.codigoTfeUnidad = tfeSeleccionada!.code;
+              widget.itemPedido.nombreTfeUnidad = tfeSeleccionada!.name;
+            }
+            
             context.pop(widget.itemPedido);
           },
           icon: const Icon(Icons.save),

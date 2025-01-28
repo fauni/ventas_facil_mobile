@@ -22,7 +22,7 @@ class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with Ti
   @override
   void initState() {
     super.initState();
-    cargarPedidos();
+    cargarPedidosPorFecha(DateTime.now());
   }
 
   @override
@@ -139,8 +139,26 @@ class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with Ti
                     child: CircularProgressIndicator()
                   );
                 } else if (state is PedidosPendientesLoaded) {
+                  if(state.pedidos.isEmpty){
+                    return NotFoundInformationWidget(
+                      textoBoton: 'Volver a cargar',
+                      mensaje: 'No se encontraron pedidos aprobados',
+                      onPush: () {
+                        cargarPedidos();
+                      },
+                    );
+                  }
                   return ListaPedidosWidget(pedidos: state.pedidos,);
                 } else if(state is PedidosPendientesLoadedSearch){
+                  if(state.pedidos.isEmpty){
+                    return NotFoundInformationWidget(
+                      textoBoton: 'Cargar los últimos',
+                      mensaje: 'No se encontraron pedidos aprobados con el criterio de busqueda',
+                      onPush: () {
+                        cargarPedidos();
+                      },
+                    );
+                  }
                   return ListaPedidosWidget(pedidos: state.pedidos);
                 } else if(state is CreacionPedidoAprobadoLoading){
                   return const SizedBox();
@@ -149,6 +167,7 @@ class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with Ti
                 }
                 else {
                   return NotFoundInformationWidget(
+                    textoBoton: 'Volver a cargar',
                     mensaje: '',
                     onPush: () {
                       cargarPedidos();

@@ -50,3 +50,7 @@ export 'package:ventas_facil/bloc/user_serie_bloc/user_serie_event.dart';
 export 'package:ventas_facil/bloc/pedido_rechazado_bloc/pedido_rechazado_event.dart';
 export 'package:ventas_facil/bloc/pedido_rechazado_bloc/pedido_rechazado_bloc.dart';
 export 'package:ventas_facil/bloc/pedido_rechazado_bloc/pedido_rechazado_state.dart';
+
+export 'package:ventas_facil/bloc/unidad_medida_factura_bloc/unidad_medida_factura_bloc.dart';
+export 'package:ventas_facil/bloc/unidad_medida_factura_bloc/unidad_medida_factura_event.dart';
+export 'package:ventas_facil/bloc/unidad_medida_factura_bloc/unidad_medida_factura_state.dart';

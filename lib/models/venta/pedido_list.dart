@@ -274,6 +274,9 @@ class LinesOrder {
   final int? codigoUnidadMedida;
   final String? estadoLinea;
   final DateTime? fechaDeEntrega;
+  final String? codigoAlmacen;
+  final String? codigoTfeUnidad;
+  final String? nombreTfeUnidad;
 
   LinesOrder({
     this.numeroDeLinea,
@@ -290,7 +293,10 @@ class LinesOrder {
     this.unidadDeMedida,
     this.codigoUnidadMedida,
     this.estadoLinea,
-    this.fechaDeEntrega
+    this.fechaDeEntrega,
+    this.codigoAlmacen,
+    this.codigoTfeUnidad,
+    this.nombreTfeUnidad
   });
 
   double? get total => cantidad != null && precioUnitario != null
@@ -315,7 +321,10 @@ class LinesOrder {
     String? unidadDeMedida,
     int? codigoUnidadMedida,
     String? estadoLinea,
-    DateTime? fechaDeEntrega
+    DateTime? fechaDeEntrega,
+    String? codigoAlmacen,
+    String? codigoTfeUnidad,
+    String? nombreTfeUnidad
   }) =>
       LinesOrder(
         numeroDeLinea: numeroDeLinea ?? this.numeroDeLinea,
@@ -333,7 +342,10 @@ class LinesOrder {
         unidadDeMedida: unidadDeMedida ?? this.unidadDeMedida,
         codigoUnidadMedida: codigoUnidadMedida ?? this.codigoUnidadMedida,
         estadoLinea: estadoLinea ?? this.estadoLinea,
-        fechaDeEntrega: fechaDeEntrega ?? this.fechaDeEntrega
+        fechaDeEntrega: fechaDeEntrega ?? this.fechaDeEntrega,
+        codigoAlmacen: codigoAlmacen ?? this.codigoAlmacen,
+        codigoTfeUnidad: codigoTfeUnidad ?? this.codigoTfeUnidad,
+        nombreTfeUnidad: nombreTfeUnidad ?? this.nombreTfeUnidad
       );
 
   factory LinesOrder.fromJson(Map<String, dynamic> json) => LinesOrder(
@@ -354,6 +366,9 @@ class LinesOrder {
         fechaDeEntrega: json["fechaDeEntrega"] == null
             ? null
             : DateTime.parse(json["fechaDeEntrega"]),
+        codigoAlmacen: json["codigoAlmacen"],
+        codigoTfeUnidad: json["codigoTfeUnidad"],
+        nombreTfeUnidad: json["nombreTfeUnidad"]
       );
 
   Map<String, dynamic> toJson() => {
@@ -371,6 +386,9 @@ class LinesOrder {
         "unidadDeMedida": unidadDeMedida,
         "codigoUnidadMedida": codigoUnidadMedida,
         "estadoLinea": estadoLinea,
-        "fechaDeEntrega": fechaDeEntrega
+        "fechaDeEntrega": fechaDeEntrega,
+        "codigoAlmacen": codigoAlmacen,
+        "codigoTfeUnidad": codigoTfeUnidad,
+        "nombreTfeUnidad": nombreTfeUnidad
       };
 }

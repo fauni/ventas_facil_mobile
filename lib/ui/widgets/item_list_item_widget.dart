@@ -43,6 +43,7 @@ class _ItemListItemWidgetState extends State<ItemListItemWidget> {
                         children: [
                           Text('${widget.item.codigo}', style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Theme.of(context).colorScheme.onError),),
                           Text('${widget.item.cantidadEnStock} ${widget.item.unidadMedidaVenta ?? ''}', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onError),),
+                          // Text('${widget.item.unidadMedidaVenta} - ${widget.item.codigoUnidadTfe}')
                         ],
                       ),
                       Row(

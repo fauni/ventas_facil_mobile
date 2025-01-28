@@ -24,6 +24,8 @@ class ItemPedido {
   String? codigoAlmacen;
   String? codigoProveedor;
   String? nombreProveedor;
+  String? codigoTfeUnidad;
+  String? nombreTfeUnidad;
   // double? porcentajeDescuento;
   // double? precioTrasElDescuento;
   // String? monedaPrecio;
@@ -43,7 +45,9 @@ class ItemPedido {
       this.fechaDeEntrega,
       this.codigoAlmacen,
       this.codigoProveedor,
-      this.nombreProveedor
+      this.nombreProveedor,
+      this.codigoTfeUnidad,
+      this.nombreTfeUnidad
   });
 
   double? get total => cantidad != null && precioPorUnidad != null
@@ -68,7 +72,9 @@ class ItemPedido {
           DateTime? fechaDeEntrega,
           String? codigoAlmacen,
           String? codigoProveedor,
-          String? nombreProveedor
+          String? nombreProveedor,
+          String? codigoTfeUnidad,
+          String? nombreTfeUnidad
           }) =>
       ItemPedido(
           numeroDeLinea: numeroDeLinea ?? this.numeroDeLinea,
@@ -88,7 +94,9 @@ class ItemPedido {
           fechaDeEntrega: fechaDeEntrega ?? this.fechaDeEntrega,
           codigoAlmacen: codigoAlmacen ?? this.codigoAlmacen,
           codigoProveedor: codigoProveedor ?? this.codigoProveedor,
-          nombreProveedor: nombreProveedor ?? this.nombreProveedor
+          nombreProveedor: nombreProveedor ?? this.nombreProveedor,
+          codigoTfeUnidad: codigoTfeUnidad ?? this.codigoTfeUnidad,
+          nombreTfeUnidad: nombreTfeUnidad ?? this.nombreTfeUnidad
         );
 
   factory ItemPedido.fromJson(Map<String, dynamic> json) => ItemPedido(
@@ -106,7 +114,9 @@ class ItemPedido {
       fechaDeEntrega: json["fechaDeEntrega"] == null ? null : DateTime.parse(json["fechaDeEntrega"]),
       codigoAlmacen: json["codigoAlmacen"],
       codigoProveedor: json["codigoProveedor"],
-      nombreProveedor: json["nombreProveedor"]
+      nombreProveedor: json["nombreProveedor"],
+      codigoTfeUnidad: json["codigoTfeUnidad"],
+      nombreTfeUnidad: json["nombreTfeUnidad"]
     );
 
   Map<String, dynamic> toJson() => {
@@ -124,6 +134,8 @@ class ItemPedido {
         "fechaDeEntrega": fechaDeEntrega?.toIso8601String(),
         "codigoAlmacen": codigoAlmacen,
         "codigoProveedor": codigoProveedor,
-        "nombreProveedor": nombreProveedor
+        "nombreProveedor": nombreProveedor,
+        "codigoTfeUnidad": codigoTfeUnidad,
+        "nombreTfeUnidad": nombreTfeUnidad
       };
 }

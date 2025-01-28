@@ -30,6 +30,7 @@ class CommonBloc {
   static final serieNumeracionBloc = SerieNumeracionBloc(SerieNumeracionRepository());
   static final userSerieBloc = UserSerieBloc(UserSerieRepository());
   static final pedidoRechazadoBloc = PedidoRechazadoBloc(PedidoRepository());
+  static final unidadMedidaFacturaBloc = UnidadMedidaFacturaBloc(ItemUnidadMedidaRepository());
 
   static final List<BlocProvider> blocProviders = [
     BlocProvider<ThemeBloc>(
@@ -74,6 +75,9 @@ class CommonBloc {
     BlocProvider<PedidoRechazadoBloc>(
       create: (context) => pedidoRechazadoBloc,
     ),
+    BlocProvider<UnidadMedidaFacturaBloc>(
+      create: (context) => unidadMedidaFacturaBloc,
+    )
   ];
 
   // Dispose
@@ -92,6 +96,7 @@ class CommonBloc {
     serieNumeracionBloc.close();
     userSerieBloc.close();
     pedidoRechazadoBloc.close();
+    unidadMedidaFacturaBloc.close();
   }
 
   static final CommonBloc _instance = CommonBloc._internal();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ventas_facil/models/empleado_venta/empleado_venta.dart';
+import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/serie_numeracion/user_serie.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
 import 'package:ventas_facil/models/venta/pedido_list.dart';
@@ -10,6 +11,7 @@ import 'package:ventas_facil/ui/pages/home_page.dart';
 import 'package:ventas_facil/ui/pages/item/item_page.dart';
 import 'package:ventas_facil/ui/pages/login_page.dart';
 import 'package:ventas_facil/ui/pages/modulo_page.dart';
+import 'package:ventas_facil/ui/pages/pedido/actualizar_item_pedido_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/detalle_pedido_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/empleado_venta_page.dart';
 import 'package:ventas_facil/ui/pages/pedido/line_pedido_page.dart';
@@ -107,6 +109,17 @@ final appRouter = GoRouter(
         Pedido data = state.extra as Pedido;
         return LinePedidoPage(pedido: data,);
       } 
+    ),
+     GoRoute(
+      path: '/actualizar-item-pedido',
+      builder: (context, state) {
+        final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+        return ActualizarItemPedidoPage(
+          itemPedido: args['itemPedido'] as ItemPedido,
+          indexLine: args['indexLine'] as int,
+          pedido: args['pedido'] as Pedido,
+        );
+      },
     ),
     GoRoute(
       path: '/EmpleadoVentas',

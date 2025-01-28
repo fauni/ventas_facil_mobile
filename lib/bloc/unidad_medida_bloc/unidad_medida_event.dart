@@ -9,3 +9,8 @@ abstract class UnidadMedidaEvent extends Equatable {
 class LoadUnidadMedida extends UnidadMedidaEvent{
   LoadUnidadMedida();
 }
+
+class CargarUnidadesDeMedida extends UnidadMedidaEvent{
+  final String itemCode;
+  CargarUnidadesDeMedida(this.itemCode);
+}

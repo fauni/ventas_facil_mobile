@@ -20,7 +20,7 @@ class _PedidosRechazadosPageState extends State<PedidosRechazadosPage> with Tick
   @override
   void initState() {
     super.initState();
-    cargarPedidosSearch();
+    cargarPedidosPorFecha(DateTime.now());
   }
 
   @override
@@ -111,12 +111,20 @@ class _PedidosRechazadosPageState extends State<PedidosRechazadosPage> with Tick
                   return const Center(
                     child: CircularProgressIndicator()
                   );
-                } else if (state is PedidosRechazadosLoaded) {
-                  return ListaPedidosWidget(pedidos: state.pedidos,);
                 } else if(state is PedidosRechazadosLoaded){
+                  if(state.pedidos.isEmpty){
+                    return NotFoundInformationWidget(
+                      textoBoton: 'Cargar los últimos',
+                      mensaje: 'No se encontraron pedidos rechazados',
+                      onPush: () {
+                        cargarPedidosSearch();
+                      },
+                    );
+                  }
                   return ListaPedidosWidget(pedidos: state.pedidos);
                 } else {
                   return NotFoundInformationWidget(
+                    textoBoton: 'Volver a cargar',
                     mensaje: '',
                     onPush: () {
                       cargarPedidosSearch();

@@ -28,7 +28,7 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
         
       });
     });
-    cargarPedidos();
+    cargarPedidosPorFecha(DateTime.now());
   }
 
   @override
@@ -135,10 +135,20 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
                   } else if (state is PedidosLoaded) {
                     return ListaPedidosWidget(pedidos: state.pedidos,);
                   } else if(state is PedidosLoadedSearch){
+                    if(state.pedidos.isEmpty){
+                      return NotFoundInformationWidget(
+                        textoBoton: 'Cargar los últimos pedidos',
+                        mensaje: 'No se encontraron pedidos con el criterio de busqueda',
+                        onPush: () {
+                          cargarPedidos();
+                        },
+                      );
+                    }
                     return ListaPedidosWidget(pedidos: state.pedidos);
                   }
                   else {
                     return NotFoundInformationWidget(
+                      textoBoton: 'Volver a cargar',
                       mensaje: 'No se encontraron pedidos',
                       onPush: () {
                         cargarPedidos();

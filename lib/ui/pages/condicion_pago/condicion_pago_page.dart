@@ -71,6 +71,7 @@ class _CondicionPagoPageState extends State<CondicionPagoPage> {
               );
             } else if(state is ErrorAlCargarCondicionPago){
               return NotFoundInformationWidget(
+                textoBoton: 'Volver a cargar',
                 mensaje: 'No se pudo cargar las condiciones de pago', 
                 onPush: () {
                   cargarCondicionesDePago();

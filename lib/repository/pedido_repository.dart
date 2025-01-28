@@ -86,9 +86,6 @@ class PedidoRepository {
       if(response.statusCode == 200){
         final jsonData = jsonDecode(response.body) as List<dynamic>;
         List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
-        if(orders.isEmpty){
-          throw GenericEmptyException();
-        }
         return orders;
       } else if(response.statusCode == 401){
         throw UnauthorizedException();
@@ -116,9 +113,6 @@ class PedidoRepository {
       if(response.statusCode == 200){
         final jsonData = jsonDecode(response.body) as List<dynamic>;
         List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
-        if(orders.isEmpty){
-          throw GenericEmptyException();
-        }
         return orders;
       } else if(response.statusCode == 401){
         throw UnauthorizedException();
@@ -146,9 +140,6 @@ class PedidoRepository {
       if(response.statusCode == 200){
         final jsonData = jsonDecode(response.body) as List<dynamic>;
         List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
-        if(orders.isEmpty){
-          throw GenericEmptyException();
-        }
         return orders;
       } else if(response.statusCode == 401){
         throw UnauthorizedException();
@@ -294,9 +285,6 @@ class PedidoRepository {
       if(response.statusCode == 200){
         final jsonData = jsonDecode(response.body) as List<dynamic>;
         List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
-        if(orders.isEmpty){
-          throw GenericEmptyException();
-        }
         return orders;
       } else if(response.statusCode == 401){
         throw UnauthorizedException();
@@ -323,9 +311,6 @@ class PedidoRepository {
       if(response.statusCode == 200){
         final jsonData = jsonDecode(response.body) as List<dynamic>;
         List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
-        if(orders.isEmpty){
-          throw GenericEmptyException();
-        }
         return orders;
       } else if(response.statusCode == 401){
         throw UnauthorizedException();
@@ -352,9 +337,6 @@ class PedidoRepository {
       if(response.statusCode == 200){
         final jsonData = jsonDecode(response.body) as List<dynamic>;
         List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
-        if(orders.isEmpty){
-          throw GenericEmptyException();
-        }
         return orders;
       } else if(response.statusCode == 401){
         throw UnauthorizedException();
@@ -382,9 +364,6 @@ class PedidoRepository {
       if(response.statusCode == 200){
         final jsonData = jsonDecode(response.body) as List<dynamic>;
         List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
-        if(orders.isEmpty){
-          throw GenericEmptyException();
-        }
         return orders;
       } else if(response.statusCode == 401){
         throw UnauthorizedException();
@@ -419,9 +398,6 @@ class PedidoRepository {
       if(response.statusCode == 200){
         final jsonData = jsonDecode(response.body) as List<dynamic>;
         List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
-        if(orders.isEmpty){
-          throw GenericEmptyException();
-        }
         return orders;
       } else if(response.statusCode == 401){
         throw UnauthorizedException();
@@ -448,9 +424,6 @@ class PedidoRepository {
       if(response.statusCode == 200){
         final jsonData = jsonDecode(response.body) as List<dynamic>;
         List<PedidoList> orders = jsonData.map((item) => PedidoList.fromJson(item)).toList();
-        if(orders.isEmpty){
-          throw GenericEmptyException();
-        }
         return orders;
       } else if(response.statusCode == 401){
         throw UnauthorizedException();
