@@ -8,5 +8,7 @@ abstract class ItemEvent extends Equatable {
 // ignore: must_be_immutable
 class LoadItems extends ItemEvent{
   String text;
-  LoadItems({ required this.text });
+  int top;
+  int skip;
+  LoadItems({ required this.text, this.top = 10, this.skip = 0});
 }

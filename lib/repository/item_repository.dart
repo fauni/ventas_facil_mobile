@@ -9,10 +9,10 @@ class ItemRepository {
   final String _baseUrl = Environment.UrlApi;
   final String _databaseSelector = Environment.databaseSelector;
 
-  Future<List<Item>> getAllItemsParaVenta(String sessionID, String text) async {
+  Future<List<Item>> getAllItemsParaVenta(String sessionID, String text, {int top = 10, int skip = 0}) async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/Items?text=$text'),
+        Uri.parse('$_baseUrl/Items?text=$text&top=$top&skip=$skip'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'X-Database-Identifier': _databaseSelector,

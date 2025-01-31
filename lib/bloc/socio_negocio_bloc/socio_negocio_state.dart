@@ -10,7 +10,9 @@ class SocioNegocioLoading extends SocioNegocioState{}
 class SocioNegocioUnauthorized extends SocioNegocioState{}
 class SocioNegocioLoaded extends SocioNegocioState{
   final List<SocioNegocio> clientes;
-  SocioNegocioLoaded(this.clientes);
+  final int newItemsStartIndex;
+
+  SocioNegocioLoaded(this.clientes, {this.newItemsStartIndex = 0});
 
   @override
   List<Object?> get props => [clientes];

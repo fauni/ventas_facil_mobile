@@ -10,7 +10,9 @@ class ItemLoading extends ItemState{}
 
 class ItemLoaded extends ItemState{
   final List<Item> items;
-  ItemLoaded(this.items);
+  final int newItemsStartIndex;
+
+  ItemLoaded(this.items, {this.newItemsStartIndex = 0});
 
   @override
   List<Object?> get props => [items];

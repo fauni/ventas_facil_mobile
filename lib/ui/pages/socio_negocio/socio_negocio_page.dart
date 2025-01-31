@@ -50,14 +50,17 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
 
   void cargarSocioDeNegocio(){
     final currentState = context.read<SocioNegocioBloc>().state;
+    int skip = 0;
+
     if(currentState is SocioNegocioLoaded){
       lastItemIndex = currentState.clientes.length;
+      skip= currentState.clientes.length;
     }
 
     BlocProvider.of<SocioNegocioBloc>(context).add(
       LoadSociosNegocio(
-        top: 10, 
-        skip: clientes.length,
+        top: 15, 
+        skip: skip,// clientes.length,
         text: controllerSearch.text
       )
     );
@@ -76,24 +79,21 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                   if (state.error.contains('UnauthorizedException')) {
                     LoginDialogWidget.mostrarDialogLogin(context);
                   }
-                } else if(state is SocioNegocioLoaded) {
-                  // if(clientes.isNotEmpty){
-                  //   WidgetsBinding.instance.addPostFrameCallback((_) { 
-                  //     if (_scrollController.hasClients) {
-                  //       int scrollIndex = max(0, clientes.length - 10);
-                  //       double position = scrollIndex * 60; // Asumiendo una altura aproximada por elemento
-                  //       _scrollController.animateTo(
-                  //         position,
-                  //         duration: const Duration(milliseconds: 300),
-                  //         curve: Curves.easeOut,
-                  //       );
-                  //     }
-                  //   });
-                  // }
-                  clientesNuevos = state.clientes;
-                  clientes = clientesNuevos; 
-                  // clientes = clientes..addAll(clientesNuevos); 
+                } 
+                if (state is SocioNegocioLoaded && state.newItemsStartIndex > 0){
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    final position = _scrollController.position.minScrollExtent + (state.newItemsStartIndex * 72.0); // Assuming each item has a height of 72.0
+                    _scrollController.animateTo(
+                      position,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                    );
+                  });
                 }
+                // else if(state is SocioNegocioLoaded) {
+                //   clientesNuevos = state.clientes;
+                //   clientes = clientesNuevos; 
+                // }
               },
               builder: (context, state) {
                 if(state is SocioNegocioLoading){
@@ -102,8 +102,9 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                   );
                 } else if(state is SocioNegocioLoaded){
                   return ListView.separated(
+                    controller: _scrollController,
                     itemBuilder: (context, index) {
-                      SocioNegocio cliente = clientes[index];
+                      SocioNegocio cliente = state.clientes[index];
                       bool isSelected = widget.clienteSeleccionado.codigoSn == cliente.codigoSn;
                       return ListTile(
                         leading: CircleAvatar(
@@ -161,7 +162,7 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                     separatorBuilder: (context, index) {
                       return const Divider();
                     },
-                    itemCount: clientes.length,
+                    itemCount: state.clientes.length,
                   );
                 } else {
                   return NotFoundInformationWidget(

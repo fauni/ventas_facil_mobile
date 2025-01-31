@@ -25,6 +25,10 @@ class _ItemPageState extends State<ItemPage> {
   // Item itemSeleccionado = Item();
   final TextEditingController controllerCantidad = TextEditingController();
   TextEditingController controllerSearch = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  int _skip = 0;
+  final int _top = 15;
 
   @override
   void initState() {
@@ -35,8 +39,11 @@ class _ItemPageState extends State<ItemPage> {
 
   void cargarItems(){
     BlocProvider.of<ItemBloc>(context).add(LoadItems(
-      text: controllerSearch.text
+      text: controllerSearch.text,
+      top: _top,
+      skip: _skip
     ));
+    _skip += _top;
   }
   @override
   Widget build(BuildContext context) {
@@ -45,7 +52,13 @@ class _ItemPageState extends State<ItemPage> {
       appBar: const AppBarWidget(titulo: 'Items',),
       body: Column(
         children: [
-          BuscadorItemsWidget(controllerSearch: controllerSearch, onSearch: cargarItems),
+          BuscadorItemsWidget(
+            controllerSearch: controllerSearch, 
+            onSearch: (){
+              _skip = 0;
+              cargarItems();
+            },
+          ),
           Expanded(
             child: BlocConsumer<ItemBloc, ItemState>(
               listener: (context, state) {
@@ -53,6 +66,15 @@ class _ItemPageState extends State<ItemPage> {
                   if(state.error.contains('UnauthorizedException')){
                     LoginDialogWidget.mostrarDialogLogin(context);
                   } 
+                } else if (state is ItemLoaded && state.newItemsStartIndex > 0){
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    final position = _scrollController.position.minScrollExtent + (state.newItemsStartIndex * 72.0); // Assuming each item has a height of 72.0
+                    _scrollController.animateTo(
+                      position,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                    );
+                  });
                 }
               },
               builder: (context, state) {
@@ -62,9 +84,22 @@ class _ItemPageState extends State<ItemPage> {
                   );
                 } else if(state is ItemLoaded){
                   return ListView.separated(
+                    controller: _scrollController,
                     shrinkWrap: true,
-                    itemCount: state.items.length,
+                    itemCount: state.items.length + 1,
                     itemBuilder: (context, index) {
+                      if(index == state.items.length){
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: ElevatedButton.icon(
+                            icon: const Icon(Icons.arrow_downward),
+                            onPressed: (){
+                              cargarItems();
+                            }, 
+                            label: const Text('Cargar más Items'),	
+                          ),
+                        );
+                      }
                       Item item = state.items[index];
                       return ItemListItemWidget(
                         index: index,
