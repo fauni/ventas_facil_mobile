@@ -141,6 +141,7 @@ class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with Ti
                 } else if (state is PedidosPendientesLoaded) {
                   if(state.pedidos.isEmpty){
                     return NotFoundInformationWidget(
+                      iconoBoton: Icons.refresh,
                       textoBoton: 'Volver a cargar',
                       mensaje: 'No se encontraron pedidos aprobados',
                       onPush: () {
@@ -152,6 +153,7 @@ class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with Ti
                 } else if(state is PedidosPendientesLoadedSearch){
                   if(state.pedidos.isEmpty){
                     return NotFoundInformationWidget(
+                      iconoBoton: Icons.refresh,
                       textoBoton: 'Cargar los últimos',
                       mensaje: 'No se encontraron pedidos aprobados con el criterio de busqueda',
                       onPush: () {
@@ -167,6 +169,7 @@ class _PedidosAutorizadosPageState extends State<PedidosAutorizadosPage> with Ti
                 }
                 else {
                   return NotFoundInformationWidget(
+                    iconoBoton: Icons.refresh,
                     textoBoton: 'Volver a cargar',
                     mensaje: '',
                     onPush: () {

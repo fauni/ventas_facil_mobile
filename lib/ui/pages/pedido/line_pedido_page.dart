@@ -7,7 +7,6 @@ import 'package:ventas_facil/bloc/bloc.dart';
 import 'package:ventas_facil/models/pedido/item_pedido.dart';
 import 'package:ventas_facil/models/producto/item_unidad_medida.dart';
 import 'package:ventas_facil/models/venta/pedido.dart';
-import 'package:ventas_facil/ui/widgets/update_item_pedido_dialog_widget.dart';
 
 class LinePedidoPage extends StatefulWidget {
   final Pedido pedido;

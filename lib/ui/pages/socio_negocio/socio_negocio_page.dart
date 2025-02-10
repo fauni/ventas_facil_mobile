@@ -18,52 +18,56 @@ class SocioNegocioPage extends StatefulWidget {
 }
 
 class _SocioNegocioPageState extends State<SocioNegocioPage> {
-  final ScrollController _scrollController = ScrollController();
   TextEditingController controllerSearch = TextEditingController();
-  int lastItemIndex = 0;
+  final int _pageSize = 10;
+  int _currentPage = 0;
+
   List<SocioNegocio> clientes = [];
-  List<SocioNegocio> clientesNuevos = [];
 
   @override
   void initState() {
     super.initState();
     cargarSocioDeNegocio();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      listenerControllerScroll();
       controllerSearch.text = '';
     });
   }
 
-  void listenerControllerScroll(){
-    _scrollController.addListener(() {
-      if(_scrollController.position.atEdge && _scrollController.position.pixels != 0){
-        cargarSocioDeNegocio();
-      }
-    });
-  }
+  
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    controllerSearch.dispose();
     super.dispose();
   }
 
+  void _nextPage() {
+    setState(() {
+      _currentPage++;
+      cargarSocioDeNegocio();
+    });
+  }
+
+  void _previousPage() {
+    setState(() {
+      _currentPage--;
+      cargarSocioDeNegocio();
+    });
+  }
+
   void cargarSocioDeNegocio(){
-    final currentState = context.read<SocioNegocioBloc>().state;
-    int skip = 0;
-
-    if(currentState is SocioNegocioLoaded){
-      lastItemIndex = currentState.clientes.length;
-      skip= currentState.clientes.length;
-    }
-
     BlocProvider.of<SocioNegocioBloc>(context).add(
       LoadSociosNegocio(
-        top: 15, 
-        skip: skip,// clientes.length,
+        top: _pageSize, 
+        skip: _currentPage * _pageSize,
         text: controllerSearch.text
       )
     );
+  }
+
+  void buscarSocioDeNegocio(){
+    _currentPage = 0;
+    cargarSocioDeNegocio();
   }
   @override
   Widget build(BuildContext context) {
@@ -71,7 +75,12 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
       appBar: const AppBarWidget(titulo: 'Socios de Negocio',),
       body: Column(
         children: [
-          BuscadorItemsWidget(controllerSearch: controllerSearch, onSearch: cargarSocioDeNegocio),
+          BuscadorItemsWidget(
+            controllerSearch: controllerSearch, 
+            onSearch: () {
+              buscarSocioDeNegocio();
+            },
+          ),
           Expanded(
             child: BlocConsumer<SocioNegocioBloc, SocioNegocioState>(
               listener: (context, state) {
@@ -79,21 +88,11 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                   if (state.error.contains('UnauthorizedException')) {
                     LoginDialogWidget.mostrarDialogLogin(context);
                   }
-                } 
-                if (state is SocioNegocioLoaded && state.newItemsStartIndex > 0){
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    final position = _scrollController.position.minScrollExtent + (state.newItemsStartIndex * 72.0); // Assuming each item has a height of 72.0
-                    _scrollController.animateTo(
-                      position,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeOut,
-                    );
+                } else if(state is SocioNegocioLoaded){
+                  setState(() {
+                    clientes = state.clientes;
                   });
                 }
-                // else if(state is SocioNegocioLoaded) {
-                //   clientesNuevos = state.clientes;
-                //   clientes = clientesNuevos; 
-                // }
               },
               builder: (context, state) {
                 if(state is SocioNegocioLoading){
@@ -102,7 +101,6 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                   );
                 } else if(state is SocioNegocioLoaded){
                   return ListView.separated(
-                    controller: _scrollController,
                     itemBuilder: (context, index) {
                       SocioNegocio cliente = state.clientes[index];
                       bool isSelected = widget.clienteSeleccionado.codigoSn == cliente.codigoSn;
@@ -110,7 +108,6 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                         leading: CircleAvatar(
                           backgroundColor: Theme.of(context).colorScheme.error,
                           foregroundColor: Theme.of(context).colorScheme.surface,
-                          // backgroundColor: isSelected ? Colors.green : Colors.yellowAccent,
                           child: isSelected 
                             ? const Icon(Icons.check) 
                             : const Icon(Icons.info_outline),
@@ -165,15 +162,39 @@ class _SocioNegocioPageState extends State<SocioNegocioPage> {
                     itemCount: state.clientes.length,
                   );
                 } else {
-                  return NotFoundInformationWidget(
-                    textoBoton: 'Volver a cargar',
-                    mensaje: 'Ocurrio un error al traer los socios de negocio.', 
-                    onPush: () => cargarSocioDeNegocio(),
-                  );
+                  if(_currentPage > 0){
+                    return NotFoundInformationWidget(
+                      iconoBoton: Icons.arrow_back,
+                      textoBoton: 'Volver atras',
+                      mensaje: 'Ya no existen mas registros.', 
+                      onPush: () => _previousPage(),
+                    );
+                  } 
+                  else {
+                    return NotFoundInformationWidget(
+                      iconoBoton: Icons.refresh,
+                      textoBoton: 'Volver a cargar',
+                      mensaje: 'Ocurrio un error al traer los socios de negocio.', 
+                      onPush: () => cargarSocioDeNegocio(),
+                    );
+                  }
                 }
               }
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                onPressed: _currentPage == 0 ? null : _previousPage,
+              ),
+              IconButton(
+                icon: const Icon(Icons.arrow_forward_ios),
+                onPressed: clientes.isEmpty ? null : _nextPage, 
+              ),
+            ],
+          )
         ],
       ),
     );

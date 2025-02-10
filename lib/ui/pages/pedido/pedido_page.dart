@@ -137,6 +137,7 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
                   } else if(state is PedidosLoadedSearch){
                     if(state.pedidos.isEmpty){
                       return NotFoundInformationWidget(
+                        iconoBoton: Icons.refresh,
                         textoBoton: 'Cargar los últimos pedidos',
                         mensaje: 'No se encontraron pedidos con el criterio de busqueda',
                         onPush: () {
@@ -148,6 +149,7 @@ class _PedidoPageState extends State<PedidoPage> with TickerProviderStateMixin{
                   }
                   else {
                     return NotFoundInformationWidget(
+                      iconoBoton: Icons.refresh,
                       textoBoton: 'Volver a cargar',
                       mensaje: 'No se encontraron pedidos',
                       onPush: () {

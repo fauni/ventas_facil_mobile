@@ -121,6 +121,7 @@ class _PedidosPendientesPageState extends State<PedidosPendientesPage> with Tick
                 } else if (state is PedidosPendientesLoaded) {
                   if(state.pedidos.isEmpty){
                     return NotFoundInformationWidget(
+                      iconoBoton: Icons.refresh,
                       textoBoton: 'Volver a cargar',
                       mensaje: 'No se encontraron pedidos',
                       onPush: () {
@@ -132,6 +133,7 @@ class _PedidosPendientesPageState extends State<PedidosPendientesPage> with Tick
                 } else if(state is PedidosPendientesLoadedSearch){
                   if(state.pedidos.isEmpty){
                     return NotFoundInformationWidget(
+                      iconoBoton: Icons.refresh,
                       textoBoton: 'Cargar los últimos pedidos',
                       mensaje: 'No se encontraron pedidos con el criterio de busqueda',
                       onPush: () {
@@ -143,6 +145,7 @@ class _PedidosPendientesPageState extends State<PedidosPendientesPage> with Tick
                 }
                 else {
                   return NotFoundInformationWidget(
+                    iconoBoton: Icons.refresh,
                     textoBoton: 'Volver a cargar',
                     mensaje: 'No se encontraron pedidos',
                     onPush: () {

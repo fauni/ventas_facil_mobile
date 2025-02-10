@@ -25,26 +25,55 @@ class _ItemPageState extends State<ItemPage> {
   // Item itemSeleccionado = Item();
   final TextEditingController controllerCantidad = TextEditingController();
   TextEditingController controllerSearch = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
+  final int _pageSize = 10;
+  int _currentPage = 0;
 
-  int _skip = 0;
-  final int _top = 15;
+  List<Item> items = [];
 
   @override
   void initState() {
     super.initState();
     cargarItems();
-    controllerSearch.text = '';
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controllerSearch.text = '';
+    });
+  }
+
+  @override
+  void dispose() {
+    controllerSearch.dispose();
+    super.dispose();
+  }
+
+  void _nextPage(){
+    setState(() {
+      _currentPage++;
+      cargarItems();
+    });
+  }
+
+  void _previousPage(){
+    setState(() {
+      _currentPage--;
+      cargarItems();
+    });
   }
 
   void cargarItems(){
     BlocProvider.of<ItemBloc>(context).add(LoadItems(
       text: controllerSearch.text,
-      top: _top,
-      skip: _skip
+      top: _pageSize,
+      skip: _currentPage * _pageSize
     ));
-    _skip += _top;
   }
+
+  void buscarItems(){
+    setState(() {
+      _currentPage = 0;
+      cargarItems();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,8 +84,7 @@ class _ItemPageState extends State<ItemPage> {
           BuscadorItemsWidget(
             controllerSearch: controllerSearch, 
             onSearch: (){
-              _skip = 0;
-              cargarItems();
+              buscarItems();
             },
           ),
           Expanded(
@@ -66,14 +94,9 @@ class _ItemPageState extends State<ItemPage> {
                   if(state.error.contains('UnauthorizedException')){
                     LoginDialogWidget.mostrarDialogLogin(context);
                   } 
-                } else if (state is ItemLoaded && state.newItemsStartIndex > 0){
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    final position = _scrollController.position.minScrollExtent + (state.newItemsStartIndex * 72.0); // Assuming each item has a height of 72.0
-                    _scrollController.animateTo(
-                      position,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeOut,
-                    );
+                } else if (state is ItemLoaded){
+                  setState(() {
+                    items = state.items;
                   });
                 }
               },
@@ -84,22 +107,10 @@ class _ItemPageState extends State<ItemPage> {
                   );
                 } else if(state is ItemLoaded){
                   return ListView.separated(
-                    controller: _scrollController,
-                    shrinkWrap: true,
-                    itemCount: state.items.length + 1,
+                    // shrinkWrap: true,
+                    itemCount: state.items.length,
                     itemBuilder: (context, index) {
-                      if(index == state.items.length){
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: ElevatedButton.icon(
-                            icon: const Icon(Icons.arrow_downward),
-                            onPressed: (){
-                              cargarItems();
-                            }, 
-                            label: const Text('Cargar más Items'),	
-                          ),
-                        );
-                      }
+
                       Item item = state.items[index];
                       return ItemListItemWidget(
                         index: index,
@@ -139,17 +150,40 @@ class _ItemPageState extends State<ItemPage> {
                     },
                   );
                 } else {
-                  return NotFoundInformationWidget(
-                    textoBoton: 'Volver a cargar',
-                    mensaje: 'No se pudo cargar los Items, intente nuevamente!', 
-                    onPush: () {
-                      cargarItems();
-                    },
-                  );
+                  if(_currentPage > 0){
+                    return NotFoundInformationWidget(
+                      iconoBoton: Icons.arrow_back, 
+                      textoBoton: 'Volver atras', 
+                      mensaje: 'Ya no existen mas registros.', 
+                      onPush: () => _previousPage(),
+                    );
+                  } else {
+                    return NotFoundInformationWidget(
+                      iconoBoton: Icons.refresh,
+                      textoBoton: 'Volver a cargar',
+                      mensaje: 'No se pudo cargar los Items, intente nuevamente!', 
+                      onPush: () {
+                        cargarItems();
+                      },
+                    );
+                  }
                 }
               }, 
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                onPressed: _currentPage == 0 ? null : _previousPage,
+              ),
+              IconButton(
+                icon: const Icon(Icons.arrow_forward_ios),
+                onPressed: items.isEmpty ? null : _nextPage, 
+              ),
+            ],
+          )
         ],
       )
     );

@@ -16,18 +16,10 @@ class ItemBloc extends Bloc<ItemEvent, ItemState>{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.get('token').toString();    
 
-    final currentSate = state;
-    List<Item> items = [];
-    int newItemsStartIndex = 0;
-
-    if(currentSate is ItemLoaded){
-      items = currentSate.items;
-      newItemsStartIndex = items.length;
-    }
     emit(ItemLoading());
     try {
-      final newItems = await _repository.getAllItemsParaVenta(token, event.text, top: event.top, skip: event.skip);
-      emit(ItemLoaded(items + newItems, newItemsStartIndex: newItemsStartIndex));
+      final items = await _repository.getAllItemsParaVenta(token, event.text, top: event.top, skip: event.skip);
+      emit(ItemLoaded(items));
     } catch(e){
       emit(ItemNotLoaded(e.toString()));
     }

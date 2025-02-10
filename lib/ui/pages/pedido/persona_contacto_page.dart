@@ -63,6 +63,7 @@ class _PersonaContactoPageState extends State<PersonaContactoPage> {
         },
         itemCount: widget.socioNegocio.contactosEmpleado!.length,
       ) : NotFoundInformationWidget( 
+        iconoBoton: Icons.arrow_back,
         textoBoton: 'Regresar',
         mensaje: 'No se registraron personas de contacto', onPush: () {
         context.pop();

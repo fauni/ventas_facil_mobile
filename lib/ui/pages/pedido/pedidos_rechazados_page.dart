@@ -114,6 +114,7 @@ class _PedidosRechazadosPageState extends State<PedidosRechazadosPage> with Tick
                 } else if(state is PedidosRechazadosLoaded){
                   if(state.pedidos.isEmpty){
                     return NotFoundInformationWidget(
+                      iconoBoton: Icons.refresh,
                       textoBoton: 'Cargar los últimos',
                       mensaje: 'No se encontraron pedidos rechazados',
                       onPush: () {
@@ -124,6 +125,7 @@ class _PedidosRechazadosPageState extends State<PedidosRechazadosPage> with Tick
                   return ListaPedidosWidget(pedidos: state.pedidos);
                 } else {
                   return NotFoundInformationWidget(
+                    iconoBoton: Icons.refresh,
                     textoBoton: 'Volver a cargar',
                     mensaje: '',
                     onPush: () {

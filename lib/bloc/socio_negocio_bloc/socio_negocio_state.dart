@@ -8,11 +8,13 @@ abstract class SocioNegocioState extends Equatable {
 
 class SocioNegocioLoading extends SocioNegocioState{}
 class SocioNegocioUnauthorized extends SocioNegocioState{}
+
 class SocioNegocioLoaded extends SocioNegocioState{
   final List<SocioNegocio> clientes;
   final int newItemsStartIndex;
+  final bool hasReaschedMax;
 
-  SocioNegocioLoaded(this.clientes, {this.newItemsStartIndex = 0});
+  SocioNegocioLoaded(this.clientes, {this.newItemsStartIndex = 0, this.hasReaschedMax = false});
 
   @override
   List<Object?> get props => [clientes];

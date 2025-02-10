@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ventas_facil/bloc/unidad_medida_bloc/unidad_medida_event.dart';
 import 'package:ventas_facil/bloc/unidad_medida_bloc/unidad_medida_state.dart';
 import 'package:ventas_facil/config/helpers/exceptions.dart';
