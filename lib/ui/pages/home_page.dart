@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text('V.1.1.1'),// user != null ? Text('Usuario: ${user!.nombre} ${user!.apellido}') : const SizedBox(),
+                    const Text('V.2.0.0'),// user != null ? Text('Usuario: ${user!.nombre} ${user!.apellido}') : const SizedBox(),
                     Image.asset(
                       'assets/icons/tomatefaciltoolbar.jpg',
                       height: 80,
